@@ -1,10 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
-<h1>泸沽湖 · 情感文明入口</h1>
-<p>系统已成功上线</p>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>泸沽湖 · 爱与文明</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+  font-family: "Arial", sans-serif;
+  background: black;
+}
+
+/* 星空背景 */
+.stars {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 20%, #ffffff10 0%, transparent 50%),
+              radial-gradient(circle at 80% 30%, #ffffff10 0%, transparent 50%),
+              radial-gradient(circle at 50% 80%, #ffffff10 0%, transparent 50%);
+  animation: twinkle 6s infinite alternate;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+/* 地球 */
+.earth {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 220px;
+  height: 220px;
+  margin-left: -110px;
+  margin-top: -110px;
+  border-radius: 50%;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg');
+  background-size: cover;
+  box-shadow: 0 0 60px rgba(255,255,255,0.3);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 按钮区 */
+.buttons {
+  position: absolute;
+  bottom: 10%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btn {
+  padding: 10px 16px;
+  border: 1px solid white;
+  color: white;
+  background: transparent;
+  border-radius: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+</style>
 </head>
+
 <body>
-  hello lugu
+
+<div class="stars"></div>
+
+<div class="earth"></div>
+
+<div class="buttons">
+  <div class="btn">打开心声盲盒</div>
+  <div class="btn">留下我的一句话</div>
+  <div class="btn">回应一个灵魂</div>
+</div>
+
 </body>
 </html>
