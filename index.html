@@ -1,93 +1,151 @@
-<!DOCTYPE html>
-<html lang="zh">
+自动换行
+<!doctype html>
+<html lang =" zh-CN ">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>泸沽湖 · 爱与文明</title>
-
+<meta charset =" utf-8 ">
+<meta name =" viewport " content =" width=device-width, initial-scale=1 ">
+<title> </title>
 <style>
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+box-sizing: border-box;
 }
 
-body {
-  overflow: hidden;
-  font-family: "Arial", sans-serif;
-  background: black;
+html，
+身体 {
+宽度：100%；
+高度：100%；
+边距：0；
+溢出：隐藏；
 }
 
-/* 星空背景 */
-.stars {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 20% 20%, #ffffff10 0%, transparent 50%),
-              radial-gradient(circle at 80% 30%, #ffffff10 0%, transparent 50%),
-              radial-gradient(circle at 50% 80%, #ffffff10 0%, transparent 50%);
-  animation: twinkle 6s infinite alternate;
+身体 {
+显示方式：网格；
+放置物品：中心；
+背景颜色：#000；
+background-image: url("space-bg.jpg");
+background-position: center center;
+background-size: cover;
+background-repeat: no-repeat;
 }
 
-@keyframes twinkle {
-  0% { opacity: 0.4; }
-  100% { opacity: 1; }
+.星空{
+位置：固定；
+插入：0；
+z-index：0；
+指针事件：无；
 }
 
-/* 地球 */
-.earth {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 220px;
-  height: 220px;
-  margin-left: -110px;
-  margin-top: -110px;
-  border-radius: 50%;
-  background: url('https://raw.githubusercontent.com/plotly/datasets/master/earth.jpg');
-  background-size: cover;
-  box-shadow: 0 0 60px rgba(255,255,255,0.3);
-  animation: rotate 20s linear infinite;
+。星星 {
+位置：绝对定位；
+顶部：var(--y);
+左：var(--x);
+宽度：var(--size);
+高度：var(--size);
+圆角半径：50%；
+颜色：var(--color);
+背景色：当前颜色；
+动画：breathe-star 4s ease-in-out var(--delay) infinite;
+将会改变：不透明度、变换、滤镜；
 }
 
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+。方法 {
+位置：固定；
+顶部：8vh；
+左：8vw；
+z-index：1；
+宽度：最小值(68vmin, 680px);
+宽高比：1；
+变换：平移(-50%, -50%) 缩放(.02);
+transform-origin: center;
+动画：接近地球 7 秒线性向前；
+将会改变：顶部，左侧，转变；
 }
 
-/* 按钮区 */
-.buttons {
-  position: absolute;
-  bottom: 10%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
+。地球 {
+位置：相对；
+宽度：100%；
+高度：100%；
+溢出：隐藏；
+圆角半径：50%；
+动画：旋转地球 60 秒 线性无限；
+会改变：转变；
 }
 
-.btn {
-  padding: 10px 16px;
-  border: 1px solid white;
-  color: white;
-  background: transparent;
-  border-radius: 20px;
-  font-size: 14px;
-  text-align: center;
+.earth img {
+位置：绝对定位；
+最高：-74%；
+左侧：50%；
+宽度：151%；
+高度：自动；
+显示：块；
+变换：translateX(-50%)；
+指针事件：无；
+用户选择：无；
+}
+
+@keyframes rotate-earth {
+到 {
+变换：旋转（360度）；
+}
+}
+
+@keyframes approach-earth {
+从 {
+顶部：8vh；
+左：8vw；
+变换：平移(-50%, -50%) 缩放(.02);
+}
+
+到 {
+顶部：50vh；
+左：50vw；
+transform: translate(-50%, -50%) scale(1);
+}
+}
+
+@keyframes 呼吸星形 {
+0%，
+100% {
+不透明度：0.22；
+滤镜：亮度(.9)；
+变换：缩放（.82）；
+}
+
+50% {
+不透明度：1；
+滤镜：亮度(2.1)；
+变换：缩放（1.35）；
+}
 }
 </style>
 </head>
-
 <body>
-
-<div class="stars"></div>
-
-<div class="earth"></div>
-
-<div class="buttons">
-  <div class="btn">打开心声盲盒</div>
-  <div class="btn">留下我的一句话</div>
-  <div class="btn">回应一个灵魂</div>
+<div class =" star-field " aria-hidden =" true ">
+<span class =" star " style =" --x: 7%; --y: 15%; --size: 3px; --color: #fff; --duration: 5.7s; --delay: -1.2s "> </span>
+<span class="star" style="--x: 18%; --y: 36%; --size: 2px; --color: #e8f2ff; --duration: 6.8s; --delay: -4.7s"></span>
+<span class="star" style="--x: 10%; --y: 63%; --size: 3px; --color: #fff; --duration: 6.2s; --delay: -2.9s"></span>
+<span class="star" style="--x: 22%; --y: 91%; --size: 2px; --color: #edf5ff; --duration: 7.1s; --delay: -5.6s"></span>
+<span class="star" style="--x: 75%; --y: 9%; --size: 3px; --color: #fff; --duration: 5.9s; --delay: -3.8s"></span>
+<span class="star" style="--x: 91%; --y: 38%; --size: 2px; --color: #eef6ff; --duration: 6.6s; --delay: -.7s"></span>
+<span class="star" style="--x: 88%; --y: 68%; --size: 3px; --color: #fff; --duration: 7.3s; --delay: -4.2s"></span>
+<span class="star" style="--x: 76%; --y: 89%; --size: 2px; --color: #eaf3ff; --duration: 6.1s; --delay: -2.1s"></span>
+<span class="star" style="--x: 14%; --y: 82%; --size: 3px; --color: #bd76ff; --duration: 6.9s; --delay: -5.1s"></span>
+<span class="star" style="--x: 25%; --y: 73%; --size: 4px; --color: #ce8dff; --duration: 5.8s; --delay: -3.3s"></span>
+<span class="star" style="--x: 35%; --y: 65%; --size: 3px; --color: #ae59ff; --duration: 7.4s; --delay: -1.8s"></span>
+<span class="star" style="--x: 45%; --y: 57%; --size: 4px; --color: #d99aff; --duration: 6.3s; --delay: -4.9s"></span>
+<span class =" star " style =" --x: 55%; --y: 48%; --size: 4px; --color: #ba62ff; --duration: 7s; --delay: -2.6s "> </span>
+<span class =" star " style =" --x: 65%; --y: 39%; --size: 3px; --color: #df96ff; --duration: 5.6s; --delay: -.4s "> </span>
+<span class =" star " style =" --x: 75%; --y: 30%; --size: 4px; --color: #b75cff; --duration: 6.5s; --delay: -5.8s "> </span>
+<span class =" star " style =" --x: 85%; --y: 21%; --size: 3px; --color: #d58cff; --duration: 7.2s; --delay: -3.6s "> </span>
+<span class =" star " style =" --x: 31%; --y: 43%; --size: 3px; --color: #ffd37d; --duration: 5.9s; --delay: -2.3s "> </span>
+<span class =" star " style =" --x: 48%; --y: 16%; --size: 2px; --color: #ffdda0; --duration: 6.7s; --delay: -5.3s "> </span>
+<span class =" star " style =" --x: 67%; --y: 67%; --size: 3px; --color: #ffd47f; --duration: 7.4s; --delay: -1.5s "> </span>
+<span class =" star " style =" --x: 86%; --y: 55%; --size: 2px; --color: #ffe0a6; --duration: 6.2s; --delay: -4.4s "> </span>
 </div>
-
+<div class =" approach ">
+<div class =" earth ">
+<img src =" earth.png " alt ="">
+</div>
+</div>
 </body>
 </html>
