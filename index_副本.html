@@ -1,0 +1,1593 @@
+自动换行
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<style>
+* {
+box-sizing: border-box;
+}
+
+html,
+body {
+width: 100%;
+height: 100%;
+margin: 0;
+overflow: hidden;
+}
+
+body {
+display: grid;
+place-items: center;
+background-color: #000;
+background-image: url("space-bg_副本.jpg");
+background-position: center center;
+background-size: cover;
+background-repeat: no-repeat;
+}
+
+.star-field {
+position: fixed;
+inset: 0;
+z-index: 0;
+pointer-events: none;
+}
+
+.place-mark {
+position: fixed;
+top: 28px;
+left: 32px;
+z-index: 2;
+color: rgba(255, 244, 214, .78);
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-size: clamp(14px, 1.5vw, 20px);
+font-weight: 300;
+line-height: 1.55;
+letter-spacing: .08em;
+text-shadow: 0 0 12px rgba(255, 236, 184, .45);
+pointer-events: none;
+}
+
+.place-mark span {
+display: block;
+font-size: .72em;
+letter-spacing: .16em;
+color: rgba(255, 255, 255, .62);
+}
+
+.star {
+position: absolute;
+top: var(--y);
+left: var(--x);
+width: var(--size);
+height: var(--size);
+border-radius: 50%;
+color: var(--color);
+background: currentColor;
+animation: breathe-star 4s ease-in-out var(--delay) infinite;
+will-change: opacity, transform, filter;
+}
+
+.voice-star-layer {
+position: fixed;
+inset: 0;
+z-index: 2;
+pointer-events: none;
+overflow: hidden;
+}
+
+.voice-star {
+position: absolute;
+left: 0;
+top: 0;
+width: var(--voice-size);
+height: var(--voice-size);
+padding: 0;
+border: 0;
+background: transparent;
+opacity: 0;
+transform: translate3d(var(--voice-x), var(--voice-y), 0) scale(.18);
+transform-origin: center;
+pointer-events: auto;
+cursor: pointer;
+will-change: transform, opacity, filter;
+}
+
+.voice-star::before {
+content: "";
+position: absolute;
+inset: -150%;
+border-radius: 50%;
+background: radial-gradient(circle, var(--voice-glow) 0%, var(--voice-haze) 28%, rgba(255, 255, 255, 0) 70%);
+opacity: .76;
+filter: blur(2.5px);
+}
+
+.voice-star::after {
+content: "";
+position: absolute;
+inset: 12%;
+border-radius: 50%;
+background: radial-gradient(circle, #fff 0 18%, var(--voice-core) 44%, rgba(255, 255, 255, 0) 76%);
+box-shadow: 0 0 16px var(--voice-core), 0 0 26px var(--voice-glow);
+opacity: 1;
+}
+
+.voice-star-shape {
+position: absolute;
+inset: -8%;
+border-radius: 34%;
+background:
+radial-gradient(circle at 50% 50%, #fff 0 11%, var(--voice-core) 19%, rgba(255, 255, 255, 0) 40%),
+linear-gradient(135deg, rgba(255, 255, 255, .96), var(--voice-color) 46%, var(--voice-deep) 100%);
+clip-path: polygon(50% 0, 56% 41%, 100% 50%, 56% 59%, 50% 100%, 44% 59%, 0 50%, 44% 41%);
+filter: drop-shadow(0 0 9px var(--voice-core)) drop-shadow(0 0 24px var(--voice-glow));
+}
+
+.voice-star.is-touched {
+pointer-events: none;
+filter: brightness(3.4) saturate(1.6);
+animation: touched-star-flare 2s ease forwards;
+}
+
+.voice-star.is-touched::before {
+inset: -180%;
+background: radial-gradient(circle, var(--voice-glow) 0%, rgba(255, 255, 255, .3) 30%, rgba(255, 255, 255, 0) 70%);
+opacity: 1;
+filter: blur(1.5px) drop-shadow(0 0 18px var(--voice-glow));
+animation: touched-star-halo 2s ease forwards;
+}
+
+.voice-star.is-touched::after {
+inset: 4%;
+box-shadow: 0 0 22px #fff, 0 0 42px var(--voice-glow), 0 0 70px var(--voice-color);
+animation: touched-star-core 2s ease forwards;
+}
+
+.voice-star.is-touched .voice-star-shape {
+animation: touched-star-shape 2s ease forwards;
+}
+
+@keyframes touched-star-flare {
+0%,
+100% {
+opacity: 1;
+}
+
+35%,
+68% {
+opacity: .72;
+}
+}
+
+@keyframes touched-star-halo {
+0% {
+opacity: .42;
+transform: scale(.55);
+}
+
+35%,
+72% {
+opacity: .95;
+transform: scale(1.08);
+}
+
+100% {
+opacity: 0;
+transform: scale(1.24);
+}
+}
+
+@keyframes touched-star-core {
+0% {
+opacity: .72;
+transform: scale(.8);
+}
+
+35%,
+72% {
+opacity: 1;
+transform: scale(1.18);
+}
+
+100% {
+opacity: .18;
+transform: scale(.72);
+}
+}
+
+@keyframes touched-star-shape {
+0% {
+filter: drop-shadow(0 0 9px var(--voice-core)) drop-shadow(0 0 24px var(--voice-glow));
+transform: scale(1);
+}
+
+35%,
+72% {
+filter: drop-shadow(0 0 18px #fff) drop-shadow(0 0 42px var(--voice-glow));
+transform: scale(1.35);
+}
+
+100% {
+filter: drop-shadow(0 0 8px var(--voice-core));
+transform: scale(.7);
+}
+}
+
+.voice-bottle {
+position: fixed;
+left: 0;
+top: 0;
+z-index: 4;
+width: min(74vw, 103px);
+height: 130px;
+color: rgba(91, 58, 28, .9);
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-size: 13px;
+letter-spacing: .04em;
+text-align: center;
+opacity: 0;
+transform: translate3d(var(--bottle-x), var(--bottle-y), 0) rotate(-24deg) scale(.1);
+pointer-events: auto;
+animation: bottle-arrive var(--bottle-arrive) linear forwards;
+filter: drop-shadow(0 0 18px rgba(118, 201, 255, .28)) drop-shadow(0 0 30px rgba(255, 205, 116, .46));
+}
+
+.voice-bottle-glass {
+position: absolute;
+left: 50%;
+bottom: 54px;
+z-index: 4;
+width: 64px;
+height: 97px;
+border: 2px solid rgba(255, 244, 218, .76);
+border-radius: 35px 35px 22px 22px / 43px 43px 20px 20px;
+background:
+linear-gradient(90deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, .04) 20%, rgba(103, 195, 255, .18) 46%, rgba(255, 233, 190, .2) 78%, rgba(255, 255, 255, .28)),
+radial-gradient(ellipse at 24% 16%, rgba(255, 255, 255, .72), rgba(255, 255, 255, 0) 30%),
+radial-gradient(ellipse at 72% 68%, rgba(255, 255, 255, .2), rgba(255, 255, 255, 0) 36%),
+radial-gradient(circle at 68% 88%, rgba(255, 188, 80, .48), rgba(255, 188, 80, 0) 34%);
+box-shadow:
+inset 0 0 24px rgba(255, 255, 255, .34),
+inset 12px 0 16px rgba(255, 255, 255, .22),
+inset -10px 0 14px rgba(80, 169, 255, .12),
+0 0 24px rgba(125, 207, 255, .24),
+0 0 28px rgba(255, 204, 117, .42);
+transform: translateX(-50%);
+}
+
+.voice-bottle-glass::before {
+content: "";
+position: absolute;
+left: 50%;
+top: -26px;
+width: 28px;
+height: 33px;
+border: 2px solid rgba(255, 244, 218, .76);
+border-bottom: 0;
+border-radius: 14px 14px 5px 5px;
+background:
+linear-gradient(90deg, rgba(255, 255, 255, .34), rgba(125, 193, 255, .12), rgba(255, 238, 202, .24)),
+radial-gradient(ellipse at 28% 18%, rgba(255, 255, 255, .62), transparent 40%);
+box-shadow: inset 0 0 16px rgba(255, 255, 255, .24), 0 0 20px rgba(255, 211, 132, .32);
+transform: translateX(-50%);
+}
+
+.voice-bottle-glass::after {
+content: "";
+position: absolute;
+left: 50%;
+bottom: 5px;
+width: 48px;
+height: 12px;
+border-radius: 50%;
+border: 1px solid rgba(255, 236, 196, .52);
+background: radial-gradient(ellipse, rgba(255, 238, 191, .5), rgba(255, 238, 191, 0) 68%);
+box-shadow: inset 0 0 8px rgba(255, 255, 255, .28), 0 0 12px rgba(255, 199, 100, .34);
+transform: translateX(-50%);
+}
+
+.voice-bottle-shine {
+position: absolute;
+left: 30px;
+top: 3px;
+z-index: 3;
+width: 12px;
+height: 48px;
+border-radius: 999px;
+background: linear-gradient(rgba(255, 255, 255, .72), rgba(255, 255, 255, .06));
+filter: blur(.3px);
+opacity: .72;
+transform: rotate(16deg);
+}
+
+.voice-bottle-sparkle {
+position: absolute;
+z-index: 6;
+width: 10px;
+height: 10px;
+opacity: .86;
+filter: drop-shadow(0 0 8px rgba(255, 226, 158, .76));
+}
+
+.voice-bottle-sparkle::before,
+.voice-bottle-sparkle::after {
+content: "";
+position: absolute;
+left: 50%;
+top: 50%;
+background: rgba(255, 247, 219, .92);
+transform: translate(-50%, -50%);
+}
+
+.voice-bottle-sparkle::before {
+width: 100%;
+height: 2px;
+border-radius: 999px;
+}
+
+.voice-bottle-sparkle::after {
+width: 2px;
+height: 100%;
+border-radius: 999px;
+}
+
+.voice-bottle-sparkle.one {
+left: 28px;
+top: 6px;
+}
+
+.voice-bottle-sparkle.two {
+right: 22px;
+bottom: 78px;
+transform: scale(.72);
+opacity: .7;
+}
+
+.voice-bottle-origin {
+display: block;
+position: absolute;
+left: calc(50% + 46px);
+top: 68px;
+max-width: 112px;
+opacity: 0;
+color: #fff;
+font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", cursive;
+font-size: 11px;
+line-height: 1.35;
+text-align: left;
+text-shadow: 0 1px 2px rgba(0, 0, 0, .32);
+white-space: normal;
+overflow-wrap: anywhere;
+animation: origin-show 1.5s ease var(--letter-delay) forwards;
+}
+
+.voice-letter {
+position: absolute;
+left: 50%;
+top: 56px;
+z-index: 4;
+width: 34px;
+min-height: 50px;
+padding: 16px 18px 52px;
+border: 1px solid transparent;
+border-radius: 8px;
+background: transparent;
+box-shadow: none;
+backdrop-filter: none;
+-webkit-backdrop-filter: none;
+line-height: 1.6;
+transform: translateX(-50%) rotate(var(--letter-tilt)) scale(.46);
+opacity: 0;
+overflow: hidden;
+animation: letter-float-out 1.5s ease var(--letter-delay) forwards;
+}
+
+.voice-letter::before,
+.voice-letter::after {
+content: "";
+position: absolute;
+left: 50%;
+width: 40px;
+height: 10px;
+border-radius: 50%;
+background: rgba(207, 157, 79, .55);
+opacity: 0;
+transform: translateX(-50%);
+}
+
+.voice-letter::before {
+top: -10px;
+}
+
+.voice-letter::after {
+bottom: -10px;
+}
+
+.voice-bottle-tie {
+position: absolute;
+left: 50%;
+top: 39px;
+z-index: 6;
+width: 43px;
+height: 7px;
+border-top: 2px solid rgba(101, 55, 23, .82);
+border-bottom: 1px solid rgba(101, 55, 23, .5);
+border-radius: 50%;
+transform: translateX(-50%);
+animation: twine-release 1.5s ease var(--letter-delay) forwards;
+}
+
+.voice-bottle-heart {
+position: absolute;
+left: 50%;
+top: 30px;
+z-index: 5;
+width: 22px;
+height: 22px;
+transform: translateX(-50%);
+filter: drop-shadow(0 0 12px rgba(235, 252, 255, 1)) drop-shadow(0 0 30px rgba(111, 222, 255, .86)) drop-shadow(0 0 48px rgba(86, 142, 255, .48));
+animation: glowing-heart-hold 1.5s ease var(--letter-delay) forwards;
+background:
+linear-gradient(45deg, transparent 47%, rgba(255, 255, 255, .62) 48% 52%, transparent 53%),
+linear-gradient(-45deg, transparent 45%, rgba(130, 224, 255, .46) 46% 54%, transparent 55%),
+linear-gradient(120deg, transparent 0 28%, rgba(255, 255, 255, .84) 29% 34%, transparent 35%),
+linear-gradient(230deg, transparent 0 34%, rgba(92, 190, 255, .44) 35% 42%, transparent 43%),
+linear-gradient(135deg, rgba(238, 252, 255, .96), rgba(91, 210, 255, .72) 52%, rgba(83, 122, 255, .66));
+box-shadow: inset 0 0 10px rgba(255, 255, 255, .58), inset -4px -5px 9px rgba(54, 111, 210, .18), 0 0 22px rgba(183, 244, 255, .96), 0 0 42px rgba(92, 171, 255, .62);
+outline: 1px solid rgba(239, 254, 255, .62);
+outline-offset: -1px;
+clip-path: polygon(50% 0, 62% 18%, 82% 18%, 100% 39%, 50% 100%, 0 39%, 18% 18%, 38% 18%);
+}
+
+.voice-bottle-heart .diamond-facet {
+position: absolute;
+inset: -1px;
+z-index: 2;
+border-radius: 12% 12% 16% 16%;
+background:
+linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, .84) 49% 51%, transparent 52%),
+linear-gradient(0deg, transparent 48%, rgba(255, 255, 255, .38) 49% 51%, transparent 52%),
+linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, .56) 31% 34%, transparent 35%),
+linear-gradient(45deg, transparent 29%, rgba(68, 174, 255, .4) 30% 34%, transparent 35%),
+conic-gradient(from 45deg, rgba(255, 255, 255, .42), rgba(105, 218, 255, .18), rgba(255, 255, 255, .52), rgba(69, 128, 255, .22), rgba(255, 255, 255, .42));
+clip-path: polygon(50% 0, 68% 20%, 100% 50%, 70% 70%, 50% 100%, 30% 70%, 0 50%, 32% 20%);
+mix-blend-mode: screen;
+pointer-events: none;
+}
+
+.voice-bottle-heart::before,
+.voice-bottle-heart::after {
+content: "";
+position: absolute;
+border-radius: 0;
+background:
+linear-gradient(135deg, rgba(255, 255, 255, .74), rgba(95, 210, 255, .18));
+box-shadow: none;
+pointer-events: none;
+}
+
+.voice-bottle-heart::before {
+left: 5px;
+top: 4px;
+width: 12px;
+height: 18px;
+clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.voice-bottle-heart::after {
+left: 2px;
+top: 7px;
+width: 18px;
+height: 12px;
+clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.voice-bottle-heart-rays {
+position: absolute;
+left: 50%;
+top: 30px;
+z-index: 4;
+width: 70px;
+height: 70px;
+border-radius: 50%;
+background:
+conic-gradient(from 4deg, rgba(238, 252, 255, .96) 0 5deg, transparent 5deg 22deg, rgba(125, 224, 255, .78) 22deg 28deg, transparent 28deg 52deg),
+radial-gradient(circle, rgba(236, 252, 255, .5), rgba(100, 210, 255, .18) 38%, transparent 66%);
+mix-blend-mode: screen;
+opacity: .78;
+filter: blur(.4px) drop-shadow(0 0 16px rgba(133, 228, 255, .72));
+pointer-events: none;
+transform: translate(-50%, -50%);
+animation: heart-rays-flare 1.5s ease var(--letter-delay) forwards;
+}
+
+.voice-letter-time {
+position: absolute;
+right: 18px;
+top: 16px;
+color: #fff;
+font-family: "Songti SC", "SimSun", serif;
+font-size: 10px;
+letter-spacing: .04em;
+white-space: nowrap;
+}
+
+.voice-letter-brand {
+position: absolute;
+left: 18px;
+top: 15px;
+color: #fff;
+font-family: "Songti SC", "SimSun", serif;
+font-size: 12px;
+font-weight: 600;
+line-height: 1.45;
+letter-spacing: .04em;
+}
+
+.voice-letter-brand span {
+display: block;
+font-size: 9px;
+font-weight: 400;
+letter-spacing: .02em;
+}
+
+.voice-letter-text {
+position: absolute;
+left: 50%;
+top: 24px;
+display: block;
+width: min(78%, 268px);
+min-height: 62px;
+color: #fff;
+font-family: var(--hand-font);
+font-style: italic;
+font-size: 18px;
+line-height: var(--hand-line-height);
+letter-spacing: var(--hand-letter-spacing);
+transform: translateX(-50%) skewX(var(--hand-skew));
+text-align: left;
+}
+
+.voice-letter-text span {
+display: inline-block;
+transform: translate(var(--char-x), var(--char-y)) rotate(var(--char-rotate));
+}
+
+.voice-letter-text.is-typing::after {
+content: "......";
+display: inline-block;
+position: relative;
+top: .45em;
+width: auto;
+height: auto;
+margin-left: 3px;
+background: transparent;
+color: #fff;
+overflow: hidden;
+white-space: nowrap;
+vertical-align: baseline;
+animation: type-caret 1.2s steps(6, end) infinite;
+}
+
+.voice-letter-rose {
+position: absolute;
+left: 50%;
+top: -103px;
+z-index: 2;
+width: 58px;
+height: 82px;
+transform: translateX(-50%) rotate(var(--rose-tilt));
+}
+
+.voice-letter-rose.flower-blossom::after {
+left: 18px;
+top: 8px;
+width: 30px;
+height: 30px;
+border-radius: 50% 12% 50% 12%;
+background:
+radial-gradient(circle at 50% 50%, rgba(255, 238, 151, .95) 0 12%, transparent 13%),
+conic-gradient(from 18deg, var(--rose-light), var(--rose-color), var(--rose-light), var(--rose-color), var(--rose-light));
+}
+
+.voice-letter-rose.flower-daisy::after {
+left: 15px;
+top: 6px;
+width: 34px;
+height: 34px;
+border-radius: 50%;
+background:
+radial-gradient(circle, rgba(229, 154, 38, .98) 0 18%, transparent 19%),
+repeating-conic-gradient(rgba(255, 255, 245, .98) 0 18deg, rgba(255, 221, 122, .72) 18deg 28deg, transparent 28deg 45deg);
+box-shadow: 0 0 0 1px rgba(119, 83, 40, .18);
+}
+
+.voice-letter-rose.flower-lavender::after {
+left: 28px;
+top: 4px;
+width: 9px;
+height: 44px;
+border-radius: 999px;
+background:
+radial-gradient(circle at 50% 8%, var(--rose-light) 0 28%, transparent 30%),
+radial-gradient(circle at 50% 26%, var(--rose-color) 0 28%, transparent 30%),
+radial-gradient(circle at 50% 44%, var(--rose-light) 0 28%, transparent 30%),
+radial-gradient(circle at 50% 62%, var(--rose-color) 0 28%, transparent 30%),
+linear-gradient(var(--rose-deep), var(--rose-deep));
+box-shadow: -7px 9px 0 -2px var(--rose-color), 7px 18px 0 -2px var(--rose-light);
+}
+
+.voice-letter-footer {
+position: absolute;
+right: 18px;
+bottom: 16px;
+color: #fff;
+font-family: "Songti SC", "SimSun", serif;
+font-size: 10px;
+line-height: 1.35;
+letter-spacing: .04em;
+text-align: right;
+}
+
+.voice-letter-footer span {
+display: block;
+font-size: 9px;
+letter-spacing: .01em;
+}
+
+.voice-letter-pager {
+position: absolute;
+left: 50%;
+bottom: 16px;
+z-index: 5;
+display: none;
+align-items: center;
+gap: 10px;
+color: #fff;
+font-family: "Songti SC", "SimSun", serif;
+font-size: 10px;
+transform: translateX(-50%);
+}
+
+.voice-letter.has-pages .voice-letter-pager {
+display: flex;
+}
+
+.voice-letter-pager button {
+padding: 2px 6px;
+border: 1px solid rgba(136, 92, 48, .28);
+border-radius: 999px;
+background: rgba(255, 246, 220, .56);
+color: #fff;
+font: inherit;
+cursor: pointer;
+}
+
+.voice-letter-pager button:disabled {
+opacity: .36;
+cursor: default;
+}
+
+.voice-letter-rose::before {
+content: "";
+position: absolute;
+left: 28px;
+top: 26px;
+width: 3px;
+height: 50px;
+border-radius: 999px;
+background: linear-gradient(rgba(39, 111, 62, .92), rgba(32, 103, 58, .72));
+transform: rotate(0deg);
+}
+
+.voice-letter-rose::after {
+content: "";
+position: absolute;
+left: 20px;
+top: 4px;
+width: 26px;
+height: 28px;
+border-radius: 70% 34% 62% 38%;
+background:
+radial-gradient(circle at 35% 30%, rgba(255, 232, 222, .94), var(--rose-light) 28%, var(--rose-color) 60%, var(--rose-deep));
+box-shadow: inset -4px -3px 0 rgba(122, 34, 36, .26), 0 0 0 1px rgba(94, 58, 40, .35);
+transform: rotate(var(--rose-bloom-tilt));
+}
+
+.voice-letter-rose i,
+.voice-letter-rose i::before,
+.voice-letter-rose i::after {
+position: absolute;
+display: block;
+content: "";
+width: 20px;
+height: 12px;
+border-radius: 0 80% 0 80%;
+background: linear-gradient(135deg, rgba(84, 174, 103, .96), rgba(32, 119, 70, .9));
+box-shadow: 0 0 0 1px rgba(33, 86, 51, .22);
+}
+
+.voice-letter-rose i {
+left: 12px;
+top: 42px;
+transform: rotate(-28deg);
+}
+
+.voice-letter-rose i::before {
+left: 22px;
+top: 10px;
+transform: rotate(54deg);
+}
+
+.voice-letter-rose i::after {
+left: 3px;
+top: 27px;
+transform: rotate(42deg);
+}
+
+.voice-bottle-close {
+position: absolute;
+right: -13px;
+top: 44px;
+z-index: 8;
+width: 26px;
+height: 26px;
+border: 1px solid rgba(255, 232, 180, .56);
+border-radius: 50%;
+background: rgba(34, 20, 12, .52);
+color: rgba(255, 239, 205, .92);
+font-family: Arial, sans-serif;
+font-size: 18px;
+line-height: 1;
+cursor: pointer;
+opacity: 0;
+box-shadow: 0 0 14px rgba(255, 194, 96, .24);
+animation: close-show 1s ease calc(var(--letter-delay) + .75s) forwards;
+}
+
+@keyframes bottle-arrive {
+0% {
+opacity: 0;
+transform: translate3d(var(--bottle-x), var(--bottle-y), 0) rotate(-24deg) scale(.1);
+filter: blur(1px) brightness(1.9);
+}
+
+100% {
+opacity: 1;
+transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 50px), 0) rotate(-24deg) scale(1.16);
+filter: blur(0) brightness(1);
+}
+}
+
+@keyframes origin-show {
+0%,
+72% {
+opacity: 0;
+}
+
+88%,
+100% {
+opacity: 1;
+}
+}
+
+@keyframes twine-release {
+0%,
+45% {
+opacity: 1;
+transform: translateX(-50%) rotate(0deg);
+}
+
+72%,
+100% {
+opacity: .18;
+transform: translateX(-50%) translateY(74px) rotate(18deg);
+}
+}
+
+@keyframes letter-float-out {
+0%,
+44% {
+width: 34px;
+min-height: 50px;
+opacity: 0;
+transform: translateX(-50%) translateY(0) rotate(calc(var(--letter-tilt) * .25)) scale(.46);
+filter: blur(0);
+}
+
+72% {
+width: min(76vw, 330px);
+min-height: 218px;
+opacity: 1;
+transform: translateX(calc(-50% - 40px)) translateY(20px) rotate(calc(var(--letter-tilt) * .78)) scale(.9);
+filter: blur(0);
+}
+
+100% {
+width: min(76vw, 330px);
+min-height: 218px;
+opacity: 1;
+transform: translateX(calc(-50% - 40px)) translateY(20px) rotate(var(--letter-tilt)) scale(.92);
+}
+}
+
+@keyframes glowing-heart-hold {
+0% {
+opacity: 1;
+transform: translateX(-50%) scale(.92);
+filter: drop-shadow(0 0 7px rgba(232, 252, 255, .72)) drop-shadow(0 0 14px rgba(100, 210, 255, .5));
+}
+
+22%,
+48% {
+opacity: 1;
+transform: translateX(-50%) scale(1.18);
+filter: drop-shadow(0 0 16px rgba(250, 255, 255, 1)) drop-shadow(0 0 38px rgba(123, 224, 255, .96)) drop-shadow(0 0 60px rgba(89, 143, 255, .58));
+}
+
+62% {
+opacity: .86;
+transform: translateX(-50%) scale(.96);
+filter: drop-shadow(0 0 8px rgba(232, 252, 255, .88)) drop-shadow(0 0 18px rgba(100, 210, 255, .62));
+}
+
+100% {
+opacity: 0;
+transform: translateX(-50%) translateY(-44px) scale(.5);
+filter: drop-shadow(0 0 4px rgba(232, 252, 255, .45));
+}
+}
+
+@keyframes heart-rays-flare {
+0% {
+opacity: .46;
+transform: translate(-50%, -50%) rotate(0deg) scale(.62);
+}
+
+26%,
+50% {
+opacity: 1;
+transform: translate(-50%, -50%) rotate(18deg) scale(1.08);
+}
+
+70% {
+opacity: .7;
+transform: translate(-50%, -50%) rotate(34deg) scale(.86);
+}
+
+100% {
+opacity: 0;
+transform: translate(-50%, -50%) rotate(54deg) scale(.38);
+}
+}
+
+@keyframes close-show {
+0%,
+82% {
+opacity: 0;
+}
+
+100% {
+opacity: 1;
+}
+}
+
+@keyframes type-caret {
+0% {
+max-width: 0;
+}
+
+100% {
+max-width: 6ch;
+}
+}
+
+.approach {
+position: fixed;
+top: 8vh;
+left: 8vw;
+z-index: 1;
+width: min(68vmin, 680px);
+aspect-ratio: 1;
+transform: translate(-50%, -50%) scale(.02);
+transform-origin: center;
+animation: approach-earth 7s linear forwards;
+will-change: top, left, transform;
+}
+
+.earth {
+position: relative;
+width: 100%;
+height: 100%;
+overflow: hidden;
+border-radius: 50%;
+animation: rotate-earth 60s linear infinite;
+will-change: transform;
+}
+
+.earth img {
+position: absolute;
+top: -74%;
+left: 50%;
+width: 151%;
+height: auto;
+display: block;
+transform: translateX(-50%);
+pointer-events: none;
+user-select: none;
+}
+
+.footer-signature {
+position: fixed;
+left: 50%;
+bottom: 24px;
+z-index: 2;
+transform: translateX(-50%);
+color: rgba(255, 244, 214, .5);
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-size: clamp(11px, 1vw, 14px);
+font-weight: 300;
+letter-spacing: .12em;
+text-align: center;
+text-shadow: 0 0 10px rgba(255, 236, 184, .28);
+white-space: nowrap;
+pointer-events: none;
+}
+
+#audioControl {
+position: fixed;
+right: 18px;
+bottom: 18px;
+z-index: 5;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+#audioToggleBtn {
+width: 36px;
+height: 36px;
+border: 1px solid rgba(255, 232, 180, .46);
+border-radius: 50%;
+background: rgba(18, 14, 25, .5);
+color: rgba(255, 242, 214, .92);
+font-size: 18px;
+line-height: 1;
+box-shadow: 0 0 16px rgba(255, 204, 116, .18), inset 0 0 12px rgba(255, 255, 255, .06);
+cursor: pointer;
+}
+
+#audioVolumeSlider {
+width: 92px;
+accent-color: rgba(255, 214, 111, .95);
+cursor: pointer;
+}
+
+@keyframes rotate-earth {
+to {
+transform: rotate(360deg);
+}
+}
+
+@keyframes approach-earth {
+from {
+top: 8vh;
+left: 8vw;
+transform: translate(-50%, -50%) scale(.02);
+}
+
+to {
+top: 50vh;
+left: 50vw;
+transform: translate(-50%, -50%) scale(1);
+}
+}
+
+@keyframes breathe-star {
+0%,
+100% {
+opacity: .22;
+filter: brightness(.9);
+transform: scale(.82);
+}
+
+50% {
+opacity: 1;
+filter: brightness(2.1);
+transform: scale(1.35);
+}
+}
+</style>
+</head>
+<body>
+<div class="place-mark">中国·泸沽湖<span>LUGU LAKE · CHINA</span></div>
+<div class="star-field" aria-hidden="true">
+<span class="star" style="--x: 7%; --y: 15%; --size: 3px; --color: #fff; --duration: 5.7s; --delay: -1.2s"></span>
+<span class="star" style="--x: 18%; --y: 36%; --size: 2px; --color: #e8f2ff; --duration: 6.8s; --delay: -4.7s"></span>
+<span class="star" style="--x: 10%; --y: 63%; --size: 3px; --color: #fff; --duration: 6.2s; --delay: -2.9s"></span>
+<span class="star" style="--x: 22%; --y: 91%; --size: 2px; --color: #edf5ff; --duration: 7.1s; --delay: -5.6s"></span>
+<span class="star" style="--x: 75%; --y: 9%; --size: 3px; --color: #fff; --duration: 5.9s; --delay: -3.8s"></span>
+<span class="star" style="--x: 91%; --y: 38%; --size: 2px; --color: #eef6ff; --duration: 6.6s; --delay: -.7s"></span>
+<span class="star" style="--x: 88%; --y: 68%; --size: 3px; --color: #fff; --duration: 7.3s; --delay: -4.2s"></span>
+<span class="star" style="--x: 76%; --y: 89%; --size: 2px; --color: #eaf3ff; --duration: 6.1s; --delay: -2.1s"></span>
+<span class="star" style="--x: 14%; --y: 82%; --size: 3px; --color: #bd76ff; --duration: 6.9s; --delay: -5.1s"></span>
+<span class="star" style="--x: 25%; --y: 73%; --size: 4px; --color: #ce8dff; --duration: 5.8s; --delay: -3.3s"></span>
+<span class="star" style="--x: 35%; --y: 65%; --size: 3px; --color: #ae59ff; --duration: 7.4s; --delay: -1.8s"></span>
+<span class="star" style="--x: 45%; --y: 57%; --size: 4px; --color: #d99aff; --duration: 6.3s; --delay: -4.9s"></span>
+<span class="star" style="--x: 55%; --y: 48%; --size: 4px; --color: #ba62ff; --duration: 7s; --delay: -2.6s"></span>
+<span class="star" style="--x: 65%; --y: 39%; --size: 3px; --color: #df96ff; --duration: 5.6s; --delay: -.4s"></span>
+<span class="star" style="--x: 75%; --y: 30%; --size: 4px; --color: #b75cff; --duration: 6.5s; --delay: -5.8s"></span>
+<span class="star" style="--x: 85%; --y: 21%; --size: 3px; --color: #d58cff; --duration: 7.2s; --delay: -3.6s"></span>
+<span class="star" style="--x: 31%; --y: 43%; --size: 3px; --color: #ffd37d; --duration: 5.9s; --delay: -2.3s"></span>
+<span class="star" style="--x: 48%; --y: 16%; --size: 2px; --color: #ffdda0; --duration: 6.7s; --delay: -5.3s"></span>
+<span class="star" style="--x: 67%; --y: 67%; --size: 3px; --color: #ffd47f; --duration: 7.4s; --delay: -1.5s"></span>
+<span class="star" style="--x: 86%; --y: 55%; --size: 2px; --color: #ffe0a6; --duration: 6.2s; --delay: -4.4s"></span>
+</div>
+<div class="voice-star-layer" aria-hidden="true"></div>
+<div class="approach">
+<div class="earth">
+<img src="earth_副本.png" alt="">
+</div>
+</div>
+<div class="footer-signature">心域·情感文明共创</div>
+<div id="audioControl">
+<button id="audioToggleBtn" type="button" aria-label="音乐开关">🔇</button>
+<input id="audioVolumeSlider" type="range" min="0" max="1" step="0.01" value="0.6" aria-label="背景音乐音量">
+</div>
+<script>
+(() => {
+const layer = document.querySelector(".voice-star-layer");
+const earth = document.querySelector(".earth");
+const colors = [
+["#54c7ff", "rgba(72, 191, 255, .72)", "rgba(83, 202, 255, .28)", "#f5fcff", "#167dff"],
+["#a672ff", "rgba(171, 111, 255, .68)", "rgba(190, 134, 255, .26)", "#fff4ff", "#7136ff"],
+["#ff78bb", "rgba(255, 104, 178, .64)", "rgba(255, 146, 203, .26)", "#fff5fb", "#eb358c"],
+["#ffd55f", "rgba(255, 204, 76, .68)", "rgba(255, 224, 128, .28)", "#fff9df", "#e49d17"],
+["#66fff1", "rgba(88, 245, 232, .62)", "rgba(113, 255, 246, .25)", "#f4ffff", "#16bfc3"],
+["#fff3df", "rgba(255, 255, 255, .56)", "rgba(255, 239, 202, .22)", "#ffffff", "#ffd48a"]
+];
+const brightZones = [
+{ x: .36, y: .31, r: .06 },
+{ x: .48, y: .27, r: .07 },
+{ x: .62, y: .34, r: .07 },
+{ x: .42, y: .44, r: .08 },
+{ x: .57, y: .48, r: .07 },
+{ x: .70, y: .53, r: .06 },
+{ x: .30, y: .58, r: .06 },
+{ x: .50, y: .66, r: .07 },
+{ x: .64, y: .68, r: .05 }
+];
+const messages = [
+"愿每一次相遇，都让心更柔软一点。",
+"把未说出口的想念，交给星河慢慢听。",
+"有人在远方，也在同一片光里。",
+"愿爱不急着抵达，只安静地照亮。",
+"今晚的心声，会替你漂向更辽阔的地方。",
+"每一份善意，都会在黑暗里留下微光。",
+"愿你被世界温柔回应，也温柔回应世界。",
+"有些答案，会在慢慢靠近时发光。"
+];
+const origins = [
+"来自上海 From Shanghai",
+"来自北京 From Beijing",
+"来自广州 From Guangzhou",
+"来自美国纽约 From New York",
+"来自日本东京 東京から",
+"来自法国巴黎 Depuis Paris"
+];
+const handFonts = [
+'"Kaiti SC", "STKaiti", "KaiTi", cursive',
+'"Songti SC", "STSong", "SimSun", serif',
+'"Xingkai SC", "STXingkai", "Kaiti SC", cursive',
+'"Yuanti SC", "PingFang SC", cursive'
+];
+const rosePalettes = [
+["rgba(255, 143, 132, .96)", "rgba(211, 67, 69, .96)", "rgba(130, 32, 40, .94)"],
+["rgba(255, 178, 211, .96)", "rgba(222, 84, 148, .96)", "rgba(137, 38, 94, .94)"],
+["rgba(255, 199, 126, .96)", "rgba(226, 116, 58, .96)", "rgba(139, 57, 30, .94)"],
+["rgba(225, 122, 255, .94)", "rgba(151, 72, 218, .96)", "rgba(86, 41, 139, .94)"],
+["rgba(255, 235, 210, .96)", "rgba(226, 174, 128, .96)", "rgba(135, 85, 48, .94)"]
+];
+const flowerClasses = ["flower-rose", "flower-blossom", "flower-daisy"];
+const musicList = [
+"assets/music/native-american-flute.mp3",
+"assets/music/p-aaa0536-54f92252.mp3",
+"assets/music/p-mzpy00978-ccbf4fd7.mp3"
+];
+const stars = new Set();
+let nextSpawn = 0;
+let lastLetterTilt = null;
+let musicFadeFrame = 0;
+let musicIndex = 0;
+let musicVolume = .6;
+const starClickSoundSrc = "assets/sounds/star-click-typing.mp3";
+const typingKeySoundSrc = "assets/sounds/typing-key-source.mp3";
+const typingKeyVolume = .32;
+const typingKeyStartAt = 0;
+let typingKeyAudio = null;
+
+const random = (min, max) => min + Math.random() * (max - min);
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+function randomLetterTilt() {
+let tilt;
+
+do {
+const mode = Math.floor(Math.random() * 3);
+
+if (mode === 0) {
+tilt = Number(random(-10, -3).toFixed(1));
+} else if (mode === 1) {
+tilt = 0;
+} else {
+tilt = Number(random(3, 10).toFixed(1));
+}
+} while (tilt === lastLetterTilt);
+
+lastLetterTilt = tilt;
+return tilt;
+}
+
+function destroyAudioNow(audio) {
+if (!audio) return;
+audio.pause();
+audio.src = "";
+audio.load();
+}
+
+function playStarClickSound() {
+const audio = new Audio(starClickSoundSrc);
+audio.volume = .64;
+audio.play().catch(() => {});
+}
+
+function startMusic() {
+if (musicList.length === 0) return;
+
+if (window.fadingAudio) {
+cancelAnimationFrame(musicFadeFrame);
+destroyAudioNow(window.fadingAudio);
+window.fadingAudio = null;
+}
+
+if (window.audio) {
+cancelAnimationFrame(musicFadeFrame);
+destroyAudioNow(window.audio);
+window.audio = null;
+}
+
+const src = musicList[musicIndex % musicList.length];
+musicIndex += 1;
+console.log("MUSIC:", src);
+const audio = new Audio(src);
+window.audio = audio;
+audio.loop = true;
+audio.volume = 0;
+audio.play().then(() => {
+const startTime = performance.now();
+
+function fadeIn(now) {
+const progress = clamp((now - startTime) / 2000, 0, 1);
+audio.volume = musicVolume * progress;
+if (progress < 1 && window.audio === audio) {
+musicFadeFrame = requestAnimationFrame(fadeIn);
+}
+}
+
+musicFadeFrame = requestAnimationFrame(fadeIn);
+if (window.syncAudioUI) window.syncAudioUI();
+}).catch(() => {});
+}
+
+function stopMusic() {
+const audio = window.audio;
+if (!audio) return;
+
+cancelAnimationFrame(musicFadeFrame);
+window.audio = null;
+window.fadingAudio = audio;
+const startVolume = audio.volume;
+const startTime = performance.now();
+
+function fadeOut(now) {
+const progress = clamp((now - startTime) / 2000, 0, 1);
+audio.volume = startVolume * (1 - progress);
+if (progress < 1) {
+musicFadeFrame = requestAnimationFrame(fadeOut);
+return;
+}
+destroyAudioNow(audio);
+if (window.fadingAudio === audio) window.fadingAudio = null;
+if (window.syncAudioUI) window.syncAudioUI();
+}
+
+musicFadeFrame = requestAnimationFrame(fadeOut);
+}
+
+window.stopMusic = stopMusic;
+window.destroyAudioNow = destroyAudioNow;
+
+function prepareTypingKeySounds() {
+if (typingKeyAudio) return;
+
+typingKeyAudio = new Audio(typingKeySoundSrc);
+typingKeyAudio.preload = "auto";
+typingKeyAudio.volume = typingKeyVolume;
+typingKeyAudio.load();
+}
+
+function unlockTypingKeySounds() {
+prepareTypingKeySounds();
+if (!typingKeyAudio) return;
+
+typingKeyAudio.muted = false;
+typingKeyAudio.volume = typingKeyVolume;
+typingKeyAudio.currentTime = 0;
+typingKeyAudio.play().then(() => {
+setTimeout(() => {
+typingKeyAudio.pause();
+typingKeyAudio.currentTime = 0;
+typingKeyAudio.volume = typingKeyVolume;
+}, 180);
+}).catch(() => {
+typingKeyAudio.muted = false;
+});
+}
+
+function playTypingKeySound() {
+prepareTypingKeySounds();
+if (!typingKeyAudio) return;
+
+typingKeyAudio.pause();
+typingKeyAudio.currentTime = typingKeyStartAt;
+typingKeyAudio.volume = typingKeyVolume;
+typingKeyAudio.muted = false;
+typingKeyAudio.loop = true;
+typingKeyAudio.playbackRate = 1;
+typingKeyAudio.play().catch(() => {});
+}
+
+function stopTypingKeySound() {
+if (!typingKeyAudio) return;
+typingKeyAudio.pause();
+typingKeyAudio.currentTime = typingKeyStartAt;
+}
+
+function earthPoint() {
+const rect = earth.getBoundingClientRect();
+const radius = Math.min(rect.width, rect.height) * .5;
+const centerX = rect.left + rect.width * .5;
+const centerY = rect.top + rect.height * .5;
+let x;
+let y;
+
+if (Math.random() < .84) {
+const zone = brightZones[Math.floor(Math.random() * brightZones.length)];
+const angle = random(0, Math.PI * 2);
+const distance = Math.sqrt(Math.random()) * zone.r;
+x = zone.x + Math.cos(angle) * distance;
+y = zone.y + Math.sin(angle) * distance;
+} else {
+const angle = random(0, Math.PI * 2);
+const distance = Math.sqrt(Math.random()) * .42;
+x = .5 + Math.cos(angle) * distance;
+y = .5 + Math.sin(angle) * distance;
+}
+
+x = clamp(x, .12, .88);
+y = clamp(y, .12, .88);
+const px = rect.left + rect.width * x;
+const py = rect.top + rect.height * y;
+const outward = Math.atan2(py - centerY, px - centerX);
+const freeAngle = Math.random() < .28 ? random(0, Math.PI * 2) : outward + random(-1.15, 1.15);
+const distance = random(radius * 1.35, Math.max(window.innerWidth, window.innerHeight) * .58);
+
+return {
+x: px,
+y: py,
+angle: freeAngle,
+distance,
+radius
+};
+}
+
+function spawnVoiceStar() {
+if (stars.size >= 28) return;
+
+const start = earthPoint();
+const palette = colors[Math.floor(Math.random() * colors.length)];
+const size = random(8.4, 14.7);
+const life = random(25000, 35000);
+const hold = random(1700, 3800);
+const grow = random(4300, 6600);
+const sway = random(7, 18);
+const endX = start.x + Math.cos(start.angle) * start.distance;
+const endY = start.y + Math.sin(start.angle) * start.distance;
+const element = document.createElement("button");
+
+element.type = "button";
+element.className = "voice-star";
+element.setAttribute("aria-label", "打开一颗心声光星");
+element.style.setProperty("--voice-size", `${size}px`);
+element.style.setProperty("--voice-color", palette[0]);
+element.style.setProperty("--voice-glow", palette[1]);
+element.style.setProperty("--voice-haze", palette[2]);
+element.style.setProperty("--voice-core", palette[3]);
+element.style.setProperty("--voice-deep", palette[4]);
+element.innerHTML = '<span class="voice-star-shape"></span>';
+layer.appendChild(element);
+
+const star = {
+element,
+startX: start.x,
+startY: start.y,
+endX,
+endY,
+life,
+hold,
+grow,
+sway,
+phase: random(0, Math.PI * 2),
+breathePower: random(.36, .58),
+born: performance.now(),
+clicked: false,
+message: messages[Math.floor(Math.random() * messages.length)],
+origin: origins[Math.floor(Math.random() * origins.length)]
+};
+
+element.addEventListener("click", () => openVoiceBottle(star), { once: true });
+stars.add(star);
+}
+
+function formatLetterTime() {
+const now = new Date();
+const date = now.toLocaleDateString("zh-CN", {
+year: "numeric",
+month: "2-digit",
+day: "2-digit"
+});
+const time = now.toLocaleTimeString("zh-CN", {
+hour: "2-digit",
+minute: "2-digit"
+});
+return `${date} ${time}`;
+}
+
+function openVoiceBottle(star) {
+if (star.clicked) return;
+playStarClickSound();
+startMusic();
+unlockTypingKeySounds();
+star.clicked = true;
+star.element.classList.add("is-touched");
+
+setTimeout(() => {
+const bottle = document.createElement("div");
+const safeMessage = star.message.replace(/[&<>"']/g, (char) => ({
+"&": "&amp;",
+"<": "&lt;",
+">": "&gt;",
+'"': "&quot;",
+"'": "&#39;"
+}[char]));
+const safeOrigin = star.origin.replace(/[&<>"']/g, (char) => ({
+"&": "&amp;",
+"<": "&lt;",
+">": "&gt;",
+'"': "&quot;",
+"'": "&#39;"
+}[char]));
+const safeTime = formatLetterTime().replace(/[&<>"']/g, (char) => ({
+"&": "&amp;",
+"<": "&lt;",
+">": "&gt;",
+'"': "&quot;",
+"'": "&#39;"
+}[char]));
+
+bottle.className = "voice-bottle";
+const bottleStartX = star.currentX || star.startX;
+const bottleStartY = star.currentY || star.startY;
+bottle.style.setProperty("--bottle-x", `${bottleStartX}px`);
+bottle.style.setProperty("--bottle-y", `${bottleStartY}px`);
+const arriveSeconds = random(6, 8);
+bottle.style.setProperty("--bottle-arrive", `${arriveSeconds.toFixed(2)}s`);
+bottle.style.setProperty("--letter-delay", `${(arriveSeconds + .32).toFixed(2)}s`);
+bottle.style.setProperty("--letter-tilt", "24deg");
+bottle.style.setProperty("--hand-font", handFonts[Math.floor(Math.random() * handFonts.length)]);
+bottle.style.setProperty("--hand-letter-spacing", `${random(.01, .09).toFixed(3)}em`);
+bottle.style.setProperty("--hand-line-height", random(1.55, 1.92).toFixed(2));
+bottle.style.setProperty("--hand-skew", `${random(-4, 4).toFixed(1)}deg`);
+bottle.style.setProperty("--hand-color", `rgba(${Math.round(random(48, 86))}, ${Math.round(random(30, 54))}, ${Math.round(random(18, 36))}, ${random(.66, .94).toFixed(2)})`);
+const rosePalette = rosePalettes[Math.floor(Math.random() * rosePalettes.length)];
+bottle.style.setProperty("--rose-light", rosePalette[0]);
+bottle.style.setProperty("--rose-color", rosePalette[1]);
+bottle.style.setProperty("--rose-deep", rosePalette[2]);
+bottle.style.setProperty("--rose-tilt", "0deg");
+bottle.style.setProperty("--rose-bloom-tilt", "0deg");
+const flowerClass = flowerClasses[Math.floor(Math.random() * flowerClasses.length)];
+bottle.innerHTML = `
+<button class="voice-bottle-close" type="button" aria-label="关闭卡片并结束体验">×</button>
+<div class="voice-bottle-glass"></div>
+<div class="voice-bottle-shine"></div>
+<span class="voice-bottle-sparkle one"></span>
+<span class="voice-bottle-sparkle two"></span>
+<span class="voice-letter-rose ${flowerClass}"><i></i></span>
+<div class="voice-letter">
+<span class="voice-letter-text" aria-label="${safeMessage}"></span>
+</div>
+<div class="voice-bottle-heart-rays"></div>
+<div class="voice-bottle-heart"><span class="diamond-facet"></span></div>
+<div class="voice-bottle-tie"></div>`;
+document.body.appendChild(bottle);
+
+const letterNode = bottle.querySelector(".voice-letter");
+const textNode = bottle.querySelector(".voice-letter-text");
+const prevButton = bottle.querySelector(".voice-page-prev");
+const nextButton = bottle.querySelector(".voice-page-next");
+const pageStatus = bottle.querySelector(".voice-page-status");
+const messageChars = Array.from(star.message);
+const pageSize = 36;
+const pages = [];
+for (let index = 0; index < messageChars.length; index += pageSize) {
+pages.push(messageChars.slice(index, index + pageSize).join(""));
+}
+if (pages.length > 1) {
+letterNode.classList.add("has-pages");
+}
+const typeStart = (arriveSeconds + 1.55) * 1000;
+let typeTimer = 0;
+let typeIndex = 0;
+let currentPage = 0;
+function stopTyping() {
+clearInterval(typeTimer);
+textNode.classList.remove("is-typing");
+stopTypingKeySound();
+}
+function renderPage(pageIndex) {
+stopTyping();
+currentPage = clamp(pageIndex, 0, pages.length - 1);
+textNode.innerHTML = "";
+const pageChars = Array.from(pages[currentPage]);
+typeIndex = 0;
+if (pageStatus) pageStatus.textContent = `${currentPage + 1} / ${pages.length}`;
+if (prevButton) prevButton.disabled = currentPage === 0;
+if (nextButton) nextButton.disabled = currentPage === pages.length - 1;
+textNode.classList.add("is-typing");
+playTypingKeySound();
+typeTimer = setInterval(() => {
+const charSpan = document.createElement("span");
+charSpan.textContent = pageChars[typeIndex];
+charSpan.style.setProperty("--char-x", `${random(-.8, .8).toFixed(2)}px`);
+charSpan.style.setProperty("--char-y", `${random(-1.2, 1.2).toFixed(2)}px`);
+charSpan.style.setProperty("--char-rotate", `${random(-2.2, 2.2).toFixed(2)}deg`);
+textNode.appendChild(charSpan);
+typeIndex += 1;
+if (typeIndex >= pageChars.length) {
+stopTyping();
+}
+}, 300);
+}
+const startTypewriter = setTimeout(() => {
+renderPage(0);
+}, typeStart);
+
+if (prevButton) prevButton.addEventListener("click", () => renderPage(currentPage - 1));
+if (nextButton) nextButton.addEventListener("click", () => renderPage(currentPage + 1));
+
+function closeCard() {
+clearTimeout(startTypewriter);
+stopTyping();
+stopMusic();
+bottle.remove();
+}
+
+bottle.querySelector(".voice-bottle-close").addEventListener("click", () => {
+closeCard();
+});
+setTimeout(() => {
+star.element.remove();
+stars.delete(star);
+}, 220);
+}, 2000);
+}
+
+function updateVoiceStars(now) {
+if (now > nextSpawn) {
+spawnVoiceStar();
+nextSpawn = now + random(880, 1900);
+}
+
+stars.forEach((star) => {
+const age = now - star.born;
+const progress = age / star.life;
+
+if (progress >= 1 || star.clicked) {
+if (!star.clicked) star.element.remove();
+stars.delete(star);
+return;
+}
+
+const moveProgress = clamp((age - star.hold) / (star.life - star.hold), 0, 1);
+const easeMove = 1 - Math.pow(1 - moveProgress, 2.35);
+const growProgress = clamp((age - star.hold) / star.grow, 0, 1);
+const fadeIn = clamp(age / star.hold, 0, 1);
+const fadeOut = clamp((1 - progress) / .26, 0, 1);
+const breathe = .82 + Math.sin(now / 980 + star.phase) * star.breathePower;
+const swayX = Math.sin(moveProgress * Math.PI * 3.3 + star.phase) * star.sway * moveProgress;
+const swayY = Math.cos(moveProgress * Math.PI * 2.6 + star.phase) * star.sway * .52 * moveProgress;
+const x = star.startX + (star.endX - star.startX) * easeMove + swayX;
+const y = star.startY + (star.endY - star.startY) * easeMove + swayY;
+const scale = (.22 + growProgress * 1.34) * (1 - progress * .36) * (1 + (breathe - .82) * .28);
+const opacity = clamp(fadeIn * fadeOut * (.62 + breathe * .58), 0, 1);
+
+star.currentX = x;
+star.currentY = y;
+star.element.style.opacity = opacity.toFixed(3);
+star.element.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+star.element.style.filter = `brightness(${(1.12 + breathe * 1.02).toFixed(2)}) saturate(1.48)`;
+});
+
+requestAnimationFrame(updateVoiceStars);
+}
+
+for (let index = 0; index < 10; index += 1) {
+setTimeout(spawnVoiceStar, 900 + index * random(760, 1280));
+}
+
+requestAnimationFrame(updateVoiceStars);
+})();
+</script>
+<script>
+(() => {
+if (window.__audioUIBound) return;
+window.__audioUIBound = true;
+
+const btn = document.getElementById("audioToggleBtn");
+const slider = document.getElementById("audioVolumeSlider");
+
+if (!btn || !slider) return;
+
+function syncUI() {
+if (!window.audio) {
+btn.innerText = "🔇";
+return;
+}
+
+btn.innerText = window.audio.paused || musicVolume <= 0 ? "🔇" : "🔊";
+}
+
+window.syncAudioUI = syncUI;
+
+btn.onclick = function () {
+if (!window.audio) return;
+
+if (window.audio.paused) {
+window.audio.play();
+} else {
+window.audio.pause();
+}
+
+syncUI();
+};
+
+slider.oninput = function () {
+musicVolume = Number(slider.value);
+if (window.audio) {
+window.audio.volume = musicVolume;
+if (musicVolume > 0 && window.audio.paused) {
+window.audio.play().catch(() => {});
+}
+}
+
+syncUI();
+};
+
+setTimeout(syncUI, 300);
+})();
+</script>
+</body>
+</html>
