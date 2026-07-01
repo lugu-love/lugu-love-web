@@ -1158,11 +1158,7 @@ audio.volume = .64;
 audio.play().catch(() => {});
 }
 
-function playOpeningLaughSound() {
-const audio = new Audio(openingLaughSoundSrc);
-audio.volume = .72;
-audio.play().catch(() => {});
-}
+function playOpeningLaughSound(){window.l=1;new Audio(openingLaughSoundSrc).play().catch(()=>{});} 
 
 function startMusic() {
 if (musicList.length === 0) return;
@@ -1377,13 +1373,7 @@ minute: "2-digit"
 return `${date} ${time}`;
 }
 
-function openVoiceBottle(star) {
-if (star.clicked) return;
-playStarClickSound();
-startMusic();
-unlockTypingKeySounds();
-star.clicked = true;
-star.element.classList.add("is-touched");
+function openVoiceBottle(star){if(star.clicked)return;if(!window.l){playOpeningLaughSound();return}playStarClickSound();startMusic();unlockTypingKeySounds();star.clicked=true;star.element.classList.add("is-touched");
 
 setTimeout(() => {
 const bottle = document.createElement("div");
