@@ -1179,7 +1179,7 @@ window.audio = audio;
 audio.loop = true;
 audio.volume = 0;
 audio.play().then(() => {
-const startTime = performance.now();
+let startTime=performance.now()+3e3;
 
 function fadeIn(now) {
 const progress = clamp((now - startTime) / 2000, 0, 1);
