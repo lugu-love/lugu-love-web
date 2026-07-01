@@ -1161,17 +1161,7 @@ audio.play().catch(() => {});
 function playOpeningLaughSound() {
 const audio = new Audio(openingLaughSoundSrc);
 audio.volume = .72;
-audio.play().catch(() => {
-const unlock = () => {
-document.removeEventListener("pointerdown", unlock);
-document.removeEventListener("touchstart", unlock);
-document.removeEventListener("click", unlock);
 audio.play().catch(() => {});
-};
-document.addEventListener("pointerdown", unlock, { once: true });
-document.addEventListener("touchstart", unlock, { once: true });
-document.addEventListener("click", unlock, { once: true });
-});
 }
 
 function startMusic() {
