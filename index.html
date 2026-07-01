@@ -1,4 +1,3 @@
-自动换行
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -22,7 +21,7 @@ body {
 display: grid;
 place-items: center;
 background-color: #000;
-background-image: url("space-bg.jpg");
+background-image: url("space-bg_.jpg");
 background-position: center center;
 background-size: cover;
 background-repeat: no-repeat;
@@ -238,7 +237,8 @@ filter: drop-shadow(0 0 18px rgba(118, 201, 255, .28)) drop-shadow(0 0 30px rgba
 .voice-bottle-glass {
 position: absolute;
 left: 50%;
-bottom: 14px;
+bottom: 54px;
+z-index: 4;
 width: 64px;
 height: 97px;
 border: 2px solid rgba(255, 244, 218, .76);
@@ -291,7 +291,7 @@ transform: translateX(-50%);
 .voice-bottle-shine {
 position: absolute;
 left: 30px;
-top: 43px;
+top: 3px;
 z-index: 3;
 width: 12px;
 height: 48px;
@@ -335,12 +335,12 @@ border-radius: 999px;
 
 .voice-bottle-sparkle.one {
 left: 28px;
-top: 46px;
+top: 6px;
 }
 
 .voice-bottle-sparkle.two {
 right: 22px;
-bottom: 38px;
+bottom: 78px;
 transform: scale(.72);
 opacity: .7;
 }
@@ -352,12 +352,12 @@ left: calc(50% + 46px);
 top: 68px;
 max-width: 112px;
 opacity: 0;
-color: rgba(120, 75, 35, .78);
+color: #fff;
 font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", cursive;
 font-size: 11px;
 line-height: 1.35;
 text-align: left;
-text-shadow: 0 1px 0 rgba(255, 240, 198, .36);
+text-shadow: 0 1px 2px rgba(0, 0, 0, .32);
 white-space: normal;
 overflow-wrap: anywhere;
 animation: origin-show 1.5s ease var(--letter-delay) forwards;
@@ -371,18 +371,14 @@ z-index: 4;
 width: 34px;
 min-height: 50px;
 padding: 16px 18px 52px;
-border: 1px solid rgba(150, 111, 62, .3);
-border-radius: 4px 4px 8px 8px;
-background:
-radial-gradient(circle at 18% 28%, rgba(96, 72, 46, .16) 0 1px, transparent 1.7px),
-radial-gradient(circle at 72% 18%, rgba(96, 72, 46, .12) 0 1px, transparent 1.8px),
-radial-gradient(circle at 64% 72%, rgba(96, 72, 46, .1) 0 1px, transparent 1.7px),
-radial-gradient(circle at 18% 14%, rgba(150, 92, 44, .13), transparent 26%),
-radial-gradient(circle at 82% 76%, rgba(122, 82, 42, .12), transparent 30%),
-linear-gradient(135deg, rgba(255, 250, 232, .99), rgba(232, 218, 185, .98));
-box-shadow: inset 0 0 30px rgba(139, 92, 39, .14), 0 8px 26px rgba(0, 0, 0, .22);
+border: 1px solid transparent;
+border-radius: 8px;
+background: transparent;
+box-shadow: none;
+backdrop-filter: none;
+-webkit-backdrop-filter: none;
 line-height: 1.6;
-transform: translateX(-50%) rotate(-2deg) scale(.46);
+transform: translateX(-50%) rotate(var(--letter-tilt)) scale(.46);
 opacity: 0;
 overflow: hidden;
 animation: letter-float-out 1.5s ease var(--letter-delay) forwards;
@@ -397,6 +393,7 @@ width: 40px;
 height: 10px;
 border-radius: 50%;
 background: rgba(207, 157, 79, .55);
+opacity: 0;
 transform: translateX(-50%);
 }
 
@@ -411,7 +408,7 @@ bottom: -10px;
 .voice-bottle-tie {
 position: absolute;
 left: 50%;
-top: 79px;
+top: 39px;
 z-index: 6;
 width: 43px;
 height: 7px;
@@ -425,7 +422,7 @@ animation: twine-release 1.5s ease var(--letter-delay) forwards;
 .voice-bottle-heart {
 position: absolute;
 left: 50%;
-top: 70px;
+top: 30px;
 z-index: 5;
 width: 22px;
 height: 22px;
@@ -490,7 +487,7 @@ clip-path: polygon(0 0, 100% 0, 50% 100%);
 .voice-bottle-heart-rays {
 position: absolute;
 left: 50%;
-top: 70px;
+top: 30px;
 z-index: 4;
 width: 70px;
 height: 70px;
@@ -510,7 +507,7 @@ animation: heart-rays-flare 1.5s ease var(--letter-delay) forwards;
 position: absolute;
 right: 18px;
 top: 16px;
-color: rgba(112, 77, 36, .7);
+color: #fff;
 font-family: "Songti SC", "SimSun", serif;
 font-size: 10px;
 letter-spacing: .04em;
@@ -521,7 +518,7 @@ white-space: nowrap;
 position: absolute;
 left: 18px;
 top: 15px;
-color: rgba(49, 34, 22, .88);
+color: #fff;
 font-family: "Songti SC", "SimSun", serif;
 font-size: 12px;
 font-weight: 600;
@@ -539,11 +536,11 @@ letter-spacing: .02em;
 .voice-letter-text {
 position: absolute;
 left: 50%;
-top: 116px;
+top: 24px;
 display: block;
 width: min(78%, 268px);
 min-height: 62px;
-color: var(--hand-color);
+color: #fff;
 font-family: var(--hand-font);
 font-style: italic;
 font-size: 18px;
@@ -559,20 +556,26 @@ transform: translate(var(--char-x), var(--char-y)) rotate(var(--char-rotate));
 }
 
 .voice-letter-text.is-typing::after {
-content: "";
+content: "......";
 display: inline-block;
-width: 1px;
-height: 1em;
+position: relative;
+top: .45em;
+width: auto;
+height: auto;
 margin-left: 3px;
-background: rgba(69, 43, 23, .62);
-vertical-align: -2px;
-animation: type-caret .8s steps(1) infinite;
+background: transparent;
+color: #fff;
+overflow: hidden;
+white-space: nowrap;
+vertical-align: baseline;
+animation: type-caret 1.2s steps(6, end) infinite;
 }
 
 .voice-letter-rose {
 position: absolute;
 left: 50%;
-top: 42px;
+top: -103px;
+z-index: 2;
 width: 58px;
 height: 82px;
 transform: translateX(-50%) rotate(var(--rose-tilt));
@@ -620,7 +623,7 @@ box-shadow: -7px 9px 0 -2px var(--rose-color), 7px 18px 0 -2px var(--rose-light)
 position: absolute;
 right: 18px;
 bottom: 16px;
-color: rgba(76, 52, 33, .78);
+color: #fff;
 font-family: "Songti SC", "SimSun", serif;
 font-size: 10px;
 line-height: 1.35;
@@ -642,7 +645,7 @@ z-index: 5;
 display: none;
 align-items: center;
 gap: 10px;
-color: rgba(88, 58, 34, .78);
+color: #fff;
 font-family: "Songti SC", "SimSun", serif;
 font-size: 10px;
 transform: translateX(-50%);
@@ -657,7 +660,7 @@ padding: 2px 6px;
 border: 1px solid rgba(136, 92, 48, .28);
 border-radius: 999px;
 background: rgba(255, 246, 220, .56);
-color: rgba(84, 54, 30, .82);
+color: #fff;
 font: inherit;
 cursor: pointer;
 }
@@ -676,7 +679,7 @@ width: 3px;
 height: 50px;
 border-radius: 999px;
 background: linear-gradient(rgba(39, 111, 62, .92), rgba(32, 103, 58, .72));
-transform: rotate(18deg);
+transform: rotate(0deg);
 }
 
 .voice-letter-rose::after {
@@ -726,16 +729,17 @@ transform: rotate(42deg);
 
 .voice-bottle-close {
 position: absolute;
-right: -104px;
-top: -96px;
+right: -13px;
+top: 44px;
 z-index: 8;
-width: 30px;
-height: 30px;
+width: 26px;
+height: 26px;
 border: 1px solid rgba(255, 232, 180, .56);
 border-radius: 50%;
 background: rgba(34, 20, 12, .52);
 color: rgba(255, 239, 205, .92);
-font-size: 20px;
+font-family: Arial, sans-serif;
+font-size: 18px;
 line-height: 1;
 cursor: pointer;
 opacity: 0;
@@ -752,7 +756,7 @@ filter: blur(1px) brightness(1.9);
 
 100% {
 opacity: 1;
-transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) rotate(-24deg) scale(1.16);
+transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 50px), 0) rotate(-24deg) scale(1.16);
 filter: blur(0) brightness(1);
 }
 }
@@ -794,18 +798,18 @@ filter: blur(0);
 }
 
 72% {
-width: min(82vw, 360px);
-min-height: 238px;
+width: min(76vw, 330px);
+min-height: 218px;
 opacity: 1;
-transform: translateX(-50%) translateY(-154px) rotate(calc(var(--letter-tilt) * .78)) scale(.95);
+transform: translateX(calc(-50% - 40px)) translateY(20px) rotate(calc(var(--letter-tilt) * .78)) scale(.9);
 filter: blur(0);
 }
 
 100% {
-width: min(82vw, 360px);
-min-height: 238px;
+width: min(76vw, 330px);
+min-height: 218px;
 opacity: 1;
-transform: translateX(-50%) translateY(-154px) rotate(var(--letter-tilt)) scale(1);
+transform: translateX(calc(-50% - 40px)) translateY(20px) rotate(var(--letter-tilt)) scale(.92);
 }
 }
 
@@ -871,8 +875,12 @@ opacity: 1;
 }
 
 @keyframes type-caret {
-50% {
-opacity: 0;
+0% {
+max-width: 0;
+}
+
+100% {
+max-width: 6ch;
 }
 }
 
@@ -926,6 +934,35 @@ text-align: center;
 text-shadow: 0 0 10px rgba(255, 236, 184, .28);
 white-space: nowrap;
 pointer-events: none;
+}
+
+#audioControl {
+position: fixed;
+right: 18px;
+bottom: 18px;
+z-index: 5;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+#audioToggleBtn {
+width: 36px;
+height: 36px;
+border: 1px solid rgba(255, 232, 180, .46);
+border-radius: 50%;
+background: rgba(18, 14, 25, .5);
+color: rgba(255, 242, 214, .92);
+font-size: 18px;
+line-height: 1;
+box-shadow: 0 0 16px rgba(255, 204, 116, .18), inset 0 0 12px rgba(255, 255, 255, .06);
+cursor: pointer;
+}
+
+#audioVolumeSlider {
+width: 92px;
+accent-color: rgba(255, 214, 111, .95);
+cursor: pointer;
 }
 
 @keyframes rotate-earth {
@@ -991,10 +1028,14 @@ transform: scale(1.35);
 <div class="voice-star-layer" aria-hidden="true"></div>
 <div class="approach">
 <div class="earth">
-<img src="earth.png" alt="">
+<img src="earth_.png" alt="">
 </div>
 </div>
 <div class="footer-signature">心域·情感文明共创</div>
+<div id="audioControl">
+<button id="audioToggleBtn" type="button" aria-label="音乐开关">🔇</button>
+<input id="audioVolumeSlider" type="range" min="0" max="1" step="0.01" value="0.6" aria-label="背景音乐音量">
+</div>
 <script>
 (() => {
 const layer = document.querySelector(".voice-star-layer");
@@ -1049,12 +1090,185 @@ const rosePalettes = [
 ["rgba(225, 122, 255, .94)", "rgba(151, 72, 218, .96)", "rgba(86, 41, 139, .94)"],
 ["rgba(255, 235, 210, .96)", "rgba(226, 174, 128, .96)", "rgba(135, 85, 48, .94)"]
 ];
-const flowerClasses = ["flower-rose", "flower-blossom", "flower-daisy", "flower-lavender"];
+const flowerClasses = ["flower-rose", "flower-blossom", "flower-daisy"];
+const musicList = [
+"assets/music/native-american-flute.mp3",
+"assets/music/p-aaa0536-54f92252.mp3",
+"assets/music/p-mzpy00978-ccbf4fd7.mp3"
+];
 const stars = new Set();
 let nextSpawn = 0;
+let lastLetterTilt = null;
+let musicFadeFrame = 0;
+let musicIndex = 0;
+let musicVolume = .6;
+const starClickSoundSrc = "assets/sounds/star-click-typing.mp3";
+const typingKeySoundSrc = "assets/sounds/typing-key-source.mp3";
+const typingKeyVolume = .32;
+const typingKeyStartAt = 0;
+let typingKeyAudio = null;
 
 const random = (min, max) => min + Math.random() * (max - min);
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+function randomLetterTilt() {
+let tilt;
+
+do {
+const mode = Math.floor(Math.random() * 3);
+
+if (mode === 0) {
+tilt = Number(random(-10, -3).toFixed(1));
+} else if (mode === 1) {
+tilt = 0;
+} else {
+tilt = Number(random(3, 10).toFixed(1));
+}
+} while (tilt === lastLetterTilt);
+
+lastLetterTilt = tilt;
+return tilt;
+}
+
+function destroyAudioNow(audio) {
+if (!audio) return;
+audio.pause();
+audio.src = "";
+audio.load();
+}
+
+function setMusicVolume(volume) {
+musicVolume = clamp(Number(volume), 0, 1);
+if (window.audio) {
+window.audio.volume = musicVolume;
+if (musicVolume > 0 && window.audio.paused) {
+window.audio.play().catch(() => {});
+}
+}
+}
+
+function getMusicVolume() {
+return musicVolume;
+}
+
+function playStarClickSound() {
+const audio = new Audio(starClickSoundSrc);
+audio.volume = .64;
+audio.play().catch(() => {});
+}
+
+function startMusic() {
+if (musicList.length === 0) return;
+
+if (window.fadingAudio) {
+cancelAnimationFrame(musicFadeFrame);
+destroyAudioNow(window.fadingAudio);
+window.fadingAudio = null;
+}
+
+if (window.audio) {
+cancelAnimationFrame(musicFadeFrame);
+destroyAudioNow(window.audio);
+window.audio = null;
+}
+
+const src = musicList[musicIndex % musicList.length];
+musicIndex += 1;
+const audio = new Audio(src);
+window.audio = audio;
+audio.loop = true;
+audio.volume = 0;
+audio.play().then(() => {
+const startTime = performance.now();
+
+function fadeIn(now) {
+const progress = clamp((now - startTime) / 2000, 0, 1);
+audio.volume = musicVolume * progress;
+if (progress < 1 && window.audio === audio) {
+musicFadeFrame = requestAnimationFrame(fadeIn);
+}
+}
+
+musicFadeFrame = requestAnimationFrame(fadeIn);
+if (window.syncAudioUI) window.syncAudioUI();
+}).catch(() => {});
+}
+
+function stopMusic() {
+const audio = window.audio;
+if (!audio) return;
+
+cancelAnimationFrame(musicFadeFrame);
+window.audio = null;
+window.fadingAudio = audio;
+const startVolume = audio.volume;
+const startTime = performance.now();
+
+function fadeOut(now) {
+const progress = clamp((now - startTime) / 2000, 0, 1);
+audio.volume = startVolume * (1 - progress);
+if (progress < 1) {
+musicFadeFrame = requestAnimationFrame(fadeOut);
+return;
+}
+destroyAudioNow(audio);
+if (window.fadingAudio === audio) window.fadingAudio = null;
+if (window.syncAudioUI) window.syncAudioUI();
+}
+
+musicFadeFrame = requestAnimationFrame(fadeOut);
+}
+
+window.stopMusic = stopMusic;
+window.destroyAudioNow = destroyAudioNow;
+window.setMusicVolume = setMusicVolume;
+window.getMusicVolume = getMusicVolume;
+
+function prepareTypingKeySounds() {
+if (typingKeyAudio) return;
+
+typingKeyAudio = new Audio(typingKeySoundSrc);
+typingKeyAudio.preload = "auto";
+typingKeyAudio.volume = typingKeyVolume;
+typingKeyAudio.load();
+}
+
+function unlockTypingKeySounds() {
+prepareTypingKeySounds();
+if (!typingKeyAudio) return;
+
+typingKeyAudio.muted = false;
+typingKeyAudio.volume = typingKeyVolume;
+typingKeyAudio.currentTime = 0;
+typingKeyAudio.play().then(() => {
+setTimeout(() => {
+typingKeyAudio.pause();
+typingKeyAudio.currentTime = 0;
+typingKeyAudio.volume = typingKeyVolume;
+}, 180);
+}).catch(() => {
+typingKeyAudio.muted = false;
+});
+}
+
+function playTypingKeySound() {
+prepareTypingKeySounds();
+if (!typingKeyAudio) return;
+
+typingKeyAudio.pause();
+typingKeyAudio.currentTime = typingKeyStartAt;
+typingKeyAudio.volume = typingKeyVolume;
+typingKeyAudio.muted = false;
+typingKeyAudio.loop = true;
+typingKeyAudio.playbackRate = 1;
+typingKeyAudio.play().catch(() => {});
+}
+
+function stopTypingKeySound() {
+if (!typingKeyAudio) return;
+typingKeyAudio.pause();
+typingKeyAudio.currentTime = typingKeyStartAt;
+}
 
 function earthPoint() {
 const rect = earth.getBoundingClientRect();
@@ -1158,6 +1372,9 @@ return `${date} ${time}`;
 
 function openVoiceBottle(star) {
 if (star.clicked) return;
+playStarClickSound();
+startMusic();
+unlockTypingKeySounds();
 star.clicked = true;
 star.element.classList.add("is-touched");
 
@@ -1193,8 +1410,7 @@ bottle.style.setProperty("--bottle-y", `${bottleStartY}px`);
 const arriveSeconds = random(6, 8);
 bottle.style.setProperty("--bottle-arrive", `${arriveSeconds.toFixed(2)}s`);
 bottle.style.setProperty("--letter-delay", `${(arriveSeconds + .32).toFixed(2)}s`);
-const letterTilt = random(-15, 15);
-bottle.style.setProperty("--letter-tilt", `${letterTilt.toFixed(1)}deg`);
+bottle.style.setProperty("--letter-tilt", "24deg");
 bottle.style.setProperty("--hand-font", handFonts[Math.floor(Math.random() * handFonts.length)]);
 bottle.style.setProperty("--hand-letter-spacing", `${random(.01, .09).toFixed(3)}em`);
 bottle.style.setProperty("--hand-line-height", random(1.55, 1.92).toFixed(2));
@@ -1204,27 +1420,18 @@ const rosePalette = rosePalettes[Math.floor(Math.random() * rosePalettes.length)
 bottle.style.setProperty("--rose-light", rosePalette[0]);
 bottle.style.setProperty("--rose-color", rosePalette[1]);
 bottle.style.setProperty("--rose-deep", rosePalette[2]);
-bottle.style.setProperty("--rose-tilt", `${random(-9, 9).toFixed(1)}deg`);
-bottle.style.setProperty("--rose-bloom-tilt", `${random(-26, -10).toFixed(1)}deg`);
+bottle.style.setProperty("--rose-tilt", "0deg");
+bottle.style.setProperty("--rose-bloom-tilt", "0deg");
 const flowerClass = flowerClasses[Math.floor(Math.random() * flowerClasses.length)];
 bottle.innerHTML = `
-<button class="voice-bottle-close" type="button" aria-label="关闭信纸">×</button>
+<button class="voice-bottle-close" type="button" aria-label="关闭卡片并结束体验">×</button>
 <div class="voice-bottle-glass"></div>
 <div class="voice-bottle-shine"></div>
 <span class="voice-bottle-sparkle one"></span>
 <span class="voice-bottle-sparkle two"></span>
-<div class="voice-letter">
-<div class="voice-letter-brand">中国·泸沽湖<span>China · Lugu Lake</span></div>
 <span class="voice-letter-rose ${flowerClass}"><i></i></span>
-<span class="voice-letter-time">${safeTime}</span>
+<div class="voice-letter">
 <span class="voice-letter-text" aria-label="${safeMessage}"></span>
-<span class="voice-bottle-origin">${safeOrigin}</span>
-<div class="voice-letter-footer">心域·情感文明共创<span>Heartland · Emotional Civilization Co-creation</span></div>
-<div class="voice-letter-pager">
-<button class="voice-page-prev" type="button">上一页</button>
-<span class="voice-page-status"></span>
-<button class="voice-page-next" type="button">下一页</button>
-</div>
 </div>
 <div class="voice-bottle-heart-rays"></div>
 <div class="voice-bottle-heart"><span class="diamond-facet"></span></div>
@@ -1252,6 +1459,7 @@ let currentPage = 0;
 function stopTyping() {
 clearInterval(typeTimer);
 textNode.classList.remove("is-typing");
+stopTypingKeySound();
 }
 function renderPage(pageIndex) {
 stopTyping();
@@ -1259,10 +1467,11 @@ currentPage = clamp(pageIndex, 0, pages.length - 1);
 textNode.innerHTML = "";
 const pageChars = Array.from(pages[currentPage]);
 typeIndex = 0;
-pageStatus.textContent = `${currentPage + 1} / ${pages.length}`;
-prevButton.disabled = currentPage === 0;
-nextButton.disabled = currentPage === pages.length - 1;
+if (pageStatus) pageStatus.textContent = `${currentPage + 1} / ${pages.length}`;
+if (prevButton) prevButton.disabled = currentPage === 0;
+if (nextButton) nextButton.disabled = currentPage === pages.length - 1;
 textNode.classList.add("is-typing");
+playTypingKeySound();
 typeTimer = setInterval(() => {
 const charSpan = document.createElement("span");
 charSpan.textContent = pageChars[typeIndex];
@@ -1274,19 +1483,24 @@ typeIndex += 1;
 if (typeIndex >= pageChars.length) {
 stopTyping();
 }
-}, 260);
+}, 300);
 }
 const startTypewriter = setTimeout(() => {
 renderPage(0);
 }, typeStart);
 
-prevButton.addEventListener("click", () => renderPage(currentPage - 1));
-nextButton.addEventListener("click", () => renderPage(currentPage + 1));
+if (prevButton) prevButton.addEventListener("click", () => renderPage(currentPage - 1));
+if (nextButton) nextButton.addEventListener("click", () => renderPage(currentPage + 1));
 
-bottle.querySelector(".voice-bottle-close").addEventListener("click", () => {
+function closeCard() {
 clearTimeout(startTypewriter);
 stopTyping();
+stopMusic();
 bottle.remove();
+}
+
+bottle.querySelector(".voice-bottle-close").addEventListener("click", () => {
+closeCard();
 });
 setTimeout(() => {
 star.element.remove();
@@ -1339,6 +1553,48 @@ setTimeout(spawnVoiceStar, 900 + index * random(760, 1280));
 }
 
 requestAnimationFrame(updateVoiceStars);
+})();
+</script>
+<script>
+(() => {
+if (window.__audioUIBound) return;
+window.__audioUIBound = true;
+
+const btn = document.getElementById("audioToggleBtn");
+const slider = document.getElementById("audioVolumeSlider");
+
+if (!btn || !slider) return;
+
+function syncUI() {
+if (!window.audio) {
+btn.innerText = "🔇";
+return;
+}
+
+const currentVolume = window.getMusicVolume ? window.getMusicVolume() : Number(slider.value);
+btn.innerText = window.audio.paused || currentVolume <= 0 ? "🔇" : "🔊";
+}
+
+window.syncAudioUI = syncUI;
+
+btn.onclick = function () {
+if (!window.audio) return;
+
+if (window.audio.paused) {
+window.audio.play();
+} else {
+window.audio.pause();
+}
+
+syncUI();
+};
+
+slider.oninput = function () {
+if (window.setMusicVolume) window.setMusicVolume(slider.value);
+syncUI();
+};
+
+setTimeout(syncUI, 300);
 })();
 </script>
 </body>
