@@ -1103,6 +1103,7 @@ let musicFadeFrame = 0;
 let musicIndex = 0;
 let musicVolume = .6;
 const starClickSoundSrc = "assets/sounds/star-click-typing.mp3";
+const openingLaughSoundSrc = "assets/sounds/child-laugh.mp3";
 const typingKeySoundSrc = "assets/sounds/typing-key-source.mp3";
 const typingKeyVolume = .32;
 const typingKeyStartAt = 0;
@@ -1155,6 +1156,22 @@ function playStarClickSound() {
 const audio = new Audio(starClickSoundSrc);
 audio.volume = .64;
 audio.play().catch(() => {});
+}
+
+function playOpeningLaughSound() {
+const audio = new Audio(openingLaughSoundSrc);
+audio.volume = .72;
+audio.play().catch(() => {
+const unlock = () => {
+document.removeEventListener("pointerdown", unlock);
+document.removeEventListener("touchstart", unlock);
+document.removeEventListener("click", unlock);
+audio.play().catch(() => {});
+};
+document.addEventListener("pointerdown", unlock, { once: true });
+document.addEventListener("touchstart", unlock, { once: true });
+document.addEventListener("click", unlock, { once: true });
+});
 }
 
 function startMusic() {
@@ -1552,6 +1569,7 @@ for (let index = 0; index < 10; index += 1) {
 setTimeout(spawnVoiceStar, 900 + index * random(760, 1280));
 }
 
+setTimeout(playOpeningLaughSound, 500);
 requestAnimationFrame(updateVoiceStars);
 })();
 </script>
