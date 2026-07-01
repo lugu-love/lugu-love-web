@@ -27,6 +27,40 @@ background-size: cover;
 background-repeat: no-repeat;
 }
 
+body:not(.is-started) .approach,
+body:not(.is-started) .voice-star-layer {
+visibility: hidden;
+}
+
+body:not(.is-started) .approach,
+body:not(.is-started) .earth {
+animation-play-state: paused;
+}
+
+.entry-gate {
+position: fixed;
+inset: 0;
+z-index: 10;
+display: grid;
+place-items: center;
+border: 0;
+padding: 0;
+background: rgba(0, 0, 0, .36);
+color: rgba(255, 244, 214, .88);
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-size: clamp(18px, 4vw, 34px);
+letter-spacing: .16em;
+text-shadow: 0 0 18px rgba(255, 236, 184, .6);
+cursor: pointer;
+transition: opacity .8s ease, visibility .8s ease;
+}
+
+body.is-started .entry-gate {
+opacity: 0;
+visibility: hidden;
+pointer-events: none;
+}
+
 .star-field {
 position: fixed;
 inset: 0;
@@ -1002,6 +1036,7 @@ transform: scale(1.35);
 </style>
 </head>
 <body>
+<button class="entry-gate" type="button">轻触进入</button>
 <div class="place-mark">中国·泸沽湖<span>LUGU LAKE · CHINA</span></div>
 <div class="star-field" aria-hidden="true">
 <span class="star" style="--x: 7%; --y: 15%; --size: 3px; --color: #fff; --duration: 5.7s; --delay: -1.2s"></span>
@@ -1040,6 +1075,7 @@ transform: scale(1.35);
 (() => {
 const layer = document.querySelector(".voice-star-layer");
 const earth = document.querySelector(".earth");
+const entryGate = document.querySelector(".entry-gate");
 const colors = [
 ["#54c7ff", "rgba(72, 191, 255, .72)", "rgba(83, 202, 255, .28)", "#f5fcff", "#167dff"],
 ["#a672ff", "rgba(171, 111, 255, .68)", "rgba(190, 134, 255, .26)", "#fff4ff", "#7136ff"],
@@ -1102,6 +1138,7 @@ let lastLetterTilt = null;
 let musicFadeFrame = 0;
 let musicIndex = 0;
 let musicVolume = .6;
+let experienceStarted = false;
 const starClickSoundSrc = "assets/sounds/star-click-typing.mp3";
 const openingLaughSoundSrc = "assets/sounds/child-laugh.mp3";
 const typingKeySoundSrc = "assets/sounds/typing-key-source.mp3";
@@ -1555,12 +1592,24 @@ star.element.style.filter = `brightness(${(1.12 + breathe * 1.02).toFixed(2)}) s
 requestAnimationFrame(updateVoiceStars);
 }
 
+function startExperience() {
+if (experienceStarted) return;
+experienceStarted = true;
+document.body.classList.add("is-started");
+playOpeningLaughSound();
+
 for (let index = 0; index < 10; index += 1) {
 setTimeout(spawnVoiceStar, 900 + index * random(760, 1280));
 }
 
-setTimeout(playOpeningLaughSound, 500);
 requestAnimationFrame(updateVoiceStars);
+}
+
+if (entryGate) {
+entryGate.addEventListener("click", startExperience, { once: true });
+} else {
+startExperience();
+}
 })();
 </script>
 <script>
