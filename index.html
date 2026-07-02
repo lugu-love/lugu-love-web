@@ -1224,6 +1224,7 @@ musicFadeFrame = requestAnimationFrame(fadeOut);
 }
 
 window.stopMusic = stopMusic;
+window.startMusic = startMusic;
 window.destroyAudioNow = destroyAudioNow;
 window.setMusicVolume = setMusicVolume;
 window.getMusicVolume = getMusicVolume;
@@ -1577,12 +1578,20 @@ btn.innerText = window.audio.paused || currentVolume <= 0 ? "🔇" : "🔊";
 window.syncAudioUI = syncUI;
 
 btn.onclick = function () {
-if (!window.audio) return;
+if (!window.audio) {
+if (window.startMusic) {
+window.startMusic();
+setTimeout(syncUI, 120);
+}
+return;
+}
 
 if (window.audio.paused) {
-window.audio.play();
+window.audio.play().then(syncUI).catch(syncUI);
 } else {
 window.audio.pause();
+syncUI();
+return;
 }
 
 syncUI();
