@@ -1206,9 +1206,10 @@ window.audio = null;
 window.fadingAudio = audio;
 const startVolume = audio.volume;
 const startTime = performance.now();
+const fadeOutDuration = 600;
 
 function fadeOut(now) {
-const progress = clamp((now - startTime) / 2000, 0, 1);
+const progress = clamp((now - startTime) / fadeOutDuration, 0, 1);
 audio.volume = startVolume * (1 - progress);
 if (progress < 1) {
 musicFadeFrame = requestAnimationFrame(fadeOut);
