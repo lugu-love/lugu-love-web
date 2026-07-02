@@ -1206,7 +1206,7 @@ window.audio = null;
 window.fadingAudio = audio;
 const startVolume = audio.volume;
 const startTime = performance.now();
-const fadeOutDuration = 600;
+const fadeOutDuration = 1000;
 
 function fadeOut(now) {
 const progress = clamp((now - startTime) / fadeOutDuration, 0, 1);
