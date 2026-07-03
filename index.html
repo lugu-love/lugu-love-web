@@ -954,33 +954,118 @@ user-select: none;
 .touch-guide {
 position: fixed;
 left: 50%;
-top: min(calc(50% + 31vmin), calc(100vh - 118px));
+top: clamp(36px, calc(50vh - min(58vmin, 410px)), 190px);
 z-index: 2;
 display: block;
-width: min(86vw, 560px);
+width: min(88vw, 560px);
+opacity: 0;
 transform: translateX(-50%);
-color: rgba(185, 232, 255, .94);
-font-family: "Kaiti SC", "STKaiti", "Songti SC", "STSong", serif;
+color: rgba(244, 249, 255, .96);
+font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
 font-size: 0;
 font-weight: 400;
-line-height: 1.45;
+line-height: 1.16;
 letter-spacing: 0;
 text-align: center;
-text-shadow: 0 0 12px rgba(99, 204, 255, .62), 0 0 28px rgba(165, 116, 255, .32);
+text-shadow: 0 0 12px rgba(255, 247, 218, .45), 0 0 32px rgba(96, 166, 255, .22);
 pointer-events: none;
-animation: guide-life 10s ease forwards, guide-breathe 3.2s ease-in-out infinite;
 will-change: opacity, filter, transform;
 }
 
-.touch-guide span {
+.touch-guide.is-visible {
+animation: guide-life 38.8s ease forwards, guide-breathe 4.8s ease-in-out infinite;
+}
+
+.touch-guide .guide-line {
+display: flex;
+justify-content: center;
+align-items: baseline;
+gap: clamp(7px, 1.35vw, 18px);
+white-space: nowrap;
+}
+
+.touch-guide .guide-line + .guide-line {
+margin-top: clamp(5px, 1.1vw, 12px);
+}
+
+.touch-guide .guide-part {
 display: inline-block;
 opacity: 0;
-font-size: clamp(16px, 2.4vw, 27px);
-letter-spacing: .045em;
+font-size: clamp(18px, 2.8vw, 30px);
+letter-spacing: .04em;
 filter: blur(5px);
-transform: translateY(8px);
-animation: guide-letter-in 1.9s ease forwards;
+transform: translateY(13px);
+}
+
+.touch-guide.is-visible .guide-part {
+animation: guide-part-in 2.6s ease forwards;
 animation-delay: calc(.45s + var(--i) * .18s);
+}
+
+.touch-guide .guide-key {
+font-size: clamp(30px, 5vw, 52px);
+font-weight: 600;
+letter-spacing: .02em;
+line-height: .95;
+}
+
+.touch-guide .guide-heart {
+color: rgba(255, 230, 157, .98);
+text-shadow: 0 0 10px rgba(255, 246, 189, .9), 0 0 35px rgba(255, 185, 62, .54), 0 0 62px rgba(255, 255, 255, .18);
+}
+
+.touch-guide .guide-world {
+color: rgba(193, 226, 255, .98);
+text-shadow: 0 0 12px rgba(206, 235, 255, .86), 0 0 38px rgba(72, 166, 255, .5), 0 0 70px rgba(152, 201, 255, .18);
+}
+
+.touch-guide .guide-mark {
+font-size: clamp(20px, 3.2vw, 34px);
+color: rgba(255, 241, 197, .86);
+}
+
+.touch-guide .guide-orbit {
+position: relative;
+display: block;
+width: min(54vw, 420px);
+height: 1px;
+margin: clamp(7px, 1.4vw, 12px) auto clamp(5px, 1vw, 9px);
+opacity: 0;
+background: linear-gradient(90deg, transparent, rgba(255, 234, 175, .82), transparent);
+box-shadow: 0 0 14px rgba(255, 214, 120, .42);
+transform: scaleX(.55);
+}
+
+.touch-guide.is-visible .guide-orbit {
+animation: guide-orbit-in 2.9s ease forwards;
+animation-delay: 1.45s;
+}
+
+.touch-guide .guide-orbit::after {
+content: "✦";
+position: absolute;
+left: 50%;
+top: 50%;
+color: rgba(255, 234, 171, .95);
+font-size: 13px;
+text-shadow: 0 0 14px rgba(255, 227, 142, .95);
+transform: translate(-50%, -50%);
+}
+
+.touch-guide .guide-sub {
+display: block;
+opacity: 0;
+color: rgba(219, 232, 255, .82);
+font-family: "Times New Roman", Georgia, serif;
+font-size: clamp(10px, 1.15vw, 14px);
+letter-spacing: .09em;
+line-height: 1.45;
+text-shadow: 0 0 10px rgba(120, 184, 255, .42);
+}
+
+.touch-guide.is-visible .guide-sub {
+animation: guide-part-in 2.8s ease forwards;
+animation-delay: 2.05s;
 }
 
 @keyframes guide-life {
@@ -988,8 +1073,8 @@ animation-delay: calc(.45s + var(--i) * .18s);
 opacity: 0;
 }
 
-13%,
-74% {
+9%,
+86.5% {
 opacity: 1;
 }
 
@@ -1011,17 +1096,29 @@ transform: translateX(-50%) scale(1.018);
 }
 }
 
-@keyframes guide-letter-in {
+@keyframes guide-part-in {
 0% {
 opacity: 0;
 filter: blur(5px);
-transform: translateY(8px);
+transform: translateY(13px);
 }
 
 100% {
 opacity: 1;
 filter: blur(0);
 transform: translateY(0);
+}
+}
+
+@keyframes guide-orbit-in {
+0% {
+opacity: 0;
+transform: scaleX(.55);
+}
+
+100% {
+opacity: 1;
+transform: scaleX(1);
 }
 }
 
@@ -1138,23 +1235,21 @@ transform: scale(1.35);
 </div>
 </div>
 <div class="touch-guide" aria-hidden="true">
-<span style="--i: 0">轻</span>
-<span style="--i: 1">触</span>
-<span style="--i: 2">一</span>
-<span style="--i: 3">颗</span>
-<span style="--i: 4">心</span>
-<span style="--i: 5">，</span>
-<span style="--i: 6">打</span>
-<span style="--i: 7">开</span>
-<span style="--i: 8">一</span>
-<span style="--i: 9">个</span>
-<span style="--i: 10">世</span>
-<span style="--i: 11">界</span>
-<span style="--i: 12">.</span>
-<span style="--i: 13">.</span>
-<span style="--i: 14">.</span>
-<span style="--i: 15">.</span>
-<span style="--i: 16">.</span>
+<div class="guide-line">
+<span class="guide-part" style="--i: 0">轻触一颗</span>
+<span class="guide-part guide-mark" style="--i: 1">“</span>
+<span class="guide-part guide-key guide-heart" style="--i: 2">心</span>
+<span class="guide-part guide-mark" style="--i: 3">”</span>
+</div>
+<div class="guide-line">
+<span class="guide-part" style="--i: 4">打开一个</span>
+<span class="guide-part guide-mark" style="--i: 5">“</span>
+<span class="guide-part guide-key guide-world" style="--i: 6">世界</span>
+<span class="guide-part guide-mark" style="--i: 7">”</span>
+<span class="guide-part" style="--i: 8">.....</span>
+</div>
+<span class="guide-orbit"></span>
+<span class="guide-sub">Gently touch a “heart”, open a “world”.</span>
 </div>
 <div class="footer-signature">心域·情感文明共创</div>
 <div id="audioControl">
@@ -1289,7 +1384,40 @@ audio.volume = .64;
 audio.play().catch(() => {});
 }
 
-function playOpeningLaughSound(){window.l=1;new Audio(openingLaughSoundSrc).play().catch(()=>{});} 
+let touchGuideTimer = 0;
+let touchGuideShown = false;
+let touchGuideScheduled = false;
+
+function showTouchGuide() {
+if (touchGuideShown) return;
+const guide = document.querySelector(".touch-guide");
+if (!guide) return;
+
+touchGuideShown = true;
+touchGuideScheduled = false;
+guide.classList.remove("is-visible");
+void guide.offsetWidth;
+guide.classList.add("is-visible");
+}
+
+function scheduleTouchGuide(delay = 2000) {
+if (touchGuideShown || touchGuideScheduled) return;
+touchGuideScheduled = true;
+clearTimeout(touchGuideTimer);
+touchGuideTimer = setTimeout(showTouchGuide, delay);
+}
+
+function playOpeningLaughSound(){
+window.l=1;
+const audio = new Audio(openingLaughSoundSrc);
+const fallbackDelay = 7400;
+
+audio.addEventListener("ended", () => scheduleTouchGuide(2000), { once: true });
+audio.play().catch(() => {
+scheduleTouchGuide(fallbackDelay);
+});
+setTimeout(() => scheduleTouchGuide(0), fallbackDelay);
+}
 
 function startMusic() {
 if (musicList.length === 0) return;
