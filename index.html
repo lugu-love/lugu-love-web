@@ -973,7 +973,7 @@ will-change: opacity, filter, transform;
 }
 
 .touch-guide.is-visible {
-animation: guide-life 43.5s ease forwards, guide-breathe 4.8s ease-in-out infinite;
+animation: guide-life 31.8s ease forwards, guide-breathe 4.8s ease-in-out infinite;
 }
 
 .touch-guide .guide-line {
@@ -1082,13 +1082,82 @@ animation-delay: 8.2s;
 opacity: 0;
 }
 
-8%,
-88% {
+11%,
+94% {
 opacity: 1;
 }
 
 100% {
 opacity: 0;
+}
+}
+
+.guide-corner {
+position: fixed;
+top: max(18px, env(safe-area-inset-top));
+right: max(18px, env(safe-area-inset-right));
+z-index: 3;
+display: flex;
+justify-content: flex-end;
+align-items: baseline;
+gap: clamp(1px, .28vw, 4px);
+max-width: min(78vw, 420px);
+opacity: 0;
+color: rgba(244, 249, 255, .96);
+font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+font-size: clamp(12px, 2.9vw, 18px);
+font-weight: 400;
+line-height: 1.35;
+letter-spacing: .04em;
+text-align: right;
+text-shadow: 0 0 9px rgba(255, 247, 218, .42), 0 0 24px rgba(96, 166, 255, .18);
+pointer-events: none;
+transform: translateY(-8px) scale(.96);
+will-change: opacity, transform, filter;
+}
+
+.touch-guide.is-visible + .guide-corner {
+animation: guide-corner-in 2.2s ease 30s forwards, guide-corner-breathe 4.8s ease-in-out 32.2s infinite;
+}
+
+.guide-corner .corner-key {
+font-size: inherit;
+font-weight: 500;
+line-height: inherit;
+}
+
+.guide-corner .guide-heart {
+color: rgba(255, 230, 157, .98);
+text-shadow: 0 0 8px rgba(255, 246, 189, .78), 0 0 24px rgba(255, 185, 62, .42);
+}
+
+.guide-corner .guide-world {
+color: rgba(193, 226, 255, .98);
+text-shadow: 0 0 9px rgba(206, 235, 255, .72), 0 0 26px rgba(72, 166, 255, .4);
+}
+
+@keyframes guide-corner-in {
+0% {
+opacity: 0;
+filter: blur(3px);
+transform: translateY(-8px) scale(.96);
+}
+
+100% {
+opacity: 1;
+filter: blur(0);
+transform: translateY(0) scale(1);
+}
+}
+
+@keyframes guide-corner-breathe {
+0%,
+100% {
+filter: brightness(.95);
+}
+
+50% {
+filter: brightness(1.14);
 }
 }
 
@@ -1272,6 +1341,21 @@ transform: scale(1.35);
 </div>
 <span class="guide-orbit"></span>
 <span class="guide-sub">Gently touch a “heart star”, open a “world”.</span>
+</div>
+<div class="guide-corner" aria-hidden="true">
+<span>轻</span>
+<span>抚</span>
+<span>一</span>
+<span>颗</span>
+<span class="corner-key guide-heart">心</span>
+<span class="corner-key guide-heart">星</span>
+<span>，</span>
+<span>打</span>
+<span>开</span>
+<span>一</span>
+<span>个</span>
+<span class="corner-key guide-world">世</span>
+<span class="corner-key guide-world">界</span>
 </div>
 <div class="footer-signature">心域·情感文明共创</div>
 <div id="audioControl">
