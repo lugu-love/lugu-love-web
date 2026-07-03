@@ -973,14 +973,14 @@ will-change: opacity, filter, transform;
 }
 
 .touch-guide.is-visible {
-animation: guide-life 38.8s ease forwards, guide-breathe 4.8s ease-in-out infinite;
+animation: guide-life 43.5s ease forwards, guide-breathe 4.8s ease-in-out infinite;
 }
 
 .touch-guide .guide-line {
 display: flex;
 justify-content: center;
 align-items: baseline;
-gap: clamp(7px, 1.35vw, 18px);
+gap: clamp(2px, .55vw, 8px);
 white-space: nowrap;
 }
 
@@ -998,8 +998,8 @@ transform: translateY(13px);
 }
 
 .touch-guide.is-visible .guide-part {
-animation: guide-part-in 2.6s ease forwards;
-animation-delay: calc(.45s + var(--i) * .18s);
+animation: guide-part-in 2.8s ease forwards;
+animation-delay: calc(.65s + var(--i) * .29s);
 }
 
 .touch-guide .guide-key {
@@ -1038,7 +1038,7 @@ transform: scaleX(.55);
 
 .touch-guide.is-visible .guide-orbit {
 animation: guide-orbit-in 2.9s ease forwards;
-animation-delay: 1.45s;
+animation-delay: 6.6s;
 }
 
 .touch-guide .guide-orbit::after {
@@ -1065,7 +1065,7 @@ text-shadow: 0 0 10px rgba(120, 184, 255, .42);
 
 .touch-guide.is-visible .guide-sub {
 animation: guide-part-in 2.8s ease forwards;
-animation-delay: 2.05s;
+animation-delay: 7.6s;
 }
 
 @keyframes guide-life {
@@ -1073,8 +1073,8 @@ animation-delay: 2.05s;
 opacity: 0;
 }
 
-9%,
-86.5% {
+8%,
+88% {
 opacity: 1;
 }
 
@@ -1236,17 +1236,28 @@ transform: scale(1.35);
 </div>
 <div class="touch-guide" aria-hidden="true">
 <div class="guide-line">
-<span class="guide-part" style="--i: 0">轻触一颗</span>
-<span class="guide-part guide-mark" style="--i: 1">“</span>
-<span class="guide-part guide-key guide-heart" style="--i: 2">心</span>
-<span class="guide-part guide-mark" style="--i: 3">”</span>
+<span class="guide-part" style="--i: 0">轻</span>
+<span class="guide-part" style="--i: 1">触</span>
+<span class="guide-part" style="--i: 2">一</span>
+<span class="guide-part" style="--i: 3">颗</span>
+<span class="guide-part guide-mark" style="--i: 4">“</span>
+<span class="guide-part guide-key guide-heart" style="--i: 5">心</span>
+<span class="guide-part guide-mark" style="--i: 6">”</span>
 </div>
 <div class="guide-line">
-<span class="guide-part" style="--i: 4">打开一个</span>
-<span class="guide-part guide-mark" style="--i: 5">“</span>
-<span class="guide-part guide-key guide-world" style="--i: 6">世界</span>
-<span class="guide-part guide-mark" style="--i: 7">”</span>
-<span class="guide-part" style="--i: 8">.....</span>
+<span class="guide-part" style="--i: 7">打</span>
+<span class="guide-part" style="--i: 8">开</span>
+<span class="guide-part" style="--i: 9">一</span>
+<span class="guide-part" style="--i: 10">个</span>
+<span class="guide-part guide-mark" style="--i: 11">“</span>
+<span class="guide-part guide-key guide-world" style="--i: 12">世</span>
+<span class="guide-part guide-key guide-world" style="--i: 13">界</span>
+<span class="guide-part guide-mark" style="--i: 14">”</span>
+<span class="guide-part" style="--i: 15">.</span>
+<span class="guide-part" style="--i: 16">.</span>
+<span class="guide-part" style="--i: 17">.</span>
+<span class="guide-part" style="--i: 18">.</span>
+<span class="guide-part" style="--i: 19">.</span>
 </div>
 <span class="guide-orbit"></span>
 <span class="guide-sub">Gently touch a “heart”, open a “world”.</span>
