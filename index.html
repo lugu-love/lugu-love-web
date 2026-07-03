@@ -973,7 +973,7 @@ will-change: opacity, filter, transform;
 }
 
 .touch-guide.is-visible {
-animation: guide-life 31.8s ease forwards, guide-breathe 4.8s ease-in-out infinite;
+animation: guide-life 54s cubic-bezier(.25, .86, .28, 1) forwards;
 }
 
 .touch-guide .guide-line {
@@ -1077,31 +1077,118 @@ animation: guide-part-in 2.8s ease forwards;
 animation-delay: 8.2s;
 }
 
+.guide-final-heart {
+position: fixed;
+left: 50%;
+top: clamp(36px, calc(50vh - min(58vmin, 410px)), 190px);
+z-index: 2;
+opacity: 0;
+color: rgba(255, 230, 157, .98);
+font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+font-size: clamp(28px, 8vw, 62px);
+line-height: 1;
+text-shadow: 0 0 12px rgba(255, 246, 189, .88), 0 0 34px rgba(255, 185, 62, .46), 0 0 68px rgba(255, 255, 255, .2);
+pointer-events: none;
+transform: translateX(-50%) translateY(-20vh) scale(.7);
+will-change: opacity, filter, transform;
+}
+
+.touch-guide.is-visible + .guide-final-heart {
+animation: guide-heart-away 54s cubic-bezier(.25, .86, .28, 1) forwards;
+}
+
 @keyframes guide-life {
 0% {
 opacity: 0;
-}
-
-11%,
-94% {
-opacity: 1;
-}
-
-100% {
-opacity: 0;
-}
-}
-
-@keyframes guide-breathe {
-0%,
-100% {
 filter: brightness(.92);
 transform: translateX(-50%) scale(.985);
 }
 
-50% {
-filter: brightness(1.18);
+6.5% {
+opacity: 1;
+filter: brightness(1.08);
+transform: translateX(-50%) scale(1.012);
+}
+
+18% {
+opacity: 1;
+filter: brightness(.96);
+transform: translateX(-50%) scale(.992);
+}
+
+31% {
+opacity: 1;
+filter: brightness(1.12);
 transform: translateX(-50%) scale(1.018);
+}
+
+43% {
+opacity: 1;
+filter: brightness(.98);
+transform: translateX(-50%) scale(.996);
+}
+
+56% {
+opacity: 1;
+filter: brightness(1.08);
+transform: translateX(-50%) translateY(0) scale(1);
+}
+
+68% {
+opacity: .92;
+filter: brightness(1.22) blur(.5px);
+transform: translateX(-50%) translateY(-6vh) scale(.68);
+}
+
+78% {
+opacity: .7;
+filter: brightness(1.08) blur(1.4px);
+transform: translateX(-50%) translateY(-13vh) scale(.38);
+}
+
+86% {
+opacity: .36;
+filter: brightness(.92) blur(2.2px);
+transform: translateX(-50%) translateY(-20vh) scale(.18);
+}
+
+92% {
+opacity: 0;
+filter: brightness(.7) blur(3px);
+transform: translateX(-50%) translateY(-27vh) scale(.07);
+}
+
+100% {
+opacity: 0;
+filter: brightness(.55) blur(4px);
+transform: translateX(-50%) translateY(-32vh) scale(.02);
+}
+}
+
+@keyframes guide-heart-away {
+0%,
+80% {
+opacity: 0;
+filter: brightness(.9) blur(2px);
+transform: translate(-50%, -50%) scale(.7);
+}
+
+86% {
+opacity: .92;
+filter: brightness(1.16) blur(.4px);
+transform: translate(-50%, -50%) scale(.88);
+}
+
+94% {
+opacity: .78;
+filter: brightness(1.06) blur(1px);
+transform: translate(-50%, -50%) scale(.28);
+}
+
+100% {
+opacity: 0;
+filter: brightness(.72) blur(3px);
+transform: translate(-50%, -50%) scale(.05);
 }
 }
 
@@ -1273,6 +1360,7 @@ transform: scale(1.35);
 <span class="guide-orbit"></span>
 <span class="guide-sub">Gently touch a “heart star”, meet a “world”.</span>
 </div>
+<div class="guide-final-heart" aria-hidden="true">♥</div>
 <div class="footer-signature">心域·情感文明共创</div>
 <div id="audioControl">
 <button id="audioToggleBtn" type="button" aria-label="音乐开关">🔇</button>
