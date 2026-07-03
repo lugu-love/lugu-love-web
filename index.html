@@ -969,6 +969,7 @@ letter-spacing: 0;
 text-align: center;
 text-shadow: 0 0 12px rgba(255, 247, 218, .45), 0 0 32px rgba(96, 166, 255, .22);
 pointer-events: none;
+transform-origin: center center;
 will-change: opacity, filter, transform;
 }
 
@@ -1089,7 +1090,8 @@ font-size: clamp(28px, 8vw, 62px);
 line-height: 1;
 text-shadow: 0 0 12px rgba(255, 246, 189, .88), 0 0 34px rgba(255, 185, 62, .46), 0 0 68px rgba(255, 255, 255, .2);
 pointer-events: none;
-transform: translateX(-50%) translateY(-20vh) scale(.7);
+transform: translateX(-50%) scale(.7);
+transform-origin: center center;
 will-change: opacity, filter, transform;
 }
 
@@ -1131,37 +1133,37 @@ transform: translateX(-50%) scale(.996);
 56% {
 opacity: 1;
 filter: brightness(1.08);
-transform: translateX(-50%) translateY(0) scale(1);
+transform: translateX(-50%) scale(1);
 }
 
 68% {
 opacity: .92;
 filter: brightness(1.22) blur(.5px);
-transform: translateX(-50%) translateY(-6vh) scale(.68);
+transform: translateX(-50%) scale(.68);
 }
 
 78% {
 opacity: .7;
 filter: brightness(1.08) blur(1.4px);
-transform: translateX(-50%) translateY(-13vh) scale(.38);
+transform: translateX(-50%) scale(.38);
 }
 
 86% {
 opacity: .36;
 filter: brightness(.92) blur(2.2px);
-transform: translateX(-50%) translateY(-20vh) scale(.18);
+transform: translateX(-50%) scale(.18);
 }
 
 92% {
 opacity: 0;
 filter: brightness(.7) blur(3px);
-transform: translateX(-50%) translateY(-27vh) scale(.07);
+transform: translateX(-50%) scale(.07);
 }
 
 100% {
 opacity: 0;
 filter: brightness(.55) blur(4px);
-transform: translateX(-50%) translateY(-32vh) scale(.02);
+transform: translateX(-50%) scale(.02);
 }
 }
 
@@ -1170,25 +1172,25 @@ transform: translateX(-50%) translateY(-32vh) scale(.02);
 80% {
 opacity: 0;
 filter: brightness(.9) blur(2px);
-transform: translate(-50%, -50%) scale(.7);
+transform: translateX(-50%) scale(.7);
 }
 
 86% {
 opacity: .92;
 filter: brightness(1.16) blur(.4px);
-transform: translate(-50%, -50%) scale(.88);
+transform: translateX(-50%) scale(.88);
 }
 
 94% {
 opacity: .78;
 filter: brightness(1.06) blur(1px);
-transform: translate(-50%, -50%) scale(.28);
+transform: translateX(-50%) scale(.28);
 }
 
 100% {
 opacity: 0;
 filter: brightness(.72) blur(3px);
-transform: translate(-50%, -50%) scale(.05);
+transform: translateX(-50%) scale(.05);
 }
 }
 
