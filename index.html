@@ -974,7 +974,7 @@ will-change: opacity, filter, transform;
 }
 
 .touch-guide.is-visible {
-animation: guide-life 54s cubic-bezier(.25, .86, .28, 1) forwards;
+animation: guide-life 54s linear forwards;
 }
 
 .touch-guide .guide-line {
@@ -1096,7 +1096,7 @@ will-change: opacity, filter, transform;
 }
 
 .touch-guide.is-visible + .guide-final-heart {
-animation: guide-heart-away 54s cubic-bezier(.25, .86, .28, 1) forwards;
+animation: guide-heart-away 54s linear forwards;
 }
 
 @keyframes guide-life {
@@ -1132,31 +1132,49 @@ transform: translateX(-50%) scale(.996);
 
 56% {
 opacity: 1;
-filter: brightness(1.08);
+filter: brightness(1.06);
 transform: translateX(-50%) scale(1);
 }
 
+62% {
+opacity: .95;
+filter: brightness(1.15) blur(.35px);
+transform: translateX(-50%) scale(.78);
+}
+
 68% {
-opacity: .92;
-filter: brightness(1.22) blur(.5px);
-transform: translateX(-50%) scale(.68);
+opacity: .84;
+filter: brightness(1.12) blur(.7px);
+transform: translateX(-50%) scale(.57);
+}
+
+74% {
+opacity: .68;
+filter: brightness(1.02) blur(1.1px);
+transform: translateX(-50%) scale(.42);
 }
 
 78% {
-opacity: .7;
-filter: brightness(1.08) blur(1.4px);
-transform: translateX(-50%) scale(.38);
+opacity: .56;
+filter: brightness(.96) blur(1.5px);
+transform: translateX(-50%) scale(.31);
+}
+
+82% {
+opacity: .42;
+filter: brightness(.9) blur(1.9px);
+transform: translateX(-50%) scale(.24);
 }
 
 86% {
-opacity: .36;
-filter: brightness(.92) blur(2.2px);
-transform: translateX(-50%) scale(.18);
+opacity: .28;
+filter: brightness(.84) blur(2.3px);
+transform: translateX(-50%) scale(.17);
 }
 
 92% {
-opacity: 0;
-filter: brightness(.7) blur(3px);
+opacity: .06;
+filter: brightness(.7) blur(3.1px);
 transform: translateX(-50%) scale(.07);
 }
 
@@ -1169,22 +1187,40 @@ transform: translateX(-50%) scale(.02);
 
 @keyframes guide-heart-away {
 0%,
-80% {
+78% {
 opacity: 0;
 filter: brightness(.9) blur(2px);
+transform: translateX(-50%) scale(.78);
+}
+
+82% {
+opacity: .42;
+filter: brightness(1.05) blur(1.2px);
 transform: translateX(-50%) scale(.7);
 }
 
 86% {
-opacity: .92;
-filter: brightness(1.16) blur(.4px);
-transform: translateX(-50%) scale(.88);
+opacity: .9;
+filter: brightness(1.18) blur(.35px);
+transform: translateX(-50%) scale(.58);
+}
+
+90% {
+opacity: .86;
+filter: brightness(1.12) blur(.65px);
+transform: translateX(-50%) scale(.4);
 }
 
 94% {
-opacity: .78;
-filter: brightness(1.06) blur(1px);
-transform: translateX(-50%) scale(.28);
+opacity: .62;
+filter: brightness(.96) blur(1.3px);
+transform: translateX(-50%) scale(.24);
+}
+
+97% {
+opacity: .26;
+filter: brightness(.82) blur(2px);
+transform: translateX(-50%) scale(.12);
 }
 
 100% {
