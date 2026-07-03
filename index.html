@@ -951,6 +951,80 @@ pointer-events: none;
 user-select: none;
 }
 
+.touch-guide {
+position: fixed;
+left: 50%;
+top: min(calc(50% + 31vmin), calc(100vh - 118px));
+z-index: 2;
+display: block;
+width: min(86vw, 560px);
+transform: translateX(-50%);
+color: rgba(185, 232, 255, .94);
+font-family: "Kaiti SC", "STKaiti", "Songti SC", "STSong", serif;
+font-size: 0;
+font-weight: 400;
+line-height: 1.45;
+letter-spacing: 0;
+text-align: center;
+text-shadow: 0 0 12px rgba(99, 204, 255, .62), 0 0 28px rgba(165, 116, 255, .32);
+pointer-events: none;
+animation: guide-life 10s ease forwards, guide-breathe 3.2s ease-in-out infinite;
+will-change: opacity, filter, transform;
+}
+
+.touch-guide span {
+display: inline-block;
+opacity: 0;
+font-size: clamp(16px, 2.4vw, 27px);
+letter-spacing: .045em;
+filter: blur(5px);
+transform: translateY(8px);
+animation: guide-letter-in 1.9s ease forwards;
+animation-delay: calc(.45s + var(--i) * .18s);
+}
+
+@keyframes guide-life {
+0% {
+opacity: 0;
+}
+
+13%,
+74% {
+opacity: 1;
+}
+
+100% {
+opacity: 0;
+}
+}
+
+@keyframes guide-breathe {
+0%,
+100% {
+filter: brightness(.92);
+transform: translateX(-50%) scale(.985);
+}
+
+50% {
+filter: brightness(1.18);
+transform: translateX(-50%) scale(1.018);
+}
+}
+
+@keyframes guide-letter-in {
+0% {
+opacity: 0;
+filter: blur(5px);
+transform: translateY(8px);
+}
+
+100% {
+opacity: 1;
+filter: blur(0);
+transform: translateY(0);
+}
+}
+
 .footer-signature {
 position: fixed;
 left: 50%;
@@ -1062,6 +1136,25 @@ transform: scale(1.35);
 <div class="earth">
 <img src="earth.webp" alt="">
 </div>
+</div>
+<div class="touch-guide" aria-hidden="true">
+<span style="--i: 0">轻</span>
+<span style="--i: 1">触</span>
+<span style="--i: 2">一</span>
+<span style="--i: 3">颗</span>
+<span style="--i: 4">心</span>
+<span style="--i: 5">，</span>
+<span style="--i: 6">打</span>
+<span style="--i: 7">开</span>
+<span style="--i: 8">一</span>
+<span style="--i: 9">个</span>
+<span style="--i: 10">世</span>
+<span style="--i: 11">界</span>
+<span style="--i: 12">.</span>
+<span style="--i: 13">.</span>
+<span style="--i: 14">.</span>
+<span style="--i: 15">.</span>
+<span style="--i: 16">.</span>
 </div>
 <div class="footer-signature">心域·情感文明共创</div>
 <div id="audioControl">
