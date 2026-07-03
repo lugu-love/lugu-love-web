@@ -579,6 +579,16 @@ z-index: 2;
 width: 58px;
 height: 82px;
 transform: translateX(-50%) rotate(var(--rose-tilt));
+transform-origin: 50% 92%;
+will-change: transform;
+}
+
+body.is-music-playing .voice-letter-rose {
+animation: flower-sway var(--flower-sway-duration, 3.8s) ease-in-out infinite;
+}
+
+body.is-music-playing .voice-letter-rose::after {
+animation: flower-bloom-sway var(--flower-sway-duration, 3.8s) ease-in-out infinite;
 }
 
 .voice-letter-rose.flower-blossom::after {
@@ -725,6 +735,28 @@ transform: rotate(54deg);
 left: 3px;
 top: 27px;
 transform: rotate(42deg);
+}
+
+@keyframes flower-sway {
+0%,
+100% {
+transform: translateX(-50%) rotate(calc(var(--rose-tilt) - var(--flower-sway-angle, 4deg)));
+}
+
+50% {
+transform: translateX(-50%) rotate(calc(var(--rose-tilt) + var(--flower-sway-angle, 4deg)));
+}
+}
+
+@keyframes flower-bloom-sway {
+0%,
+100% {
+transform: rotate(calc(var(--rose-bloom-tilt) + 3deg));
+}
+
+50% {
+transform: rotate(calc(var(--rose-bloom-tilt) - 4deg));
+}
 }
 
 .voice-bottle-close {
@@ -1138,14 +1170,20 @@ audio.src = "";
 audio.load();
 }
 
+function syncMusicMotion() {
+const isMoving = Boolean((window.audio && !window.audio.paused && musicVolume > 0) || window.fadingAudio);
+document.body.classList.toggle("is-music-playing", isMoving);
+}
+
 function setMusicVolume(volume) {
 musicVolume = clamp(Number(volume), 0, 1);
 if (window.audio) {
 window.audio.volume = musicVolume;
 if (musicVolume > 0 && window.audio.paused) {
-window.audio.play().catch(() => {});
+window.audio.play().then(syncMusicMotion).catch(() => {});
 }
 }
+syncMusicMotion();
 }
 
 function getMusicVolume() {
@@ -1182,6 +1220,7 @@ window.audio = audio;
 audio.loop = true;
 audio.volume = 0;
 audio.play().then(() => {
+syncMusicMotion();
 let startTime=performance.now()+3e3;
 
 function fadeIn(now) {
@@ -1194,7 +1233,9 @@ musicFadeFrame = requestAnimationFrame(fadeIn);
 
 musicFadeFrame = requestAnimationFrame(fadeIn);
 if (window.syncAudioUI) window.syncAudioUI();
-}).catch(() => {});
+}).catch(() => {
+syncMusicMotion();
+});
 }
 
 function stopMusic() {
@@ -1218,14 +1259,17 @@ return;
 }
 destroyAudioNow(audio);
 if (window.fadingAudio === audio) window.fadingAudio = null;
+syncMusicMotion();
 if (window.syncAudioUI) window.syncAudioUI();
 }
 
+syncMusicMotion();
 musicFadeFrame = requestAnimationFrame(fadeOut);
 }
 
 window.stopMusic = stopMusic;
 window.startMusic = startMusic;
+window.syncMusicMotion = syncMusicMotion;
 window.destroyAudioNow = destroyAudioNow;
 window.setMusicVolume = setMusicVolume;
 window.getMusicVolume = getMusicVolume;
@@ -1422,6 +1466,8 @@ bottle.style.setProperty("--rose-color", rosePalette[1]);
 bottle.style.setProperty("--rose-deep", rosePalette[2]);
 bottle.style.setProperty("--rose-tilt", "0deg");
 bottle.style.setProperty("--rose-bloom-tilt", "0deg");
+bottle.style.setProperty("--flower-sway-angle", `${random(2.8, 5.2).toFixed(1)}deg`);
+bottle.style.setProperty("--flower-sway-duration", `${random(3.2, 4.8).toFixed(2)}s`);
 const flowerClass = flowerClasses[Math.floor(Math.random() * flowerClasses.length)];
 bottle.innerHTML = `
 <button class="voice-bottle-close" type="button" aria-label="关闭卡片并结束体验">×</button>
@@ -1588,9 +1634,13 @@ return;
 }
 
 if (window.audio.paused) {
-window.audio.play().then(syncUI).catch(syncUI);
+window.audio.play().then(() => {
+if (window.syncMusicMotion) window.syncMusicMotion();
+syncUI();
+}).catch(syncUI);
 } else {
 window.audio.pause();
+if (window.syncMusicMotion) window.syncMusicMotion();
 syncUI();
 return;
 }
