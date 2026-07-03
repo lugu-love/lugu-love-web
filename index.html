@@ -982,10 +982,19 @@ justify-content: center;
 align-items: baseline;
 gap: clamp(2px, .55vw, 8px);
 white-space: nowrap;
+transform: translateX(var(--line-shift, 0));
 }
 
 .touch-guide .guide-line + .guide-line {
 margin-top: clamp(14px, 2.7vw, 30px);
+}
+
+.touch-guide .guide-line:first-child {
+--line-shift: clamp(-30px, -5.2vw, -18px);
+}
+
+.touch-guide .guide-line:nth-child(2) {
+--line-shift: clamp(18px, 5.2vw, 30px);
 }
 
 .touch-guide .guide-part {
