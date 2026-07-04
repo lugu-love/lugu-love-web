@@ -234,6 +234,11 @@ animation: bottle-arrive var(--bottle-arrive) linear forwards;
 filter: drop-shadow(0 0 18px rgba(118, 201, 255, .28)) drop-shadow(0 0 30px rgba(255, 205, 116, .46));
 }
 
+.voice-bottle.is-closing {
+pointer-events: none;
+animation: bottle-close 2s ease forwards;
+}
+
 .voice-bottle-glass {
 position: absolute;
 left: 50%;
@@ -631,20 +636,99 @@ box-shadow: -7px 9px 0 -2px var(--rose-color), 7px 18px 0 -2px var(--rose-light)
 
 .voice-letter-footer {
 position: absolute;
-right: 18px;
-bottom: 16px;
-color: #fff;
-font-family: "Songti SC", "SimSun", serif;
-font-size: 10px;
-line-height: 1.35;
-letter-spacing: .04em;
-text-align: right;
+left: 15px;
+bottom: 14px;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: 3px;
+color: rgba(255, 250, 236, .9);
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-size: clamp(10px, .95vw, 13px);
+font-weight: 300;
+line-height: 1.28;
+letter-spacing: .1em;
+text-align: left;
+opacity: 0;
+filter: blur(2px);
+transform: translateY(5px);
+text-shadow: 0 0 8px rgba(255, 236, 184, .22);
+transition: opacity 1.2s ease, filter 1.2s ease, transform 1.2s ease;
 }
 
-.voice-letter-footer span {
+.voice-letter-footer.is-visible {
+opacity: .78;
+filter: blur(0);
+transform: translateY(0);
+}
+
+.voice-letter-footer-line {
 display: block;
-font-size: 9px;
-letter-spacing: .01em;
+white-space: nowrap;
+}
+
+.voice-letter-footer-line:first-child {
+padding-left: 6px;
+color: rgba(255, 246, 214, .94);
+}
+
+.voice-letter-footer-line:last-child {
+padding-left: 0;
+font-size: .88em;
+letter-spacing: .07em;
+color: rgba(225, 236, 255, .74);
+}
+
+.voice-world-button {
+position: absolute;
+right: 18px;
+bottom: 15px;
+display: inline-flex;
+align-items: center;
+gap: 5px;
+min-height: 24px;
+padding: 4px 9px 4px 8px;
+border: 1px solid rgba(255, 243, 204, .38);
+border-radius: 999px;
+background: linear-gradient(135deg, rgba(255, 248, 222, .16), rgba(176, 215, 255, .08));
+box-shadow: 0 0 12px rgba(255, 223, 147, .12), inset 0 0 10px rgba(255, 255, 255, .08);
+color: rgba(255, 246, 218, .9);
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-size: clamp(10px, .9vw, 12px);
+font-weight: 300;
+letter-spacing: .06em;
+line-height: 1;
+text-shadow: 0 0 8px rgba(255, 236, 184, .24);
+cursor: pointer;
+opacity: 0;
+filter: blur(2px);
+transform: translateY(5px) translateX(-4px);
+transition: opacity 1.2s ease .14s, filter 1.2s ease .14s, transform 1.2s ease .14s, border-color .3s ease, background .3s ease, box-shadow .3s ease;
+}
+
+.voice-world-button::before {
+content: "✦";
+font-size: .9em;
+color: rgba(196, 224, 255, .9);
+text-shadow: 0 0 8px rgba(130, 194, 255, .38);
+}
+
+.voice-world-button.is-visible {
+opacity: .86;
+filter: blur(0);
+transform: translateY(0) translateX(0);
+}
+
+.voice-world-button:hover,
+.voice-world-button:focus-visible {
+border-color: rgba(255, 236, 174, .68);
+background: linear-gradient(135deg, rgba(255, 248, 222, .24), rgba(176, 215, 255, .14));
+box-shadow: 0 0 16px rgba(255, 223, 147, .22), inset 0 0 12px rgba(255, 255, 255, .11);
+outline: none;
+}
+
+.voice-world-button:active {
+transform: translateY(1px) translateX(0);
 }
 
 .voice-letter-pager {
@@ -790,6 +874,20 @@ filter: blur(1px) brightness(1.9);
 opacity: 1;
 transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 50px), 0) rotate(-24deg) scale(1.16);
 filter: blur(0) brightness(1);
+}
+}
+
+@keyframes bottle-close {
+0% {
+opacity: 1;
+transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 50px), 0) rotate(-24deg) scale(1.16);
+filter: blur(0) brightness(1);
+}
+
+100% {
+opacity: 0;
+transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 50px), 0) rotate(-18deg) scale(.78);
+filter: blur(3px) brightness(.82);
 }
 }
 
@@ -977,6 +1075,10 @@ will-change: opacity, filter, transform;
 animation: guide-life 54s linear forwards;
 }
 
+.touch-guide.is-dismissing {
+animation: guide-dismiss 1.6s ease forwards;
+}
+
 .touch-guide .guide-line {
 display: flex;
 justify-content: center;
@@ -1099,6 +1201,10 @@ will-change: opacity, filter, transform;
 animation: guide-heart-away 54s linear forwards;
 }
 
+.touch-guide.is-dismissing + .guide-final-heart {
+animation: guide-heart-dismiss .42s ease forwards;
+}
+
 @keyframes guide-life {
 0% {
 opacity: 0;
@@ -1185,6 +1291,26 @@ transform: translateX(-50%) scale(.02);
 }
 }
 
+@keyframes guide-dismiss {
+0% {
+opacity: 1;
+filter: brightness(1.05);
+transform: translateX(-50%) scale(1);
+}
+
+50% {
+opacity: .54;
+filter: brightness(.9) blur(1.4px);
+transform: translateX(-50%) scale(.62);
+}
+
+100% {
+opacity: 0;
+filter: brightness(.65) blur(3.4px);
+transform: translateX(-50%) scale(.18);
+}
+}
+
 @keyframes guide-heart-away {
 0%,
 78% {
@@ -1227,6 +1353,20 @@ transform: translateX(-50%) scale(.12);
 opacity: 0;
 filter: brightness(.72) blur(3px);
 transform: translateX(-50%) scale(.05);
+}
+}
+
+@keyframes guide-heart-dismiss {
+0% {
+opacity: .9;
+filter: brightness(1.08);
+transform: translateX(-50%) scale(.58);
+}
+
+100% {
+opacity: 0;
+filter: brightness(.65) blur(3px);
+transform: translateX(-50%) scale(.24);
 }
 }
 
@@ -1438,12 +1578,12 @@ const messages = [
 "有些答案，会在慢慢靠近时发光。"
 ];
 const origins = [
-"来自上海 From Shanghai",
-"来自北京 From Beijing",
-"来自广州 From Guangzhou",
-"来自美国纽约 From New York",
-"来自日本东京 東京から",
-"来自法国巴黎 Depuis Paris"
+"中国·上海",
+"中国·北京",
+"中国·广州",
+"美国·纽约",
+"日本·东京",
+"法国·巴黎"
 ];
 const handFonts = [
 '"Kaiti SC", "STKaiti", "KaiTi", cursive',
@@ -1459,7 +1599,8 @@ const rosePalettes = [
 ["rgba(255, 235, 210, .96)", "rgba(226, 174, 128, .96)", "rgba(135, 85, 48, .94)"]
 ];
 const flowerClasses = ["flower-rose", "flower-blossom", "flower-daisy"];
-const musicList = [
+const backgroundMusicSrc = "assets/music/piano-earth-loop-6s.mp3";
+const voiceMusicList = [
 "assets/music/native-american-flute.m4a",
 "assets/music/p-aaa0536-54f92252.m4a",
 "assets/music/p-mzpy00978-ccbf4fd7.m4a"
@@ -1467,15 +1608,31 @@ const musicList = [
 const stars = new Set();
 let nextSpawn = 0;
 let lastLetterTilt = null;
-let musicFadeFrame = 0;
-let musicIndex = 0;
+let heartStarCounter = 0;
+let musicFadeFrames = new Set();
+let backgroundMusicTimer = 0;
+let musicLoopTimer = 0;
+let musicSession = 0;
+let backgroundMusicPlayCount = 0;
+let openingAfterLaughScheduled = false;
 let musicVolume = .6;
+let voiceMusicIndex = 0;
+let voiceMusicFadeFrame = 0;
+let voiceMusicStartTimer = 0;
+let voiceAudio = null;
+let fadingVoiceAudio = null;
+const activeMusicAudios = new Set();
+const musicStartFadeDuration = 900;
+const musicLoopCrossfadeDuration = 1600;
+const backgroundMusicMaxPlays = 3;
+const voiceMusicStartDelay = 1000;
 const starClickSoundSrc = "assets/sounds/star-click-typing.m4a";
 const openingLaughSoundSrc = "assets/sounds/child-laugh.m4a";
 const typingKeySoundSrc = "assets/sounds/typing-key-source.m4a";
 const typingKeyVolume = .32;
 const typingKeyStartAt = 0;
 let typingKeyAudio = null;
+let activeVoiceExperience = null;
 
 const random = (min, max) => min + Math.random() * (max - min);
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -1501,18 +1658,51 @@ return tilt;
 
 function destroyAudioNow(audio) {
 if (!audio) return;
+activeMusicAudios.delete(audio);
 audio.pause();
 audio.src = "";
 audio.load();
 }
 
+function cancelMusicAnimations() {
+musicFadeFrames.forEach((frame) => cancelAnimationFrame(frame));
+musicFadeFrames.clear();
+clearTimeout(musicLoopTimer);
+}
+
+function animateAudioVolume(audio, from, to, duration, onDone) {
+const startTime = performance.now();
+let frame = 0;
+
+function fade(now) {
+musicFadeFrames.delete(frame);
+const progress = clamp((now - startTime) / duration, 0, 1);
+const easedProgress = progress * progress * (3 - 2 * progress);
+audio.volume = from + (to - from) * easedProgress;
+if (progress < 1) {
+frame = requestAnimationFrame(fade);
+musicFadeFrames.add(frame);
+return;
+}
+if (onDone) onDone();
+}
+
+frame = requestAnimationFrame(fade);
+musicFadeFrames.add(frame);
+}
+
 function syncMusicMotion() {
-const isMoving = Boolean((window.audio && !window.audio.paused && musicVolume > 0) || window.fadingAudio);
+const isMoving = Boolean(
+Array.from(activeMusicAudios).some((audio) => !audio.paused && musicVolume > 0) ||
+(voiceAudio && !voiceAudio.paused && musicVolume > 0) ||
+(fadingVoiceAudio && !fadingVoiceAudio.paused)
+);
 document.body.classList.toggle("is-music-playing", isMoving);
 }
 
 function setMusicVolume(volume) {
 musicVolume = clamp(Number(volume), 0, 1);
+if (voiceAudio) voiceAudio.volume = musicVolume;
 if (window.audio) {
 window.audio.volume = musicVolume;
 if (musicVolume > 0 && window.audio.paused) {
@@ -1533,8 +1723,15 @@ audio.play().catch(() => {});
 }
 
 let touchGuideTimer = 0;
+let touchGuideDismissTimer = 0;
+let voiceStarStartTimer = 0;
 let touchGuideShown = false;
 let touchGuideScheduled = false;
+let voiceStarsEnabled = false;
+const touchGuideCompleteDelay = 11000;
+const touchGuideHoldDuration = 2000;
+const touchGuideDismissDuration = 1600;
+const touchGuideEnglishDelay = 8200;
 
 function showTouchGuide() {
 if (touchGuideShown) return;
@@ -1546,6 +1743,9 @@ touchGuideScheduled = false;
 guide.classList.remove("is-visible");
 void guide.offsetWidth;
 guide.classList.add("is-visible");
+clearTimeout(voiceStarStartTimer);
+voiceStarStartTimer = setTimeout(startVoiceStars, touchGuideEnglishDelay);
+touchGuideDismissTimer = setTimeout(dismissTouchGuide, touchGuideCompleteDelay + touchGuideHoldDuration);
 }
 
 function scheduleTouchGuide(delay = 2000) {
@@ -1555,65 +1755,256 @@ clearTimeout(touchGuideTimer);
 touchGuideTimer = setTimeout(showTouchGuide, delay);
 }
 
+function dismissTouchGuide() {
+const guide = document.querySelector(".touch-guide");
+clearTimeout(touchGuideTimer);
+clearTimeout(touchGuideDismissTimer);
+clearTimeout(backgroundMusicTimer);
+touchGuideShown = true;
+touchGuideScheduled = false;
+if (!guide || guide.classList.contains("is-dismissing")) {
+scheduleVoiceStarsAfterGuideRetreat();
+return;
+}
+if (!guide.classList.contains("is-visible")) {
+scheduleVoiceStarsAfterGuideRetreat();
+return;
+}
+
+void guide.offsetWidth;
+guide.classList.add("is-dismissing");
+scheduleVoiceStarsAfterGuideRetreat();
+}
+
+function scheduleVoiceStarsAfterGuideRetreat() {
+if (voiceStarsEnabled) return;
+clearTimeout(voiceStarStartTimer);
+startVoiceStars();
+}
+
+function startVoiceStars() {
+if (voiceStarsEnabled) return;
+voiceStarsEnabled = true;
+nextSpawn = performance.now() + random(260, 720);
+
+for (let index = 0; index < 10; index += 1) {
+setTimeout(spawnVoiceStar, index * random(760, 1280));
+}
+}
+
+function scheduleOpeningBackgroundMusic(delay = 1000) {
+clearTimeout(backgroundMusicTimer);
+backgroundMusicTimer = setTimeout(() => {
+startMusic();
+}, delay);
+}
+
+function scheduleOpeningAfterLaugh(delay = 1000) {
+if (openingAfterLaughScheduled) return;
+openingAfterLaughScheduled = true;
+scheduleTouchGuide(delay);
+scheduleOpeningBackgroundMusic(delay);
+}
+
 function playOpeningLaughSound(){
 window.l=1;
 const audio = new Audio(openingLaughSoundSrc);
 const fallbackDelay = 7400;
 
-audio.addEventListener("ended", () => scheduleTouchGuide(2000), { once: true });
+audio.addEventListener("ended", () => scheduleOpeningAfterLaugh(1000), { once: true });
 audio.play().catch(() => {
-scheduleTouchGuide(fallbackDelay);
+scheduleOpeningAfterLaugh(fallbackDelay);
 });
-setTimeout(() => scheduleTouchGuide(0), fallbackDelay);
+setTimeout(() => scheduleOpeningAfterLaugh(0), fallbackDelay);
+}
+
+function armBackgroundLoop(audio, session) {
+function scheduleNext() {
+if (session !== musicSession || audio.dataset.nextLoopScheduled === "true") return;
+if (backgroundMusicPlayCount >= backgroundMusicMaxPlays) return;
+if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+
+audio.dataset.nextLoopScheduled = "true";
+const crossfadeSeconds = Math.min(musicLoopCrossfadeDuration / 1000, Math.max(audio.duration * .32, .35));
+const delay = Math.max((audio.duration - crossfadeSeconds) * 1000, 250);
+musicLoopTimer = setTimeout(() => crossfadeBackgroundLoop(audio, session), delay);
+}
+
+if (Number.isFinite(audio.duration) && audio.duration > 0) {
+scheduleNext();
+} else {
+audio.addEventListener("loadedmetadata", scheduleNext, { once: true });
+}
+}
+
+function playBackgroundTrack(session, fadeDuration = musicStartFadeDuration) {
+if (session !== musicSession) return;
+if (backgroundMusicPlayCount >= backgroundMusicMaxPlays) return;
+backgroundMusicPlayCount += 1;
+const audio = new Audio(backgroundMusicSrc);
+audio.loop = false;
+audio.volume = 0;
+audio.preload = "auto";
+window.audio = audio;
+activeMusicAudios.add(audio);
+
+audio.addEventListener("ended", () => {
+if (session === musicSession && window.audio === audio) {
+playBackgroundTrack(session, fadeDuration);
+}
+if (window.audio === audio) window.audio = null;
+destroyAudioNow(audio);
+syncMusicMotion();
+if (window.syncAudioUI) window.syncAudioUI();
+}, { once: true });
+
+audio.play().then(() => {
+syncMusicMotion();
+animateAudioVolume(audio, 0, musicVolume, fadeDuration);
+armBackgroundLoop(audio, session);
+if (window.syncAudioUI) window.syncAudioUI();
+}).catch(() => {
+destroyAudioNow(audio);
+syncMusicMotion();
+});
+}
+
+function crossfadeBackgroundLoop(currentAudio, session) {
+if (session !== musicSession || !activeMusicAudios.has(currentAudio)) return;
+if (backgroundMusicPlayCount >= backgroundMusicMaxPlays) return;
+backgroundMusicPlayCount += 1;
+
+const nextAudio = new Audio(backgroundMusicSrc);
+nextAudio.loop = false;
+nextAudio.volume = 0;
+nextAudio.preload = "auto";
+window.audio = nextAudio;
+activeMusicAudios.add(nextAudio);
+
+nextAudio.addEventListener("ended", () => {
+if (session === musicSession && window.audio === nextAudio) {
+playBackgroundTrack(session, musicLoopCrossfadeDuration);
+}
+if (window.audio === nextAudio) window.audio = null;
+destroyAudioNow(nextAudio);
+syncMusicMotion();
+if (window.syncAudioUI) window.syncAudioUI();
+}, { once: true });
+
+nextAudio.play().then(() => {
+syncMusicMotion();
+animateAudioVolume(nextAudio, 0, musicVolume, musicLoopCrossfadeDuration);
+animateAudioVolume(currentAudio, currentAudio.volume, 0, musicLoopCrossfadeDuration, () => {
+destroyAudioNow(currentAudio);
+syncMusicMotion();
+});
+armBackgroundLoop(nextAudio, session);
+if (window.syncAudioUI) window.syncAudioUI();
+}).catch(() => {
+window.audio = currentAudio;
+syncMusicMotion();
+});
 }
 
 function startMusic() {
-if (musicList.length === 0) return;
-
-if (window.fadingAudio) {
-cancelAnimationFrame(musicFadeFrame);
-destroyAudioNow(window.fadingAudio);
-window.fadingAudio = null;
-}
-
-if (window.audio) {
-cancelAnimationFrame(musicFadeFrame);
-destroyAudioNow(window.audio);
+clearTimeout(backgroundMusicTimer);
+cancelMusicAnimations();
+Array.from(activeMusicAudios).forEach(destroyAudioNow);
+activeMusicAudios.clear();
 window.audio = null;
+window.fadingAudio = null;
+musicSession += 1;
+backgroundMusicPlayCount = 0;
+playBackgroundTrack(musicSession);
 }
 
-const src = musicList[musicIndex % musicList.length];
-musicIndex += 1;
+function stopMusic() {
+clearTimeout(backgroundMusicTimer);
+cancelMusicAnimations();
+musicSession += 1;
+backgroundMusicPlayCount = 0;
+const audios = new Set(activeMusicAudios);
+if (window.audio && window.audio !== voiceAudio && window.audio !== fadingVoiceAudio) audios.add(window.audio);
+if (window.fadingAudio && window.fadingAudio !== voiceAudio && window.fadingAudio !== fadingVoiceAudio) audios.add(window.fadingAudio);
+if (audios.size === 0) {
+syncMusicMotion();
+if (window.syncAudioUI) window.syncAudioUI();
+return;
+}
+
+window.audio = null;
+window.fadingAudio = null;
+const fadeOutDuration = 1600;
+
+audios.forEach((audio) => {
+activeMusicAudios.add(audio);
+animateAudioVolume(audio, audio.volume, 0, fadeOutDuration, () => {
+destroyAudioNow(audio);
+syncMusicMotion();
+if (window.syncAudioUI) window.syncAudioUI();
+});
+});
+
+syncMusicMotion();
+if (window.syncAudioUI) window.syncAudioUI();
+}
+
+function startVoiceMusic() {
+if (voiceMusicList.length === 0) return;
+
+clearTimeout(voiceMusicStartTimer);
+cancelAnimationFrame(voiceMusicFadeFrame);
+destroyAudioNow(voiceAudio);
+destroyAudioNow(fadingVoiceAudio);
+voiceAudio = null;
+fadingVoiceAudio = null;
+
+const src = voiceMusicList[voiceMusicIndex % voiceMusicList.length];
+voiceMusicIndex += 1;
 const audio = new Audio(src);
+voiceAudio = audio;
 window.audio = audio;
 audio.loop = true;
 audio.volume = 0;
 audio.play().then(() => {
 syncMusicMotion();
-let startTime=performance.now()+3e3;
+const startTime = performance.now();
 
 function fadeIn(now) {
 const progress = clamp((now - startTime) / 2000, 0, 1);
 audio.volume = musicVolume * progress;
-if (progress < 1 && window.audio === audio) {
-musicFadeFrame = requestAnimationFrame(fadeIn);
+if (progress < 1 && voiceAudio === audio) {
+voiceMusicFadeFrame = requestAnimationFrame(fadeIn);
 }
 }
 
-musicFadeFrame = requestAnimationFrame(fadeIn);
+voiceMusicFadeFrame = requestAnimationFrame(fadeIn);
 if (window.syncAudioUI) window.syncAudioUI();
 }).catch(() => {
+if (voiceAudio === audio) voiceAudio = null;
+if (window.audio === audio) window.audio = null;
+destroyAudioNow(audio);
 syncMusicMotion();
+if (window.syncAudioUI) window.syncAudioUI();
 });
 }
 
-function stopMusic() {
-const audio = window.audio;
+function scheduleVoiceMusicStart(delay = voiceMusicStartDelay) {
+clearTimeout(voiceMusicStartTimer);
+voiceMusicStartTimer = setTimeout(() => {
+startVoiceMusic();
+}, delay);
+}
+
+function stopVoiceMusic() {
+clearTimeout(voiceMusicStartTimer);
+const audio = voiceAudio;
 if (!audio) return;
 
-cancelAnimationFrame(musicFadeFrame);
-window.audio = null;
-window.fadingAudio = audio;
+cancelAnimationFrame(voiceMusicFadeFrame);
+voiceAudio = null;
+if (window.audio === audio) window.audio = null;
+fadingVoiceAudio = audio;
 const startVolume = audio.volume;
 const startTime = performance.now();
 const fadeOutDuration = 1600;
@@ -1623,21 +2014,23 @@ const progress = clamp((now - startTime) / fadeOutDuration, 0, 1);
 const easedProgress = progress * progress * (3 - 2 * progress);
 audio.volume = startVolume * (1 - easedProgress);
 if (progress < 1) {
-musicFadeFrame = requestAnimationFrame(fadeOut);
+voiceMusicFadeFrame = requestAnimationFrame(fadeOut);
 return;
 }
 destroyAudioNow(audio);
-if (window.fadingAudio === audio) window.fadingAudio = null;
+if (fadingVoiceAudio === audio) fadingVoiceAudio = null;
 syncMusicMotion();
 if (window.syncAudioUI) window.syncAudioUI();
 }
 
 syncMusicMotion();
-musicFadeFrame = requestAnimationFrame(fadeOut);
+voiceMusicFadeFrame = requestAnimationFrame(fadeOut);
 }
 
 window.stopMusic = stopMusic;
 window.startMusic = startMusic;
+window.stopVoiceMusic = stopVoiceMusic;
+window.startVoiceMusic = startVoiceMusic;
 window.syncMusicMotion = syncMusicMotion;
 window.destroyAudioNow = destroyAudioNow;
 window.setMusicVolume = setMusicVolume;
@@ -1767,6 +2160,7 @@ phase: random(0, Math.PI * 2),
 breathePower: random(.36, .58),
 born: performance.now(),
 clicked: false,
+heartStarNo: String(++heartStarCounter).padStart(4, "0"),
 message: messages[Math.floor(Math.random() * messages.length)],
 origin: origins[Math.floor(Math.random() * origins.length)]
 };
@@ -1789,10 +2183,50 @@ minute: "2-digit"
 return `${date} ${time}`;
 }
 
-function openVoiceBottle(star){if(star.clicked)return;if(!window.l){playOpeningLaughSound();return}playStarClickSound();startMusic();unlockTypingKeySounds();star.clicked=true;star.element.classList.add("is-touched");
+function closeActiveVoiceExperience() {
+if (!activeVoiceExperience) return;
+activeVoiceExperience.close();
+}
 
+function openVoiceBottle(star){if(star.clicked)return;if(!window.l){playOpeningLaughSound();return}dismissTouchGuide();closeActiveVoiceExperience();stopMusic();playStarClickSound();scheduleVoiceMusicStart();unlockTypingKeySounds();star.clicked=true;star.element.classList.add("is-touched");
+
+let bottle = null;
+let typeTimer = 0;
+let startTypewriter = 0;
+let closed = false;
+function stopTyping() {
+clearInterval(typeTimer);
+if (bottle) {
+const textNode = bottle.querySelector(".voice-letter-text");
+if (textNode) textNode.classList.remove("is-typing");
+}
+stopTypingKeySound();
+}
+function closeCard() {
+if (closed) return;
+closed = true;
+clearTimeout(cardTimer);
+clearTimeout(startTypewriter);
+stopTyping();
+stopVoiceMusic();
+star.element.remove();
+stars.delete(star);
+if (activeVoiceExperience && activeVoiceExperience.close === closeCard) {
+activeVoiceExperience = null;
+}
+if (!bottle) return;
+
+bottle.classList.add("is-closing");
 setTimeout(() => {
-const bottle = document.createElement("div");
+bottle.remove();
+}, 2000);
+}
+
+activeVoiceExperience = { close: closeCard };
+
+const cardTimer = setTimeout(() => {
+if (closed) return;
+bottle = document.createElement("div");
 const safeMessage = star.message.replace(/[&<>"']/g, (char) => ({
 "&": "&amp;",
 "<": "&lt;",
@@ -1801,6 +2235,13 @@ const safeMessage = star.message.replace(/[&<>"']/g, (char) => ({
 "'": "&#39;"
 }[char]));
 const safeOrigin = star.origin.replace(/[&<>"']/g, (char) => ({
+"&": "&amp;",
+"<": "&lt;",
+">": "&gt;",
+'"': "&quot;",
+"'": "&#39;"
+}[char]));
+const safeHeartStarNo = star.heartStarNo.replace(/[&<>"']/g, (char) => ({
 "&": "&amp;",
 "<": "&lt;",
 ">": "&gt;",
@@ -1847,6 +2288,11 @@ bottle.innerHTML = `
 <span class="voice-letter-rose ${flowerClass}"><i></i></span>
 <div class="voice-letter">
 <span class="voice-letter-text" aria-label="${safeMessage}"></span>
+<span class="voice-letter-footer">
+<span class="voice-letter-footer-line">—— 心星号 ${safeHeartStarNo}</span>
+<span class="voice-letter-footer-line">${safeOrigin} · ${safeTime}</span>
+</span>
+<button class="voice-world-button" type="button" aria-label="进入 ta 的世界">进入 ta 的世界</button>
 </div>
 <div class="voice-bottle-heart-rays"></div>
 <div class="voice-bottle-heart"><span class="diamond-facet"></span></div>
@@ -1855,6 +2301,8 @@ document.body.appendChild(bottle);
 
 const letterNode = bottle.querySelector(".voice-letter");
 const textNode = bottle.querySelector(".voice-letter-text");
+const footerNode = bottle.querySelector(".voice-letter-footer");
+const worldButton = bottle.querySelector(".voice-world-button");
 const prevButton = bottle.querySelector(".voice-page-prev");
 const nextButton = bottle.querySelector(".voice-page-next");
 const pageStatus = bottle.querySelector(".voice-page-status");
@@ -1868,18 +2316,14 @@ if (pages.length > 1) {
 letterNode.classList.add("has-pages");
 }
 const typeStart = (arriveSeconds + 1.55) * 1000;
-let typeTimer = 0;
 let typeIndex = 0;
 let currentPage = 0;
-function stopTyping() {
-clearInterval(typeTimer);
-textNode.classList.remove("is-typing");
-stopTypingKeySound();
-}
 function renderPage(pageIndex) {
 stopTyping();
 currentPage = clamp(pageIndex, 0, pages.length - 1);
 textNode.innerHTML = "";
+if (footerNode) footerNode.classList.remove("is-visible");
+if (worldButton) worldButton.classList.remove("is-visible");
 const pageChars = Array.from(pages[currentPage]);
 typeIndex = 0;
 if (pageStatus) pageStatus.textContent = `${currentPage + 1} / ${pages.length}`;
@@ -1897,22 +2341,21 @@ textNode.appendChild(charSpan);
 typeIndex += 1;
 if (typeIndex >= pageChars.length) {
 stopTyping();
+if (footerNode) footerNode.classList.add("is-visible");
+if (worldButton) worldButton.classList.add("is-visible");
 }
 }, 300);
 }
-const startTypewriter = setTimeout(() => {
+startTypewriter = setTimeout(() => {
 renderPage(0);
 }, typeStart);
 
 if (prevButton) prevButton.addEventListener("click", () => renderPage(currentPage - 1));
 if (nextButton) nextButton.addEventListener("click", () => renderPage(currentPage + 1));
-
-function closeCard() {
-clearTimeout(startTypewriter);
-stopTyping();
-stopMusic();
-bottle.remove();
-}
+if (worldButton) worldButton.addEventListener("click", (event) => {
+event.stopPropagation();
+worldButton.blur();
+});
 
 bottle.querySelector(".voice-bottle-close").addEventListener("click", () => {
 closeCard();
@@ -1925,7 +2368,7 @@ stars.delete(star);
 }
 
 function updateVoiceStars(now) {
-if (now > nextSpawn) {
+if (voiceStarsEnabled && now > nextSpawn) {
 spawnVoiceStar();
 nextSpawn = now + random(880, 1900);
 }
@@ -1961,10 +2404,6 @@ star.element.style.filter = `brightness(${(1.12 + breathe * 1.02).toFixed(2)}) s
 });
 
 requestAnimationFrame(updateVoiceStars);
-}
-
-for (let index = 0; index < 10; index += 1) {
-setTimeout(spawnVoiceStar, 900 + index * random(760, 1280));
 }
 
 setTimeout(playOpeningLaughSound, 500);
