@@ -228,7 +228,7 @@ font-size: 13px;
 letter-spacing: .04em;
 text-align: center;
 opacity: 0;
-transform: translate3d(var(--bottle-x), var(--bottle-y), 0) rotate(-24deg) scale(.1);
+transform: translate3d(var(--bottle-x), calc(var(--bottle-y) - 12px), 0) rotate(-24deg) scale(.1);
 pointer-events: auto;
 animation: bottle-arrive var(--bottle-arrive) linear forwards;
 filter: drop-shadow(0 0 18px rgba(118, 201, 255, .28)) drop-shadow(0 0 30px rgba(255, 205, 116, .46));
@@ -1004,13 +1004,13 @@ animation: close-show 1s ease calc(var(--letter-delay) + .75s) forwards;
 @keyframes bottle-arrive {
 0% {
 opacity: 0;
-transform: translate3d(var(--bottle-x), var(--bottle-y), 0) rotate(-24deg) scale(.1);
+transform: translate3d(var(--bottle-x), calc(var(--bottle-y) - 12px), 0) rotate(-24deg) scale(.1);
 filter: blur(1px) brightness(1.9);
 }
 
 100% {
 opacity: 1;
-transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 50px), 0) rotate(-24deg) scale(1.16);
+transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 62px), 0) rotate(-24deg) scale(1.16);
 filter: blur(0) brightness(1);
 }
 }
@@ -1018,13 +1018,13 @@ filter: blur(0) brightness(1);
 @keyframes bottle-close {
 0% {
 opacity: 1;
-transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 50px), 0) rotate(-24deg) scale(1.16);
+transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 62px), 0) rotate(-24deg) scale(1.16);
 filter: blur(0) brightness(1);
 }
 
 100% {
 opacity: 0;
-transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 50px), 0) rotate(-18deg) scale(.78);
+transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 62px), 0) rotate(-18deg) scale(.78);
 filter: blur(3px) brightness(.82);
 }
 }
@@ -1540,7 +1540,7 @@ left: 50%;
 bottom: 24px;
 z-index: 2;
 transform: translateX(-50%);
-color: rgba(255, 244, 214, .5);
+color: #fff;
 font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
 font-size: clamp(11px, 1vw, 14px);
 font-weight: 300;
@@ -1554,7 +1554,7 @@ pointer-events: none;
 .my-space-button {
 position: fixed;
 left: 50%;
-bottom: 48px;
+bottom: 60px;
 z-index: 4;
 width: clamp(86px, 8.2vw, 120px);
 height: clamp(66px, 6.8vw, 90px);
@@ -1805,13 +1805,13 @@ transform: rotate(360deg);
 
 @keyframes approach-earth {
 from {
-top: 8vh;
+top: calc(8vh - 12px);
 left: 8vw;
 transform: translate(-50%, -50%) scale(.02);
 }
 
 to {
-top: 50vh;
+top: calc(50vh - 12px);
 left: 50vw;
 transform: translate(-50%, -50%) scale(1);
 }
