@@ -197,30 +197,48 @@ opacity: 1;
 transform: translateY(0);
 }
 
-.nav {
+.earth-return {
 position: fixed;
-top: max(10px, env(safe-area-inset-top));
-left: max(12px, env(safe-area-inset-left));
-right: max(12px, env(safe-area-inset-right));
-z-index: 999;
-display: flex;
-justify-content: space-between;
-pointer-events: none;
+top: max(15px, env(safe-area-inset-top));
+left: max(15px, env(safe-area-inset-left));
+z-index: 9999;
 }
 
-.nav button {
-pointer-events: auto;
-min-height: 36px;
-padding: 10px 14px;
-border: 0;
-border-radius: 999px;
-background: rgba(255, 255, 255, .15);
-backdrop-filter: blur(10px);
-box-shadow: 0 10px 28px rgba(0, 0, 0, .18);
+.earth-return a,
+.bottom-nav a {
 color: #fff;
-font-size: 12px;
-font-weight: 650;
-cursor: pointer;
+text-decoration: none;
+}
+
+.earth-return a {
+display: flex;
+align-items: center;
+gap: 6px;
+padding: 8px 12px;
+border-radius: 20px;
+background: rgba(255, 255, 255, .08);
+backdrop-filter: blur(10px);
+font-size: 14px;
+}
+
+.bottom-nav {
+position: fixed;
+left: 0;
+bottom: 0;
+z-index: 9999;
+display: flex;
+width: 100%;
+justify-content: space-between;
+padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+background: rgba(0, 0, 0, .45);
+backdrop-filter: blur(10px);
+color: #fff;
+font-size: 14px;
+}
+
+.bottom-nav a {
+flex: 1;
+text-align: center;
 }
 
 @media (max-width: 520px) {
@@ -238,10 +256,15 @@ width: 100%;
 
 <body>
 
-<!-- 统一导航系统 -->
-<div class="nav" aria-label="我的空间导航">
-<button type="button" onclick="goHome()">🏠 首页</button>
-<button type="button" onclick="goBack()">← 返回</button>
+<!-- V1.1 全局导航系统 -->
+<div class="earth-return">
+<a href="index.html">🌍 返回地球</a>
+</div>
+
+<div class="bottom-nav" aria-label="全局导航">
+<a href="index.html">🌍 地球</a>
+<a href="my.html">🏠 我的空间</a>
+<a href="taspace.html">💫 TA空间</a>
 </div>
 
 <main class="screen">
@@ -296,7 +319,6 @@ background: "radial-gradient(circle at 50% 30%, rgba(255, 190, 250, .38), transp
 };
 
 let style = localStorage.getItem("style") || "star";
-let state = "control"; // control | space
 
 if (!styleMap[style]) {
 style = "star";
@@ -338,7 +360,6 @@ const card = document.getElementById("card");
 
 document.body.style.background = selectedStyle.background;
 document.body.classList.add("is-generated");
-state = "space";
 
 loading.classList.remove("is-visible");
 control.style.display = "none";
@@ -348,33 +369,6 @@ setTimeout(() => {
 card.innerText = `✨ 你的${selectedStyle.name}专属空间`;
 card.classList.add("show");
 }, 300);
-}
-
-function goBack() {
-if (state !== "space") return;
-
-const loading = document.getElementById("loading");
-const control = document.getElementById("control");
-const space = document.getElementById("space");
-const card = document.getElementById("card");
-
-space.classList.remove("is-visible");
-card.classList.remove("show");
-card.innerText = "✨ 你的专属空间";
-
-control.style.display = "flex";
-requestAnimationFrame(() => {
-control.classList.remove("is-leaving");
-});
-
-loading.classList.remove("is-visible");
-document.body.classList.remove("is-generated");
-document.body.style.background = "#000";
-state = "control";
-}
-
-function goHome() {
-location.href = "index.html";
 }
 
 syncActiveStyle();
