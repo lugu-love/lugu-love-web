@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Space V1.7</title>
+<title>My Space V1.7.1</title>
 
 <style>
 * {
@@ -22,7 +22,7 @@ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Micr
 color: #fff;
 background: #070915;
 overflow: hidden;
-transition: background 1.5s ease;
+transition: background 1.2s ease;
 }
 
 body::before {
@@ -189,7 +189,7 @@ letter-spacing: .06em;
 word-break: break-word;
 opacity: 0;
 transform: translateY(20px);
-transition: opacity 1.5s ease, transform 1.5s ease;
+transition: opacity 1.2s ease, transform 1.2s ease;
 }
 
 .card.show {
@@ -200,8 +200,8 @@ transform: translateY(0);
 .nav {
 position: fixed;
 top: max(10px, env(safe-area-inset-top));
-left: max(10px, env(safe-area-inset-left));
-right: max(10px, env(safe-area-inset-right));
+left: max(12px, env(safe-area-inset-left));
+right: max(12px, env(safe-area-inset-right));
 z-index: 999;
 display: flex;
 justify-content: space-between;
@@ -238,6 +238,7 @@ width: 100%;
 
 <body>
 
+<!-- 统一导航系统 -->
 <div class="nav" aria-label="我的空间导航">
 <button type="button" onclick="goHome()">🏠 首页</button>
 <button type="button" onclick="goBack()">← 返回</button>
@@ -245,7 +246,7 @@ width: 100%;
 
 <main class="screen">
 <section class="control" id="control" aria-label="我的空间生成控制">
-<p class="subtitle">MY SPACE V1.7</p>
+<p class="subtitle">MY SPACE V1.7.1</p>
 <h1 class="title">我的空间</h1>
 
 <button class="btn" type="button" onclick="generate()">
@@ -295,7 +296,7 @@ background: "radial-gradient(circle at 50% 30%, rgba(255, 190, 250, .38), transp
 };
 
 let style = localStorage.getItem("style") || "star";
-let state = "control";
+let state = "control"; // control | space
 
 if (!styleMap[style]) {
 style = "star";
@@ -320,7 +321,7 @@ showLoading();
 
 setTimeout(() => {
 enterSpace();
-}, 1000);
+}, 900);
 }
 
 function showLoading() {
@@ -368,7 +369,7 @@ control.classList.remove("is-leaving");
 
 loading.classList.remove("is-visible");
 document.body.classList.remove("is-generated");
-document.body.style.background = "#070915";
+document.body.style.background = "#000";
 state = "control";
 }
 
