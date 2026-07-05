@@ -197,6 +197,29 @@ opacity: 1;
 transform: translateY(0);
 }
 
+.back {
+position: fixed;
+top: max(20px, env(safe-area-inset-top));
+left: max(20px, env(safe-area-inset-left));
+z-index: 3;
+display: none;
+min-height: 40px;
+padding: 10px 14px;
+border: 0;
+border-radius: 999px;
+background: rgba(255, 255, 255, .2);
+backdrop-filter: blur(10px);
+box-shadow: 0 10px 28px rgba(0, 0, 0, .18);
+color: #fff;
+font-size: 14px;
+font-weight: 650;
+cursor: pointer;
+}
+
+.back.is-visible {
+display: block;
+}
+
 @media (max-width: 520px) {
 .control,
 .space {
@@ -213,6 +236,8 @@ width: 100%;
 <body>
 
 <main class="screen">
+<button class="back" id="backBtn" type="button" onclick="back()">← 返回</button>
+
 <section class="control" id="control" aria-label="我的空间生成控制">
 <p class="subtitle">MY SPACE V1.6</p>
 <h1 class="title">我的空间</h1>
@@ -302,6 +327,7 @@ const loading = document.getElementById("loading");
 const control = document.getElementById("control");
 const space = document.getElementById("space");
 const card = document.getElementById("card");
+const backBtn = document.getElementById("backBtn");
 
 document.body.style.background = selectedStyle.background;
 document.body.classList.add("is-generated");
@@ -309,11 +335,34 @@ document.body.classList.add("is-generated");
 loading.classList.remove("is-visible");
 control.style.display = "none";
 space.classList.add("is-visible");
+backBtn.classList.add("is-visible");
 
 setTimeout(() => {
 card.innerText = `✨ 你的${selectedStyle.name}专属空间`;
 card.classList.add("show");
 }, 300);
+}
+
+function back() {
+const loading = document.getElementById("loading");
+const control = document.getElementById("control");
+const space = document.getElementById("space");
+const card = document.getElementById("card");
+const backBtn = document.getElementById("backBtn");
+
+space.classList.remove("is-visible");
+backBtn.classList.remove("is-visible");
+card.classList.remove("show");
+card.innerText = "✨ 你的专属空间";
+
+control.style.display = "flex";
+requestAnimationFrame(() => {
+control.classList.remove("is-leaving");
+});
+
+loading.classList.remove("is-visible");
+document.body.classList.remove("is-generated");
+document.body.style.background = "#070915";
 }
 
 syncActiveStyle();
