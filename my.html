@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Space V1.5</title>
+
+<style>
+* {
+box-sizing: border-box;
+}
+
+html,
+body {
+width: 100%;
+min-height: 100%;
+margin: 0;
+}
+
+body {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+color: #fff;
+background: #070915;
+overflow: hidden;
+transition: background 1s ease;
+}
+
+body::before {
+content: "";
+position: fixed;
+inset: 0;
+background:
+radial-gradient(circle at 20% 18%, rgba(255, 255, 255, .18), transparent 22%),
+radial-gradient(circle at 78% 70%, rgba(108, 199, 255, .18), transparent 24%),
+radial-gradient(circle, rgba(255, 255, 255, .78) 0 1px, transparent 1.6px);
+background-size: auto, auto, 82px 82px;
+opacity: .42;
+pointer-events: none;
+transition: opacity 1s ease;
+}
+
+body.is-generated::before {
+opacity: .62;
+}
+
+.screen {
+position: relative;
+z-index: 1;
+width: 100%;
+min-height: 100vh;
+padding: max(24px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+}
+
+.control {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+min-height: 100vh;
+gap: 16px;
+text-align: center;
+}
+
+.title {
+margin: 0 0 8px;
+font-size: clamp(26px, 7vw, 44px);
+line-height: 1.08;
+letter-spacing: .08em;
+text-shadow: 0 0 24px rgba(255, 231, 184, .32);
+}
+
+.subtitle {
+margin: 0 0 8px;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: .2em;
+color: rgba(255, 244, 214, .72);
+}
+
+.btn {
+width: min(80vw, 320px);
+min-height: 54px;
+padding: 15px 18px;
+border: 0;
+border-radius: 14px;
+background: linear-gradient(135deg, #ff4d6d, #ffb703);
+box-shadow: 0 18px 42px rgba(0, 0, 0, .28), 0 0 24px rgba(255, 183, 70, .22);
+color: #fff;
+font-size: 15px;
+font-weight: 700;
+letter-spacing: .04em;
+cursor: pointer;
+transition: transform .24s ease, filter .24s ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+transform: translateY(-2px);
+filter: brightness(1.06);
+outline: none;
+}
+
+.styles {
+width: min(86vw, 360px);
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: 8px;
+}
+
+.tag {
+min-width: 58px;
+padding: 7px 12px;
+border-radius: 999px;
+border: 1px solid rgba(255, 255, 255, .3);
+background: rgba(255, 255, 255, .08);
+backdrop-filter: blur(12px);
+color: rgba(255, 255, 255, .9);
+font-size: 12px;
+font-weight: 650;
+cursor: pointer;
+transition: background .24s ease, border-color .24s ease, transform .24s ease;
+}
+
+.tag:hover,
+.tag:focus-visible,
+.tag.is-active {
+border-color: rgba(255, 255, 255, .7);
+background: rgba(255, 255, 255, .18);
+transform: translateY(-1px);
+outline: none;
+}
+
+.space {
+display: none;
+min-height: 100vh;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+gap: 18px;
+text-align: center;
+}
+
+.space.is-visible {
+display: flex;
+}
+
+.card {
+width: min(84vw, 420px);
+padding: clamp(22px, 6vw, 34px);
+border: 1px solid rgba(255, 255, 255, .18);
+border-radius: 16px;
+background: rgba(255, 255, 255, .08);
+backdrop-filter: blur(14px);
+box-shadow: inset 0 0 28px rgba(255, 255, 255, .05), 0 22px 60px rgba(0, 0, 0, .28);
+font-size: clamp(20px, 5vw, 30px);
+font-weight: 700;
+line-height: 1.45;
+letter-spacing: .06em;
+word-break: break-word;
+}
+
+.enter,
+.back {
+min-width: 112px;
+height: 42px;
+padding: 0 18px;
+border: 0;
+border-radius: 999px;
+background: #fff;
+color: #101010;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+}
+
+.back {
+background: rgba(255, 255, 255, .09);
+border: 1px solid rgba(255, 255, 255, .4);
+color: #fff;
+}
+
+.actions {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+flex-wrap: wrap;
+}
+
+@media (max-width: 520px) {
+.control,
+.space {
+min-height: calc(100vh - 48px);
+}
+
+.card {
+width: 100%;
+}
+}
+</style>
+</head>
+
+<body>
+
+<main class="screen">
+<section class="control" id="control" aria-label="我的空间生成控制">
+<p class="subtitle">MY SPACE V1.5</p>
+<h1 class="title">我的空间</h1>
+
+<button class="btn" type="button" onclick="generate()">
+✨ 一键生成我的空间
+</button>
+
+<div class="styles" aria-label="选择空间风格">
+<button class="tag is-active" type="button" onclick="setStyle('star', this)">星空</button>
+<button class="tag" type="button" onclick="setStyle('sunset', this)">日落</button>
+<button class="tag" type="button" onclick="setStyle('ocean', this)">海洋</button>
+<button class="tag" type="button" onclick="setStyle('forest', this)">森林</button>
+<button class="tag" type="button" onclick="setStyle('dream', this)">梦境</button>
+</div>
+</section>
+
+<section class="space" id="space" aria-live="polite">
+<div class="card" id="card">
+✨ 你的空间已生成
+</div>
+
+<div class="actions">
+<button class="enter" type="button" onclick="enter()">
+进入空间
+</button>
+<button class="back" type="button" onclick="backToControl()">
+重新生成
+</button>
+</div>
+</section>
+</main>
+
+<script>
+let style = "star";
+
+const styleMap = {
+star: {
+name: "星空",
+background: "radial-gradient(circle at 50% 28%, rgba(83, 202, 255, .24), transparent 34%), linear-gradient(135deg, #050814, #0b1320 58%, #1c2541)"
+},
+sunset: {
+name: "日落",
+background: "radial-gradient(circle at 50% 24%, rgba(255, 229, 126, .46), transparent 34%), linear-gradient(135deg, #461220, #ff7b00 58%, #ff4d6d)"
+},
+ocean: {
+name: "海洋",
+background: "radial-gradient(circle at 45% 28%, rgba(144, 224, 239, .38), transparent 34%), linear-gradient(135deg, #03045e, #0077b6 58%, #48cae4)"
+},
+forest: {
+name: "森林",
+background: "radial-gradient(circle at 42% 24%, rgba(183, 228, 199, .32), transparent 34%), linear-gradient(135deg, #081c15, #1b4332 58%, #40916c)"
+},
+dream: {
+name: "梦境",
+background: "radial-gradient(circle at 50% 30%, rgba(255, 190, 250, .38), transparent 34%), linear-gradient(135deg, #240046, #5a189a 58%, #f15bb5)"
+}
+};
+
+function setStyle(nextStyle, activeTag) {
+style = nextStyle;
+
+document.querySelectorAll(".tag").forEach((tag) => {
+tag.classList.remove("is-active");
+});
+
+if (activeTag) {
+activeTag.classList.add("is-active");
+}
+}
+
+function generate() {
+const selectedStyle = styleMap[style] || styleMap.star;
+
+document.body.style.background = selectedStyle.background;
+document.body.classList.add("is-generated");
+document.getElementById("card").innerText = `✨ ${selectedStyle.name}空间已生成`;
+
+document.getElementById("control").style.display = "none";
+document.getElementById("space").classList.add("is-visible");
+}
+
+function enter() {
+document.getElementById("card").innerText = "🌌 你已进入你的专属空间";
+}
+
+function backToControl() {
+document.getElementById("control").style.display = "flex";
+document.getElementById("space").classList.remove("is-visible");
+document.body.classList.remove("is-generated");
+document.body.style.background = "#070915";
+document.getElementById("card").innerText = "✨ 你的空间已生成";
+}
+</script>
+
+</body>
+</html>
