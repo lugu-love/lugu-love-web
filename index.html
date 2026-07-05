@@ -1682,39 +1682,271 @@ transform: translateY(-50%);
 
 .my-space-modal {
 position: fixed;
-left: var(--my-space-modal-x, 50%);
-top: var(--my-space-modal-y, 50%);
+inset: 0;
 z-index: 13;
-display: block;
-background: transparent;
+display: grid;
+place-items: center;
+padding: clamp(18px, 4vw, 48px);
+background:
+radial-gradient(circle at 20% 12%, rgba(255, 183, 86, .18), rgba(255, 183, 86, 0) 28%),
+radial-gradient(circle at 82% 72%, rgba(80, 170, 255, .2), rgba(80, 170, 255, 0) 30%),
+rgba(0, 0, 0, .88);
 opacity: 0;
+visibility: hidden;
 pointer-events: none;
-transform: translate(-50%, calc(-100% - 8px)) scale(.94);
-transition: opacity .32s ease, transform .32s ease;
+transform: scale(1.02);
+transition: opacity .36s ease, visibility .36s ease, transform .36s ease;
+overflow: hidden;
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+color: #fff;
+text-align: center;
+}
+
+.my-space-modal::before {
+content: "";
+position: absolute;
+inset: 0;
+background-image:
+radial-gradient(circle, rgba(255, 255, 255, .72) 0 1px, transparent 1.5px),
+radial-gradient(circle, rgba(255, 214, 156, .42) 0 1px, transparent 1.6px);
+background-size: 72px 72px, 114px 114px;
+background-position: 12px 18px, 38px 44px;
+opacity: .28;
+animation: my-space-drift 18s linear infinite;
+pointer-events: none;
 }
 
 .my-space-modal.is-visible {
 opacity: 1;
-transform: translate(-50%, calc(-100% - 14px)) scale(1);
+visibility: visible;
+pointer-events: auto;
+transform: scale(1);
 }
 
-.my-space-modal-content {
-width: max-content;
-min-width: 150px;
-max-width: min(70vw, 240px);
-padding: 10px 14px;
-border: 1px solid rgba(255, 255, 255, .16);
-border-radius: 14px;
-background: rgba(20, 20, 30, .15);
-backdrop-filter: blur(10px);
-box-shadow: 0 0 18px rgba(255, 120, 200, .16), inset 0 0 14px rgba(255, 255, 255, .04);
+.my-space-bg {
+position: absolute;
+inset: 0;
+background: #060816;
+opacity: 0;
+transition: opacity .7s ease, background .7s ease;
+pointer-events: none;
+}
+
+.my-space-bg.is-active {
+opacity: .92;
+}
+
+.my-space-close {
+position: absolute;
+top: max(18px, env(safe-area-inset-top));
+right: max(18px, env(safe-area-inset-right));
+z-index: 2;
+width: 42px;
+height: 42px;
+border: 1px solid rgba(255, 255, 255, .26);
+border-radius: 50%;
+background: rgba(255, 255, 255, .08);
 color: #fff;
-font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-font-size: clamp(10px, .9vw, 12px);
-line-height: 1.52;
+font-size: 28px;
+line-height: 1;
+cursor: pointer;
+backdrop-filter: blur(14px);
+box-shadow: 0 0 22px rgba(255, 255, 255, .12);
+}
+
+.my-space-shell,
+.my-space-result {
+position: relative;
+z-index: 1;
+width: min(88vw, 420px);
+min-height: min(620px, 78vh);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 14px;
+padding: clamp(24px, 5vw, 42px);
+border: 1px solid rgba(255, 255, 255, .16);
+border-radius: 18px;
+background: rgba(12, 14, 27, .42);
+backdrop-filter: blur(22px);
+box-shadow: 0 24px 90px rgba(0, 0, 0, .42), inset 0 0 30px rgba(255, 255, 255, .04);
+}
+
+.my-space-kicker {
+margin: 0 0 8px;
+font-size: 13px;
+font-weight: 600;
+letter-spacing: .2em;
+color: rgba(255, 244, 214, .76);
+}
+
+.my-space-title {
+margin: 0 0 8px;
+font-size: clamp(24px, 5vw, 40px);
+line-height: 1.08;
 letter-spacing: .08em;
-text-align: center;
-text-shadow: 0 0 10px rgba(255, 210, 234, .28);
+text-shadow: 0 0 22px rgba(255, 220, 170, .32);
+}
+
+.my-space-action {
+width: 100%;
+min-height: 54px;
+padding: 14px 18px;
+border: 0;
+border-radius: 14px;
+color: #fff;
+font-size: 15px;
+font-weight: 650;
+letter-spacing: .05em;
+cursor: pointer;
+transition: transform .22s ease, filter .22s ease, box-shadow .22s ease;
+}
+
+.my-space-action:hover,
+.my-space-action:focus-visible {
+transform: translateY(-2px);
+filter: brightness(1.08);
+outline: none;
+box-shadow: 0 14px 34px rgba(0, 0, 0, .22);
+}
+
+.my-space-primary {
+background: linear-gradient(135deg, #ff4d6d, #ffb703);
+}
+
+.my-space-secondary {
+background: linear-gradient(135deg, #4cc9f0, #4361ee);
+}
+
+.my-space-third {
+background: linear-gradient(135deg, #9b5de5, #560bad);
+}
+
+.my-space-panel {
+width: 100%;
+display: none;
+grid-template-columns: repeat(5, minmax(0, 1fr));
+gap: 8px;
+margin-top: 4px;
+}
+
+.my-space-panel.is-open {
+display: grid;
+}
+
+.my-space-style-choice {
+min-height: 42px;
+padding: 8px 6px;
+border: 1px solid rgba(255, 255, 255, .16);
+border-radius: 12px;
+background: var(--choice-bg);
+color: #fff;
+font-size: 13px;
+font-weight: 650;
+cursor: pointer;
+text-shadow: 0 1px 8px rgba(0, 0, 0, .36);
+}
+
+.my-space-custom {
+width: 100%;
+display: none;
+gap: 10px;
+margin-top: 4px;
+}
+
+.my-space-custom.is-open {
+display: flex;
+}
+
+.my-space-input {
+min-width: 0;
+flex: 1;
+height: 44px;
+padding: 0 14px;
+border: 1px solid rgba(255, 255, 255, .2);
+border-radius: 12px;
+background: rgba(255, 255, 255, .1);
+color: #fff;
+font-size: 14px;
+outline: none;
+}
+
+.my-space-input::placeholder {
+color: rgba(255, 255, 255, .55);
+}
+
+.my-space-mini-button {
+width: 76px;
+height: 44px;
+border: 0;
+border-radius: 12px;
+background: rgba(255, 255, 255, .9);
+color: #151515;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+}
+
+.my-space-result {
+display: none;
+}
+
+.my-space-result.is-visible {
+display: flex;
+}
+
+.my-space-card {
+width: 100%;
+padding: clamp(20px, 5vw, 32px);
+border: 1px solid rgba(255, 255, 255, .18);
+border-radius: 16px;
+background: rgba(255, 255, 255, .09);
+box-shadow: inset 0 0 24px rgba(255, 255, 255, .05), 0 18px 52px rgba(0, 0, 0, .22);
+backdrop-filter: blur(12px);
+font-size: clamp(18px, 4vw, 28px);
+font-weight: 650;
+line-height: 1.5;
+letter-spacing: .08em;
+word-break: break-word;
+}
+
+.my-space-back {
+min-width: 112px;
+height: 42px;
+padding: 0 18px;
+border: 1px solid rgba(255, 255, 255, .42);
+border-radius: 999px;
+background: rgba(255, 255, 255, .08);
+color: #fff;
+font-size: 14px;
+cursor: pointer;
+}
+
+@keyframes my-space-drift {
+to {
+background-position: 84px 90px, 152px 158px;
+}
+}
+
+@media (max-width: 520px) {
+.my-space-shell,
+.my-space-result {
+width: 100%;
+min-height: min(560px, 76vh);
+}
+
+.my-space-panel {
+grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.my-space-custom {
+flex-direction: column;
+}
+
+.my-space-mini-button {
+width: 100%;
+}
 }
 
 .world-maintenance-dialog {
@@ -1899,10 +2131,30 @@ transform: scale(1.35);
 <span class="my-space-button-label">我的空间</span>
 <span class="my-space-button-sub">MY SPACE</span>
 </button>
-<div class="my-space-modal" id="mySpaceModal" aria-hidden="true">
-<div class="my-space-modal-content" role="dialog" aria-modal="true" aria-label="我的空间维护提示">
-我的空间正在维护中………<br>
-敬请期待
+<div class="my-space-modal" id="mySpaceModal" role="dialog" aria-modal="true" aria-label="我的空间" aria-hidden="true">
+<div class="my-space-bg" id="mySpaceBg"></div>
+<button class="my-space-close" id="mySpaceClose" type="button" aria-label="关闭我的空间">×</button>
+<div class="my-space-shell" id="mySpaceMenu">
+<p class="my-space-kicker">MY SPACE V1</p>
+<h2 class="my-space-title">我的空间</h2>
+<button class="my-space-action my-space-primary" id="mySpaceGenerate" type="button">✨ 一键生成我的空间</button>
+<button class="my-space-action my-space-secondary" id="mySpaceStyle" type="button">🎨 选择我的风格</button>
+<div class="my-space-panel" id="mySpaceStylePanel">
+<button class="my-space-style-choice" type="button" data-my-space-style="星空" style="--choice-bg:linear-gradient(135deg,#0b1320,#273469)">星空</button>
+<button class="my-space-style-choice" type="button" data-my-space-style="日落" style="--choice-bg:linear-gradient(135deg,#ff7b00,#ff4d6d)">日落</button>
+<button class="my-space-style-choice" type="button" data-my-space-style="海洋" style="--choice-bg:linear-gradient(135deg,#0077b6,#48cae4)">海洋</button>
+<button class="my-space-style-choice" type="button" data-my-space-style="森林" style="--choice-bg:linear-gradient(135deg,#1b4332,#74c69d)">森林</button>
+<button class="my-space-style-choice" type="button" data-my-space-style="梦境" style="--choice-bg:linear-gradient(135deg,#5a189a,#f15bb5)">梦境</button>
+</div>
+<button class="my-space-action my-space-third" id="mySpaceCustom" type="button">🧠 我自己设计</button>
+<div class="my-space-custom" id="mySpaceCustomPanel">
+<input class="my-space-input" id="mySpaceCustomText" type="text" maxlength="32" placeholder="输入你的空间文字">
+<button class="my-space-mini-button" id="mySpaceCustomApply" type="button">生成</button>
+</div>
+</div>
+<div class="my-space-result" id="mySpaceResult" aria-live="polite">
+<div class="my-space-card" id="mySpaceCard">我的空间已生成</div>
+<button class="my-space-back" id="mySpaceBack" type="button">返回</button>
 </div>
 </div>
 <div class="footer-signature">心域·情感文明共创</div>
@@ -1916,6 +2168,20 @@ const layer = document.querySelector(".voice-star-layer");
 const earth = document.querySelector(".earth");
 const mySpaceButton = document.querySelector(".my-space-button");
 const mySpaceModal = document.querySelector(".my-space-modal");
+const mySpaceBg = document.getElementById("mySpaceBg");
+const mySpaceMenu = document.getElementById("mySpaceMenu");
+const mySpaceResult = document.getElementById("mySpaceResult");
+const mySpaceCard = document.getElementById("mySpaceCard");
+const mySpaceClose = document.getElementById("mySpaceClose");
+const mySpaceGenerate = document.getElementById("mySpaceGenerate");
+const mySpaceStyle = document.getElementById("mySpaceStyle");
+const mySpaceStylePanel = document.getElementById("mySpaceStylePanel");
+const mySpaceCustom = document.getElementById("mySpaceCustom");
+const mySpaceCustomPanel = document.getElementById("mySpaceCustomPanel");
+const mySpaceCustomText = document.getElementById("mySpaceCustomText");
+const mySpaceCustomApply = document.getElementById("mySpaceCustomApply");
+const mySpaceBack = document.getElementById("mySpaceBack");
+const mySpaceStyleButtons = document.querySelectorAll("[data-my-space-style]");
 const colors = [
 ["#54c7ff", "rgba(72, 191, 255, .72)", "rgba(83, 202, 255, .28)", "#f5fcff", "#167dff"],
 ["#a672ff", "rgba(171, 111, 255, .68)", "rgba(190, 134, 255, .26)", "#fff4ff", "#7136ff"],
@@ -2004,10 +2270,88 @@ let activeVoiceExperience = null;
 let worldMaintenanceDialog = null;
 let worldMaintenanceTimer = 0;
 let worldMaintenanceRemoveTimer = 0;
-let mySpaceModalTimer = 0;
 
 const random = (min, max) => min + Math.random() * (max - min);
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+const mySpaceStyles = [
+{
+name: "星空",
+background: "radial-gradient(circle at 50% 35%, rgba(84, 199, 255, .24), rgba(11, 19, 32, 0) 35%), linear-gradient(135deg, #050814, #0b1320 56%, #1c2541)"
+},
+{
+name: "日落",
+background: "radial-gradient(circle at 54% 28%, rgba(255, 229, 126, .46), rgba(255, 123, 0, 0) 32%), linear-gradient(135deg, #461220, #ff7b00 58%, #ff4d6d)"
+},
+{
+name: "海洋",
+background: "radial-gradient(circle at 45% 28%, rgba(144, 224, 239, .36), rgba(0, 119, 182, 0) 34%), linear-gradient(135deg, #03045e, #0077b6 55%, #48cae4)"
+},
+{
+name: "森林",
+background: "radial-gradient(circle at 42% 24%, rgba(183, 228, 199, .3), rgba(27, 67, 50, 0) 34%), linear-gradient(135deg, #081c15, #1b4332 56%, #40916c)"
+},
+{
+name: "梦境",
+background: "radial-gradient(circle at 50% 30%, rgba(255, 190, 250, .38), rgba(90, 24, 154, 0) 34%), linear-gradient(135deg, #240046, #5a189a 56%, #f15bb5)"
+}
+];
+
+function setMySpacePanels(styleOpen = false, customOpen = false) {
+if (mySpaceStylePanel) mySpaceStylePanel.classList.toggle("is-open", styleOpen);
+if (mySpaceCustomPanel) mySpaceCustomPanel.classList.toggle("is-open", customOpen);
+}
+
+function showMySpaceHome() {
+if (mySpaceMenu) mySpaceMenu.style.display = "flex";
+if (mySpaceResult) mySpaceResult.classList.remove("is-visible");
+if (mySpaceBg) mySpaceBg.classList.remove("is-active");
+setMySpacePanels(false, false);
+}
+
+function openMySpace() {
+if (!mySpaceModal) return;
+showMySpaceHome();
+mySpaceModal.classList.add("is-visible");
+mySpaceModal.setAttribute("aria-hidden", "false");
+}
+
+function closeMySpace() {
+if (!mySpaceModal) return;
+mySpaceModal.classList.remove("is-visible");
+mySpaceModal.setAttribute("aria-hidden", "true");
+showMySpaceHome();
+if (mySpaceButton) mySpaceButton.focus({ preventScroll: true });
+}
+
+function applyMySpace(styleName, background) {
+if (mySpaceCard) mySpaceCard.textContent = `风格：${styleName}`;
+if (mySpaceBg) {
+mySpaceBg.style.background = background;
+mySpaceBg.classList.add("is-active");
+}
+if (mySpaceMenu) mySpaceMenu.style.display = "none";
+if (mySpaceResult) mySpaceResult.classList.add("is-visible");
+}
+
+function generateMySpace() {
+const style = mySpaceStyles[Math.floor(Math.random() * mySpaceStyles.length)];
+applyMySpace(style.name, style.background);
+}
+
+function applyCustomMySpace() {
+const text = mySpaceCustomText ? mySpaceCustomText.value.trim() : "";
+if (!text) {
+if (mySpaceCustomText) mySpaceCustomText.focus();
+return;
+}
+if (mySpaceCard) mySpaceCard.textContent = text;
+if (mySpaceBg) {
+mySpaceBg.style.background = "radial-gradient(circle at 50% 30%, rgba(255, 255, 255, .2), rgba(17, 17, 17, 0) 34%), linear-gradient(135deg, #111, #222 58%, #050505)";
+mySpaceBg.classList.add("is-active");
+}
+if (mySpaceMenu) mySpaceMenu.style.display = "none";
+if (mySpaceResult) mySpaceResult.classList.add("is-visible");
+}
 
 function showWorldMaintenanceDialog(anchor, firstLine = "《ta的世界》正在维护中......", secondLine = "敬请期待") {
 clearTimeout(worldMaintenanceTimer);
@@ -2093,8 +2437,6 @@ setTimeout(() => overlay.remove(), 1200);
 if (mySpaceButton) mySpaceButton.addEventListener("click", (event) => {
 event.stopPropagation();
 mySpaceButton.blur();
-if (mySpaceModal) {
-clearTimeout(mySpaceModalTimer);
 mySpaceButton.classList.add("is-entering");
 const glow = document.createElement("span");
 glow.className = "my-space-glow";
@@ -2102,20 +2444,41 @@ document.body.appendChild(glow);
 setTimeout(() => {
 mySpaceButton.classList.remove("is-entering");
 glow.remove();
-}, 1100);
-const rect = mySpaceButton.getBoundingClientRect();
-const modalEdgeGuard = Math.min(130, Math.max(76, window.innerWidth / 2 - 18));
-const modalX = clamp(rect.left + rect.width / 2, modalEdgeGuard, window.innerWidth - modalEdgeGuard);
-const modalY = Math.max(98, rect.top - 6);
-mySpaceModal.style.setProperty("--my-space-modal-x", `${modalX}px`);
-mySpaceModal.style.setProperty("--my-space-modal-y", `${modalY}px`);
-mySpaceModal.classList.add("is-visible");
-mySpaceModal.setAttribute("aria-hidden", "false");
-mySpaceModalTimer = setTimeout(() => {
-mySpaceModal.classList.remove("is-visible");
-mySpaceModal.setAttribute("aria-hidden", "true");
-}, 3000);
-}
+}, 900);
+setTimeout(openMySpace, 180);
+});
+
+if (mySpaceGenerate) mySpaceGenerate.addEventListener("click", generateMySpace);
+
+if (mySpaceStyle) mySpaceStyle.addEventListener("click", () => {
+const isOpen = mySpaceStylePanel && mySpaceStylePanel.classList.contains("is-open");
+setMySpacePanels(!isOpen, false);
+});
+
+mySpaceStyleButtons.forEach((button) => {
+button.addEventListener("click", () => {
+const style = mySpaceStyles.find((item) => item.name === button.dataset.mySpaceStyle);
+if (style) applyMySpace(style.name, style.background);
+});
+});
+
+if (mySpaceCustom) mySpaceCustom.addEventListener("click", () => {
+const isOpen = mySpaceCustomPanel && mySpaceCustomPanel.classList.contains("is-open");
+setMySpacePanels(false, !isOpen);
+if (!isOpen && mySpaceCustomText) mySpaceCustomText.focus();
+});
+
+if (mySpaceCustomApply) mySpaceCustomApply.addEventListener("click", applyCustomMySpace);
+
+if (mySpaceCustomText) mySpaceCustomText.addEventListener("keydown", (event) => {
+if (event.key === "Enter") applyCustomMySpace();
+});
+
+if (mySpaceBack) mySpaceBack.addEventListener("click", showMySpaceHome);
+if (mySpaceClose) mySpaceClose.addEventListener("click", closeMySpace);
+
+document.addEventListener("keydown", (event) => {
+if (event.key === "Escape" && mySpaceModal && mySpaceModal.classList.contains("is-visible")) closeMySpace();
 });
 
 function randomLetterTilt() {
