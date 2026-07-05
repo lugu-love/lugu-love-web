@@ -681,36 +681,87 @@ color: rgba(225, 236, 255, .74);
 
 .voice-world-button {
 position: absolute;
-right: 18px;
-bottom: 15px;
-display: inline-flex;
+right: 14px;
+bottom: 12px;
+z-index: 6;
+display: flex;
+flex-direction: row;
+justify-content: center;
 align-items: center;
 gap: 5px;
-min-height: 24px;
-padding: 4px 9px 4px 8px;
-border: 1px solid rgba(255, 243, 204, .38);
-border-radius: 999px;
-background: linear-gradient(135deg, rgba(255, 248, 222, .16), rgba(176, 215, 255, .08));
-box-shadow: 0 0 12px rgba(255, 223, 147, .12), inset 0 0 10px rgba(255, 255, 255, .08);
-color: rgba(255, 246, 218, .9);
+height: 24px;
+width: auto;
+min-width: 96px;
+padding: 0 8px;
+border: 1px solid rgba(255, 236, 196, .36);
+border-radius: 4px;
+background: rgba(255, 255, 255, .04);
+backdrop-filter: blur(8px);
+box-shadow: 0 0 12px rgba(255, 160, 80, .16), inset 0 0 8px rgba(255, 255, 255, .04);
+color: rgba(255, 247, 228, .96);
 font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-font-size: clamp(10px, .9vw, 12px);
-font-weight: 300;
-letter-spacing: .06em;
-line-height: 1;
-text-shadow: 0 0 8px rgba(255, 236, 184, .24);
+text-align: center;
+text-shadow: 0 0 10px rgba(255, 200, 120, .45);
 cursor: pointer;
 opacity: 0;
 filter: blur(2px);
 transform: translateY(5px) translateX(-4px);
 transition: opacity 1.2s ease .14s, filter 1.2s ease .14s, transform 1.2s ease .14s, border-color .3s ease, background .3s ease, box-shadow .3s ease;
+overflow: hidden;
 }
 
-.voice-world-button::before {
-content: "✦";
-font-size: .9em;
-color: rgba(196, 224, 255, .9);
-text-shadow: 0 0 8px rgba(130, 194, 255, .38);
+.world-house-icon {
+display: block;
+width: 6px;
+height: 6px;
+font-size: 0;
+line-height: 1;
+margin-bottom: 0;
+background: linear-gradient(135deg, rgba(255, 247, 250, .92), rgba(255, 172, 203, .72) 52%, rgba(255, 222, 235, .68));
+box-shadow: 0 0 7px rgba(255, 170, 204, .48), 0 0 13px rgba(255, 220, 235, .26);
+transform: rotate(45deg) scale(.9);
+animation: world-heart-breathe 2.6s ease-in-out infinite;
+}
+
+.world-house-icon::before,
+.world-house-icon::after {
+content: "";
+position: absolute;
+width: 6px;
+height: 6px;
+border-radius: 50%;
+background: inherit;
+box-shadow: inherit;
+}
+
+.world-house-icon::before {
+left: -3px;
+top: 0;
+}
+
+.world-house-icon::after {
+left: 0;
+top: -3px;
+}
+
+.world-house-title {
+display: block;
+font-size: 10px;
+font-weight: 600;
+letter-spacing: .04em;
+line-height: 1;
+white-space: nowrap;
+}
+
+.world-house-sub {
+display: none;
+margin-top: 3px;
+font-size: 8px;
+font-weight: 300;
+letter-spacing: .02em;
+line-height: 1.1;
+opacity: .76;
+white-space: nowrap;
 }
 
 .voice-world-button.is-visible {
@@ -721,14 +772,101 @@ transform: translateY(0) translateX(0);
 
 .voice-world-button:hover,
 .voice-world-button:focus-visible {
-border-color: rgba(255, 236, 174, .68);
-background: linear-gradient(135deg, rgba(255, 248, 222, .24), rgba(176, 215, 255, .14));
-box-shadow: 0 0 16px rgba(255, 223, 147, .22), inset 0 0 12px rgba(255, 255, 255, .11);
+border-color: rgba(255, 235, 192, .42);
+background: rgba(255, 255, 255, .08);
+box-shadow: 0 0 22px rgba(255, 170, 90, .3), inset 0 0 10px rgba(255, 255, 255, .06);
+transform: translateY(-1px) translateX(0) scale(1.04);
 outline: none;
 }
 
 .voice-world-button:active {
-transform: translateY(1px) translateX(0);
+transform: translateY(0) translateX(0) scale(.98);
+}
+
+.voice-world-button.is-entering {
+opacity: .24;
+filter: blur(2px);
+transform: translateY(-1px) translateX(0) scale(1.18);
+pointer-events: none;
+}
+
+.world-house-overlay {
+position: fixed;
+inset: 0;
+z-index: 9;
+background: radial-gradient(circle at center, rgba(255, 170, 90, .25), rgba(0, 0, 0, .78));
+opacity: 0;
+pointer-events: none;
+transition: opacity 1.2s ease;
+}
+
+.world-house-overlay.is-visible {
+opacity: 1;
+}
+
+.world-house-ripple {
+position: fixed;
+left: 50%;
+top: 50%;
+z-index: 10;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: rgba(255, 180, 90, .8);
+pointer-events: none;
+transform: translate(-50%, -50%) scale(0);
+animation: world-house-ripple 1s ease-out forwards;
+}
+
+.world-house-star {
+position: fixed;
+z-index: 10;
+width: 4px;
+height: 4px;
+border-radius: 50%;
+background: rgba(255, 255, 255, .95);
+box-shadow: 0 0 10px rgba(255, 255, 255, .8);
+opacity: .6;
+pointer-events: none;
+animation: world-house-star-float var(--star-duration, 2s) ease-in-out infinite;
+}
+
+@keyframes world-house-ripple {
+0% {
+opacity: 1;
+transform: translate(-50%, -50%) scale(0);
+}
+
+100% {
+opacity: 0;
+transform: translate(-50%, -50%) scale(40);
+}
+}
+
+@keyframes world-house-star-float {
+0%,
+100% {
+opacity: .4;
+transform: translateY(0);
+}
+
+50% {
+opacity: 1;
+transform: translateY(-10px);
+}
+}
+
+@keyframes world-heart-breathe {
+0%,
+100% {
+filter: brightness(.95);
+transform: rotate(45deg) scale(.86);
+}
+
+50% {
+filter: brightness(1.22);
+transform: rotate(45deg) scale(1.08);
+}
 }
 
 .voice-letter-pager {
@@ -1052,7 +1190,7 @@ user-select: none;
 .touch-guide {
 position: fixed;
 left: 50%;
-top: clamp(36px, calc(50vh - min(58vmin, 410px)), 190px);
+top: calc(clamp(36px, calc(50vh - min(58vmin, 410px)), 190px) - 30px);
 z-index: 2;
 display: block;
 width: min(88vw, 560px);
@@ -1413,6 +1551,223 @@ white-space: nowrap;
 pointer-events: none;
 }
 
+.my-space-button {
+position: fixed;
+left: 50%;
+bottom: 48px;
+z-index: 4;
+width: clamp(86px, 8.2vw, 120px);
+height: clamp(66px, 6.8vw, 90px);
+padding: 8px 10px;
+border: 1px solid rgba(255, 255, 255, .24);
+border-radius: 18px;
+background: rgba(255, 255, 255, .08);
+backdrop-filter: blur(22px);
+box-shadow: 0 0 30px rgba(140, 120, 255, .25), inset 0 0 20px rgba(255, 255, 255, .05);
+display: inline-flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+color: #fff;
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-weight: 600;
+text-shadow: 0 0 12px rgba(255, 184, 246, .42);
+cursor: pointer;
+transform: translateX(-50%);
+transition: transform .25s ease, background .25s ease, box-shadow .25s ease, border-color .25s ease;
+user-select: none;
+}
+
+.my-space-button::after {
+content: "";
+position: absolute;
+right: 13px;
+top: 14px;
+width: 4px;
+height: 4px;
+border-radius: 50%;
+background: rgba(255, 255, 255, .92);
+box-shadow: 0 0 10px rgba(255, 255, 255, .9);
+animation: my-space-spark 2.5s ease-in-out infinite;
+pointer-events: none;
+}
+
+.my-space-button-label {
+font-size: clamp(12px, 1.1vw, 15px);
+letter-spacing: .06em;
+line-height: 1.1;
+background: linear-gradient(90deg, #fff, #ffb3ff, #b3c7ff);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.my-space-button-icon {
+font-size: clamp(26px, 2.8vw, 38px);
+line-height: 1;
+margin-bottom: 4px;
+filter: drop-shadow(0 0 12px rgba(255, 220, 150, .5));
+}
+
+.my-space-button-sub {
+margin-top: 3px;
+font-size: clamp(7px, .72vw, 9px);
+font-weight: 300;
+letter-spacing: .14em;
+line-height: 1;
+opacity: .75;
+}
+
+.my-space-button:hover,
+.my-space-button:focus-visible {
+background: rgba(255, 255, 255, .15);
+border-color: rgba(255, 255, 255, .34);
+box-shadow: 0 0 52px rgba(255, 180, 90, .38), inset 0 0 24px rgba(255, 255, 255, .08);
+transform: translateX(-50%) scale(1.06);
+outline: none;
+}
+
+.my-space-button:active {
+transform: translateX(-50%) scale(.98);
+}
+
+.my-space-button.is-entering {
+transform: translateX(-50%) scale(1.16);
+opacity: .2;
+filter: blur(2px);
+pointer-events: none;
+}
+
+.my-space-glow {
+position: fixed;
+left: 50%;
+top: 50%;
+z-index: 12;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: rgba(255, 180, 90, .8);
+pointer-events: none;
+transform: translate(-50%, -50%) scale(0);
+animation: my-space-glow-burst 1.1s ease-out forwards;
+}
+
+@keyframes my-space-glow-burst {
+0% {
+opacity: 1;
+transform: translate(-50%, -50%) scale(0);
+}
+
+100% {
+opacity: 0;
+transform: translate(-50%, -50%) scale(50);
+}
+}
+
+@keyframes my-space-spark {
+0% {
+opacity: .6;
+transform: translateY(-50%);
+}
+
+50% {
+opacity: 1;
+transform: translateY(calc(-50% - 7px));
+}
+
+100% {
+opacity: .6;
+transform: translateY(-50%);
+}
+}
+
+.my-space-modal {
+position: fixed;
+left: var(--my-space-modal-x, 50%);
+top: var(--my-space-modal-y, 50%);
+z-index: 13;
+display: block;
+background: transparent;
+opacity: 0;
+pointer-events: none;
+transform: translate(-50%, calc(-100% - 8px)) scale(.94);
+transition: opacity .32s ease, transform .32s ease;
+}
+
+.my-space-modal.is-visible {
+opacity: 1;
+transform: translate(-50%, calc(-100% - 14px)) scale(1);
+}
+
+.my-space-modal-content {
+width: max-content;
+min-width: 150px;
+max-width: min(70vw, 240px);
+padding: 10px 14px;
+border: 1px solid rgba(255, 255, 255, .16);
+border-radius: 14px;
+background: rgba(20, 20, 30, .15);
+backdrop-filter: blur(10px);
+box-shadow: 0 0 18px rgba(255, 120, 200, .16), inset 0 0 14px rgba(255, 255, 255, .04);
+color: #fff;
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-size: clamp(10px, .9vw, 12px);
+line-height: 1.52;
+letter-spacing: .08em;
+text-align: center;
+text-shadow: 0 0 10px rgba(255, 210, 234, .28);
+}
+
+.world-maintenance-dialog {
+position: fixed;
+left: var(--dialog-x, 50%);
+top: var(--dialog-y, 50%);
+z-index: 12;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 7px;
+min-width: min(68vw, 230px);
+padding: 12px 18px 11px;
+border: 1px solid rgba(255, 233, 184, .5);
+border-radius: 18px;
+background:
+linear-gradient(135deg, rgba(35, 24, 36, .76), rgba(84, 51, 42, .68)),
+radial-gradient(circle at 50% 0, rgba(255, 232, 176, .24), rgba(255, 232, 176, 0) 64%);
+box-shadow: 0 0 22px rgba(255, 211, 126, .18), inset 0 0 18px rgba(255, 255, 255, .08);
+color: rgba(255, 244, 214, .92);
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-size: clamp(10px, .9vw, 12px);
+font-weight: 300;
+letter-spacing: .12em;
+line-height: 1.48;
+text-align: center;
+text-shadow: 0 0 10px rgba(255, 236, 184, .32);
+opacity: 0;
+transform: translate(-50%, calc(-100% - 2px)) scale(.96);
+transition: opacity .72s ease, transform .72s ease, filter .72s ease;
+pointer-events: none;
+filter: blur(3px);
+}
+
+.world-maintenance-dialog.is-visible {
+opacity: 1;
+transform: translate(-50%, calc(-100% - 10px)) scale(1);
+filter: blur(0);
+}
+
+.world-maintenance-dialog span {
+display: block;
+white-space: nowrap;
+}
+
+.world-maintenance-dialog span:first-child {
+color: rgba(255, 239, 198, .96);
+}
+
+.world-maintenance-dialog span:last-child {
+color: rgba(223, 255, 231, .9);
+}
+
 #audioControl {
 position: fixed;
 right: 18px;
@@ -1539,6 +1894,17 @@ transform: scale(1.35);
 <span class="guide-sub">Gently touch a “heart star”, meet a “world”.</span>
 </div>
 <div class="guide-final-heart" aria-hidden="true">♥</div>
+<button class="my-space-button" type="button" aria-label="我的空间 My Space">
+<span class="my-space-button-icon" aria-hidden="true">🏠</span>
+<span class="my-space-button-label">我的空间</span>
+<span class="my-space-button-sub">MY SPACE</span>
+</button>
+<div class="my-space-modal" id="mySpaceModal" aria-hidden="true">
+<div class="my-space-modal-content" role="dialog" aria-modal="true" aria-label="我的空间维护提示">
+我的空间正在维护中………<br>
+敬请期待
+</div>
+</div>
 <div class="footer-signature">心域·情感文明共创</div>
 <div id="audioControl">
 <button id="audioToggleBtn" type="button" aria-label="音乐开关">🔇</button>
@@ -1548,6 +1914,8 @@ transform: scale(1.35);
 (() => {
 const layer = document.querySelector(".voice-star-layer");
 const earth = document.querySelector(".earth");
+const mySpaceButton = document.querySelector(".my-space-button");
+const mySpaceModal = document.querySelector(".my-space-modal");
 const colors = [
 ["#54c7ff", "rgba(72, 191, 255, .72)", "rgba(83, 202, 255, .28)", "#f5fcff", "#167dff"],
 ["#a672ff", "rgba(171, 111, 255, .68)", "rgba(190, 134, 255, .26)", "#fff4ff", "#7136ff"],
@@ -1633,9 +2001,122 @@ const typingKeyVolume = .32;
 const typingKeyStartAt = 0;
 let typingKeyAudio = null;
 let activeVoiceExperience = null;
+let worldMaintenanceDialog = null;
+let worldMaintenanceTimer = 0;
+let worldMaintenanceRemoveTimer = 0;
+let mySpaceModalTimer = 0;
 
 const random = (min, max) => min + Math.random() * (max - min);
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+function showWorldMaintenanceDialog(anchor, firstLine = "《ta的世界》正在维护中......", secondLine = "敬请期待") {
+clearTimeout(worldMaintenanceTimer);
+clearTimeout(worldMaintenanceRemoveTimer);
+
+if (!worldMaintenanceDialog) {
+worldMaintenanceDialog = document.createElement("div");
+worldMaintenanceDialog.className = "world-maintenance-dialog";
+worldMaintenanceDialog.setAttribute("role", "status");
+worldMaintenanceDialog.setAttribute("aria-live", "polite");
+document.body.appendChild(worldMaintenanceDialog);
+}
+
+const firstText = document.createElement("span");
+const secondText = document.createElement("span");
+firstText.textContent = firstLine;
+secondText.textContent = secondLine;
+worldMaintenanceDialog.replaceChildren(firstText, secondText);
+
+if (anchor) {
+const rect = anchor.getBoundingClientRect();
+const dialogEdgeGuard = Math.min(150, Math.max(72, window.innerWidth / 2 - 18));
+const dialogX = clamp(rect.left + rect.width / 2, dialogEdgeGuard, window.innerWidth - dialogEdgeGuard);
+const dialogY = Math.max(92, rect.top - 6);
+worldMaintenanceDialog.style.setProperty("--dialog-x", `${dialogX}px`);
+worldMaintenanceDialog.style.setProperty("--dialog-y", `${dialogY}px`);
+}
+
+requestAnimationFrame(() => {
+if (worldMaintenanceDialog) worldMaintenanceDialog.classList.add("is-visible");
+});
+
+worldMaintenanceTimer = setTimeout(() => {
+const dialog = worldMaintenanceDialog;
+if (!dialog) return;
+dialog.classList.remove("is-visible");
+worldMaintenanceRemoveTimer = setTimeout(() => {
+if (worldMaintenanceDialog === dialog) {
+dialog.remove();
+worldMaintenanceDialog = null;
+}
+}, 760);
+}, 5000);
+}
+
+function playWorldHouseEnter(anchor) {
+if (!anchor) return;
+anchor.classList.add("is-entering");
+
+const overlay = document.createElement("div");
+overlay.className = "world-house-overlay";
+document.body.appendChild(overlay);
+requestAnimationFrame(() => overlay.classList.add("is-visible"));
+
+const houseStars = [];
+for (let index = 0; index < 36; index += 1) {
+const star = document.createElement("span");
+star.className = "world-house-star";
+star.style.left = `${Math.random() * 100}vw`;
+star.style.top = `${Math.random() * 100}vh`;
+star.style.setProperty("--star-duration", `${(1.5 + Math.random() * 2).toFixed(2)}s`);
+document.body.appendChild(star);
+houseStars.push(star);
+}
+
+const ripple = document.createElement("span");
+ripple.className = "world-house-ripple";
+document.body.appendChild(ripple);
+
+setTimeout(() => {
+showWorldMaintenanceDialog(anchor);
+}, 1200);
+
+setTimeout(() => {
+anchor.classList.remove("is-entering");
+overlay.classList.remove("is-visible");
+ripple.remove();
+houseStars.forEach((star) => star.remove());
+setTimeout(() => overlay.remove(), 1200);
+}, 1900);
+}
+
+if (mySpaceButton) mySpaceButton.addEventListener("click", (event) => {
+event.stopPropagation();
+mySpaceButton.blur();
+if (mySpaceModal) {
+clearTimeout(mySpaceModalTimer);
+mySpaceButton.classList.add("is-entering");
+const glow = document.createElement("span");
+glow.className = "my-space-glow";
+document.body.appendChild(glow);
+setTimeout(() => {
+mySpaceButton.classList.remove("is-entering");
+glow.remove();
+}, 1100);
+const rect = mySpaceButton.getBoundingClientRect();
+const modalEdgeGuard = Math.min(130, Math.max(76, window.innerWidth / 2 - 18));
+const modalX = clamp(rect.left + rect.width / 2, modalEdgeGuard, window.innerWidth - modalEdgeGuard);
+const modalY = Math.max(98, rect.top - 6);
+mySpaceModal.style.setProperty("--my-space-modal-x", `${modalX}px`);
+mySpaceModal.style.setProperty("--my-space-modal-y", `${modalY}px`);
+mySpaceModal.classList.add("is-visible");
+mySpaceModal.setAttribute("aria-hidden", "false");
+mySpaceModalTimer = setTimeout(() => {
+mySpaceModal.classList.remove("is-visible");
+mySpaceModal.setAttribute("aria-hidden", "true");
+}, 3000);
+}
+});
 
 function randomLetterTilt() {
 let tilt;
@@ -2292,7 +2773,10 @@ bottle.innerHTML = `
 <span class="voice-letter-footer-line">—— 心星号 ${safeHeartStarNo}</span>
 <span class="voice-letter-footer-line">${safeOrigin} · ${safeTime}</span>
 </span>
-<button class="voice-world-button" type="button" aria-label="进入 ta 的世界">进入 ta 的世界</button>
+<button class="voice-world-button" type="button" aria-label="进入ta的世界">
+<span class="world-house-icon" aria-hidden="true"></span>
+<span class="world-house-title">进入ta的世界</span>
+</button>
 </div>
 <div class="voice-bottle-heart-rays"></div>
 <div class="voice-bottle-heart"><span class="diamond-facet"></span></div>
@@ -2352,9 +2836,17 @@ renderPage(0);
 
 if (prevButton) prevButton.addEventListener("click", () => renderPage(currentPage - 1));
 if (nextButton) nextButton.addEventListener("click", () => renderPage(currentPage + 1));
+if (worldButton) worldButton.addEventListener("transitionend", (event) => {
+if (event.propertyName !== "opacity" || !worldButton.classList.contains("is-visible")) return;
+setTimeout(() => {
+if (closed || !worldButton.isConnected) return;
+worldButton.classList.remove("is-visible");
+}, 4000);
+}, { once: true });
 if (worldButton) worldButton.addEventListener("click", (event) => {
 event.stopPropagation();
 worldButton.blur();
+playWorldHouseEnter(worldButton);
 });
 
 bottle.querySelector(".voice-bottle-close").addEventListener("click", () => {
