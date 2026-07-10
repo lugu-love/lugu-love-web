@@ -59,6 +59,26 @@
     }
   }
 
+  function isFromEarthHome() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("from") === "earth") return true;
+
+    try {
+      const referrer = new URL(document.referrer);
+      return /\/lugu-love-web\/(?:index\.html)?$/.test(referrer.pathname);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function clearEarthSourceFlag() {
+    if (!window.history || !window.history.replaceState) return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("from") !== "earth") return;
+    url.searchParams.delete("from");
+    window.history.replaceState({}, document.title, `${url.pathname}${url.search}${url.hash}`);
+  }
+
   function showStaticHome(markSeen) {
     if (!welcome) return;
     clearWelcomeTimers();
@@ -122,6 +142,8 @@
     if (welcomeReplay) {
       welcomeReplay.addEventListener("click", () => playWelcome(true));
     }
-    playWelcome(false);
+    const forceWelcomeFromEarth = isFromEarthHome();
+    clearEarthSourceFlag();
+    playWelcome(forceWelcomeFromEarth);
   }
 })();
