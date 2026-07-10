@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title></title>
+<link rel="icon" href="assets/icons/lugu-logo.svg" type="image/svg+xml">
 <style>
 * {
 box-sizing: border-box;
@@ -20,11 +21,32 @@ overflow: hidden;
 body {
 display: grid;
 place-items: center;
+min-height: 100svh;
+background-color: #020407;
+background-image:
+radial-gradient(circle at 50% 12%, rgba(82, 129, 189, .18), rgba(2, 4, 7, 0) 34%),
+url("space-bg.webp");
+background-position: center center;
+background-size: cover;
+background-repeat: no-repeat;
+}
+
+.phone-stage {
+--stage-width: min(100vw, 430px);
+--stage-height: 100svh;
+position: relative;
+isolation: isolate;
+width: var(--stage-width);
+height: var(--stage-height);
+max-height: 100dvh;
+overflow: hidden;
 background-color: #000;
 background-image: url("space-bg.webp");
 background-position: center center;
 background-size: cover;
 background-repeat: no-repeat;
+box-shadow: 0 0 90px rgba(57, 109, 172, .18);
+transform: translateZ(0);
 }
 
 .star-field {
@@ -36,17 +58,48 @@ pointer-events: none;
 
 .place-mark {
 position: fixed;
-top: 28px;
-left: 32px;
-z-index: 2;
+top: max(14px, env(safe-area-inset-top));
+left: max(14px, env(safe-area-inset-left));
+z-index: 6;
+display: inline-flex;
+align-items: center;
+gap: 10px;
+min-height: 44px;
+max-width: calc(var(--stage-width) - 28px);
+padding: 2px 4px 2px 0;
+border-radius: 999px;
 color: rgba(255, 244, 214, .78);
 font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-font-size: clamp(14px, 1.5vw, 20px);
+font-size: clamp(13px, 3.6vw, 16px);
 font-weight: 300;
 line-height: 1.55;
 letter-spacing: .08em;
+text-decoration: none;
 text-shadow: 0 0 12px rgba(255, 236, 184, .45);
-pointer-events: none;
+transition: filter .24s ease, text-shadow .24s ease, transform .24s ease;
+}
+
+.place-mark:hover,
+.place-mark:focus-visible,
+.place-mark:active {
+filter: drop-shadow(0 0 9px rgba(237, 196, 99, .5));
+text-shadow: 0 0 16px rgba(255, 236, 184, .72);
+outline: none;
+}
+
+.place-mark:active {
+transform: scale(.98);
+}
+
+.place-mark-logo {
+display: block;
+width: 34px;
+height: 34px;
+flex: 0 0 34px;
+}
+
+.place-mark-text {
+display: block;
 }
 
 .place-mark span {
@@ -1010,7 +1063,7 @@ filter: blur(1px) brightness(1.9);
 
 100% {
 opacity: 1;
-transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 62px), 0) rotate(-24deg) scale(1.16);
+transform: translate3d(calc(var(--stage-width) * .5 - 50%), calc(var(--stage-height) * .5 - 50% - 62px), 0) rotate(-24deg) scale(1.16);
 filter: blur(0) brightness(1);
 }
 }
@@ -1018,13 +1071,13 @@ filter: blur(0) brightness(1);
 @keyframes bottle-close {
 0% {
 opacity: 1;
-transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 62px), 0) rotate(-24deg) scale(1.16);
+transform: translate3d(calc(var(--stage-width) * .5 - 50%), calc(var(--stage-height) * .5 - 50% - 62px), 0) rotate(-24deg) scale(1.16);
 filter: blur(0) brightness(1);
 }
 
 100% {
 opacity: 0;
-transform: translate3d(calc(50vw - 50%), calc(50vh - 50% - 62px), 0) rotate(-18deg) scale(.78);
+transform: translate3d(calc(var(--stage-width) * .5 - 50%), calc(var(--stage-height) * .5 - 50% - 62px), 0) rotate(-18deg) scale(.78);
 filter: blur(3px) brightness(.82);
 }
 }
@@ -1066,7 +1119,7 @@ filter: blur(0);
 }
 
 72% {
-width: min(76vw, 330px);
+width: min(calc(var(--stage-width) * .76), 330px);
 min-height: 218px;
 opacity: .98;
 transform: translateX(calc(-50% - 40px)) translateY(20px) rotate(calc(var(--letter-tilt) * .78)) scale(.9);
@@ -1074,7 +1127,7 @@ filter: blur(0);
 }
 
 100% {
-width: min(76vw, 330px);
+width: min(calc(var(--stage-width) * .76), 330px);
 min-height: 218px;
 opacity: .98;
 transform: translateX(calc(-50% - 40px)) translateY(20px) rotate(var(--letter-tilt)) scale(.92);
@@ -1154,10 +1207,10 @@ max-width: 6ch;
 
 .approach {
 position: fixed;
-top: 8vh;
-left: 8vw;
+top: 8%;
+left: 8%;
 z-index: 1;
-width: min(68vmin, 680px);
+width: min(78%, 410px);
 aspect-ratio: 1;
 transform: translate(-50%, -50%) scale(.02);
 transform-origin: center;
@@ -1190,10 +1243,10 @@ user-select: none;
 .touch-guide {
 position: fixed;
 left: 50%;
-top: calc(clamp(36px, calc(50vh - min(58vmin, 410px)), 190px) - 30px);
+top: calc(clamp(36px, 22%, 190px) - 30px);
 z-index: 2;
 display: block;
-width: min(88vw, 560px);
+width: min(calc(var(--stage-width) - 28px), 390px);
 opacity: 0;
 transform: translateX(-50%);
 color: rgba(244, 249, 255, .96);
@@ -1321,7 +1374,7 @@ animation-delay: 8.2s;
 .guide-final-heart {
 position: fixed;
 left: 50%;
-top: clamp(36px, calc(50vh - min(58vmin, 410px)), 190px);
+top: clamp(36px, 22%, 190px);
 z-index: 2;
 opacity: 0;
 color: rgba(255, 230, 157, .98);
@@ -1741,8 +1794,8 @@ position: absolute;
 top: max(18px, env(safe-area-inset-top));
 right: max(18px, env(safe-area-inset-right));
 z-index: 2;
-width: 42px;
-height: 42px;
+width: 44px;
+height: 44px;
 border: 1px solid rgba(255, 255, 255, .26);
 border-radius: 50%;
 background: rgba(255, 255, 255, .08);
@@ -1758,8 +1811,8 @@ box-shadow: 0 0 22px rgba(255, 255, 255, .12);
 .my-space-result {
 position: relative;
 z-index: 1;
-width: min(88vw, 420px);
-min-height: min(620px, 78vh);
+width: min(calc(var(--stage-width) - 32px), 398px);
+min-height: min(620px, 78svh);
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -1930,6 +1983,26 @@ background-position: 84px 90px, 152px 158px;
 }
 
 @media (max-width: 520px) {
+.place-mark {
+top: max(14px, env(safe-area-inset-top));
+left: 14px;
+gap: 8px;
+max-width: calc(var(--stage-width) - 28px);
+font-size: 13px;
+line-height: 1.38;
+}
+
+.place-mark-logo {
+width: 32px;
+height: 32px;
+flex-basis: 32px;
+}
+
+.place-mark span {
+font-size: 9px;
+letter-spacing: .12em;
+}
+
 .my-space-shell,
 .my-space-result {
 width: 100%;
@@ -2011,8 +2084,8 @@ gap: 10px;
 }
 
 #audioToggleBtn {
-width: 36px;
-height: 36px;
+width: 44px;
+height: 44px;
 border: 1px solid rgba(255, 232, 180, .46);
 border-radius: 50%;
 background: rgba(18, 14, 25, .5);
@@ -2025,6 +2098,7 @@ cursor: pointer;
 
 #audioVolumeSlider {
 width: 92px;
+min-height: 44px;
 accent-color: rgba(255, 214, 111, .95);
 cursor: pointer;
 }
@@ -2037,14 +2111,14 @@ transform: rotate(360deg);
 
 @keyframes approach-earth {
 from {
-top: calc(8vh - 12px);
-left: 8vw;
+top: calc(8% - 12px);
+left: 8%;
 transform: translate(-50%, -50%) scale(.02);
 }
 
 to {
-top: calc(50vh - 12px);
-left: 50vw;
+top: calc(50% - 12px);
+left: 50%;
 transform: translate(-50%, -50%) scale(1);
 }
 }
@@ -2066,7 +2140,11 @@ transform: scale(1.35);
 </style>
 </head>
 <body>
-<div class="place-mark">中国·泸沽湖<span>LUGU LAKE · CHINA</span></div>
+<main class="phone-stage" id="phoneStage" aria-label="地球首页手机竖屏舞台">
+<a class="place-mark" href="lugu/index.html" aria-label="进入中国·泸沽湖">
+<img class="place-mark-logo" src="assets/icons/lugu-logo.svg" alt="" width="34" height="34">
+<span class="place-mark-text">中国·泸沽湖<span>LUGU LAKE · CHINA</span></span>
+</a>
 <div class="star-field" aria-hidden="true">
 <span class="star" style="--x: 7%; --y: 15%; --size: 3px; --color: #fff; --duration: 5.7s; --delay: -1.2s"></span>
 <span class="star" style="--x: 18%; --y: 36%; --size: 2px; --color: #e8f2ff; --duration: 6.8s; --delay: -4.7s"></span>
@@ -2162,8 +2240,10 @@ transform: scale(1.35);
 <button id="audioToggleBtn" type="button" aria-label="音乐开关">🔇</button>
 <input id="audioVolumeSlider" type="range" min="0" max="1" step="0.01" value="0.6" aria-label="背景音乐音量">
 </div>
+</main>
 <script>
 (() => {
+const stage = document.getElementById("phoneStage");
 const layer = document.querySelector(".voice-star-layer");
 const earth = document.querySelector(".earth");
 const mySpaceButton = document.querySelector(".my-space-button");
@@ -2362,7 +2442,7 @@ worldMaintenanceDialog = document.createElement("div");
 worldMaintenanceDialog.className = "world-maintenance-dialog";
 worldMaintenanceDialog.setAttribute("role", "status");
 worldMaintenanceDialog.setAttribute("aria-live", "polite");
-document.body.appendChild(worldMaintenanceDialog);
+(stage || document.body).appendChild(worldMaintenanceDialog);
 }
 
 const firstText = document.createElement("span");
@@ -2373,9 +2453,10 @@ worldMaintenanceDialog.replaceChildren(firstText, secondText);
 
 if (anchor) {
 const rect = anchor.getBoundingClientRect();
-const dialogEdgeGuard = Math.min(150, Math.max(72, window.innerWidth / 2 - 18));
-const dialogX = clamp(rect.left + rect.width / 2, dialogEdgeGuard, window.innerWidth - dialogEdgeGuard);
-const dialogY = Math.max(92, rect.top - 6);
+const stageRect = stage ? stage.getBoundingClientRect() : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+const dialogEdgeGuard = Math.min(150, Math.max(72, stageRect.width / 2 - 18));
+const dialogX = clamp(rect.left - stageRect.left + rect.width / 2, dialogEdgeGuard, stageRect.width - dialogEdgeGuard);
+const dialogY = Math.max(92, rect.top - stageRect.top - 6);
 worldMaintenanceDialog.style.setProperty("--dialog-x", `${dialogX}px`);
 worldMaintenanceDialog.style.setProperty("--dialog-y", `${dialogY}px`);
 }
@@ -2403,23 +2484,23 @@ anchor.classList.add("is-entering");
 
 const overlay = document.createElement("div");
 overlay.className = "world-house-overlay";
-document.body.appendChild(overlay);
+(stage || document.body).appendChild(overlay);
 requestAnimationFrame(() => overlay.classList.add("is-visible"));
 
 const houseStars = [];
 for (let index = 0; index < 36; index += 1) {
 const star = document.createElement("span");
 star.className = "world-house-star";
-star.style.left = `${Math.random() * 100}vw`;
-star.style.top = `${Math.random() * 100}vh`;
+star.style.left = `${Math.random() * 100}%`;
+star.style.top = `${Math.random() * 100}%`;
 star.style.setProperty("--star-duration", `${(1.5 + Math.random() * 2).toFixed(2)}s`);
-document.body.appendChild(star);
+(stage || document.body).appendChild(star);
 houseStars.push(star);
 }
 
 const ripple = document.createElement("span");
 ripple.className = "world-house-ripple";
-document.body.appendChild(ripple);
+(stage || document.body).appendChild(ripple);
 
 setTimeout(() => {
 showWorldMaintenanceDialog(anchor);
@@ -2440,7 +2521,7 @@ mySpaceButton.blur();
 mySpaceButton.classList.add("is-entering");
 const glow = document.createElement("span");
 glow.className = "my-space-glow";
-document.body.appendChild(glow);
+(stage || document.body).appendChild(glow);
 setTimeout(() => {
 mySpaceButton.classList.remove("is-entering");
 glow.remove();
@@ -2928,6 +3009,7 @@ typingKeyAudio.currentTime = typingKeyStartAt;
 
 function earthPoint() {
 const rect = earth.getBoundingClientRect();
+const stageRect = stage ? stage.getBoundingClientRect() : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
 const radius = Math.min(rect.width, rect.height) * .5;
 const centerX = rect.left + rect.width * .5;
 const centerY = rect.top + rect.height * .5;
@@ -2953,11 +3035,11 @@ const px = rect.left + rect.width * x;
 const py = rect.top + rect.height * y;
 const outward = Math.atan2(py - centerY, px - centerX);
 const freeAngle = Math.random() < .28 ? random(0, Math.PI * 2) : outward + random(-1.15, 1.15);
-const distance = random(radius * 1.35, Math.max(window.innerWidth, window.innerHeight) * .58);
+const distance = random(radius * 1.35, Math.max(stageRect.width, stageRect.height) * .58);
 
 return {
-x: px,
-y: py,
+x: px - stageRect.left,
+y: py - stageRect.top,
 angle: freeAngle,
 distance,
 radius
@@ -3144,7 +3226,7 @@ bottle.innerHTML = `
 <div class="voice-bottle-heart-rays"></div>
 <div class="voice-bottle-heart"><span class="diamond-facet"></span></div>
 <div class="voice-bottle-tie"></div>`;
-document.body.appendChild(bottle);
+(stage || document.body).appendChild(bottle);
 
 const letterNode = bottle.querySelector(".voice-letter");
 const textNode = bottle.querySelector(".voice-letter-text");
