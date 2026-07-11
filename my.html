@@ -1745,6 +1745,8 @@ localStorage.setItem("lugu_my_space_sequence", String(sequence + 1));
 saveState(draft);
 renderSpace();
 setView("space");
+spaceMusicAutoTried = true;
+playSpaceMusic({ silent: true });
 }
 
 function renderSpace() {
@@ -2263,6 +2265,7 @@ renderPublic();
 } else if (state && state.created) {
 renderSpace();
 setView("space");
+playSpaceMusic({ silent: true });
 } else {
 setView("home");
 }
