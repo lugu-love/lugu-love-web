@@ -1553,7 +1553,7 @@ growth: "我的成长",
 collection: "我的收藏"
 };
 
-let state = readState();
+let state = normalizeState(readState());
 let draft = createDefaultState();
 let currentStep = 0;
 let activeCategory = "voice";
@@ -1591,6 +1591,17 @@ const raw = localStorage.getItem(STORAGE_KEY);
 return raw ? JSON.parse(raw) : null;
 } catch (error) {
 return null;
+}
+
+function normalizeState(saved) {
+if (!saved || typeof saved !== "object") return null;
+const fallback = createDefaultState();
+return {
+...fallback,
+...saved,
+star: { ...fallback.star, ...(saved.star || {}) },
+contents: { ...fallback.contents, ...(saved.contents || {}) }
+};
 }
 }
 
