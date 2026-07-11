@@ -166,27 +166,27 @@ width: 188px;
 height: 188px;
 margin: 34px auto 28px;
 border-radius: 50%;
-background:
-radial-gradient(circle at 38% 30%, rgba(255, 255, 255, .95), rgba(255, 223, 156, .58) 18%, rgba(95, 184, 255, .16) 42%, rgba(255, 255, 255, 0) 68%),
-linear-gradient(145deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .02));
-box-shadow: 0 0 56px rgba(255, 213, 133, .24), inset 0 0 32px rgba(255, 255, 255, .18);
+overflow: hidden;
+background: #07101e;
+box-shadow: 0 0 56px rgba(84, 157, 255, .3), 0 0 24px rgba(255, 187, 82, .16);
 animation: float-orb 5.4s ease-in-out infinite;
+}
+
+.hero-orb img {
+position: absolute;
+top: -82%;
+left: 50%;
+width: 166%;
+height: auto;
+display: block;
+transform: translateX(-50%);
+pointer-events: none;
+user-select: none;
 }
 
 .hero-orb::before,
 .hero-orb::after {
-content: "";
-position: absolute;
-inset: 26px;
-border: 1px solid rgba(255, 255, 255, .24);
-border-radius: 50%;
-transform: rotateX(68deg) rotateZ(-18deg);
-}
-
-.hero-orb::after {
-inset: 48px;
-border-color: rgba(255, 219, 144, .3);
-transform: rotateX(72deg) rotateZ(42deg);
+display: none;
 }
 
 .primary-btn,
@@ -895,6 +895,13 @@ min-height: 38px;
 padding: 0 10px;
 }
 
+.music-track .tiny-btn.is-active {
+border-color: rgba(255, 211, 116, .72);
+background: linear-gradient(145deg, rgba(255, 199, 92, .34), rgba(137, 96, 255, .24));
+color: #fff7d7;
+box-shadow: 0 0 16px rgba(255, 190, 82, .18);
+}
+
 .music-track.is-placeholder .tiny-btn {
 visibility: hidden;
 }
@@ -1099,6 +1106,41 @@ transform: translate(-50%, 0);
 display: none !important;
 }
 
+.space-music-control {
+position: fixed;
+right: max(18px, calc((100vw - 430px) / 2 + 18px));
+top: calc(72px + env(safe-area-inset-top));
+bottom: auto;
+z-index: 100;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+min-height: 48px;
+padding: 7px 14px 7px 9px;
+border: 1px solid rgba(210, 226, 255, .34);
+border-radius: 999px;
+background: rgba(12, 18, 42, .88);
+color: #fff;
+box-shadow: 0 10px 32px rgba(0, 0, 0, .36), 0 0 22px rgba(123, 154, 255, .18);
+backdrop-filter: blur(18px);
+}
+
+.space-music-control-icon {
+display: grid;
+place-items: center;
+width: 34px;
+height: 34px;
+border-radius: 50%;
+background: linear-gradient(145deg, rgba(135, 160, 255, .38), rgba(120, 84, 214, .28));
+font-size: 17px;
+}
+
+.space-music-control-text {
+font-size: 13px;
+font-weight: 700;
+letter-spacing: .04em;
+}
+
 @keyframes star-drift {
 to {
 background-position: 84px 96px, 160px 178px;
@@ -1147,14 +1189,19 @@ grid-template-columns: 1fr;
 <main class="page">
 <div class="topbar">
 <a class="earth-link" href="index.html">🌍 地球</a>
+<button class="ghost-btn hidden" id="saveSpaceBtn" type="button">保存空间</button>
 <button class="ghost-btn hidden" id="resetBtn" type="button">重新创建</button>
 </div>
+<button class="space-music-control hidden" id="globalMusicToggleBtn" type="button" aria-label="空间音乐开关">
+<span class="space-music-control-icon" id="globalMusicIcon" aria-hidden="true">🔊</span>
+<span class="space-music-control-text" id="globalMusicText">音乐开启</span>
+</button>
 
 <section class="hero" id="homeView">
 <p class="kicker">My Space · My World</p>
 <h1 class="title">我的空间 · 我的世界</h1>
 <p class="title-en">My Space · My World</p>
-<div class="hero-orb" aria-hidden="true"></div>
+<div class="hero-orb" aria-hidden="true"><img src="earth.webp" alt=""></div>
 <button class="primary-btn" id="createBtn" type="button">创建我的空间</button>
 <p class="helper">从此拥有一个属于自己的世界。</p>
 </section>
@@ -1423,6 +1470,8 @@ grid-template-columns: 1fr;
 
 <script>
 const STORAGE_KEY = "lugu_my_space_v11";
+const MUSIC_STORAGE_KEY = "lugu_my_space_music";
+const MUSIC_ENABLED_KEY = "lugu_space_music_enabled";
 const year = "2026";
 const colors = {
 gold: { label: "金色", value: "#ffd76a", core: "#fff8dc", glow: "rgba(255, 211, 104, .76)", size: 58, speed: "2.5s" },
@@ -1560,12 +1609,21 @@ let activeCategory = "voice";
 let activeContentType = "文字";
 let selectedMusic = "";
 let previewMusicAudio = null;
+let previewMusicTrackId = "";
 let spaceMusicAudio = null;
 let spaceMusicTrack = null;
 let spaceMusicAutoTried = false;
+let musicEnabled = true;
+try {
+musicEnabled = localStorage.getItem(MUSIC_ENABLED_KEY) !== "0";
+} catch (error) {
+musicEnabled = true;
+}
+let publicSpaceData = null;
 
 const qs = new URLSearchParams(window.location.search);
 const isPublicView = qs.get("view") === "public";
+const isEmbeddedView = qs.get("embedded") === "1" && window.parent !== window;
 
 const el = (id) => document.getElementById(id);
 const homeView = el("homeView");
@@ -1574,6 +1632,10 @@ const spaceView = el("spaceView");
 const publicView = el("publicView");
 const homeFooter = el("homeFooter");
 const resetBtn = el("resetBtn");
+const saveSpaceBtn = el("saveSpaceBtn");
+const globalMusicToggleBtn = el("globalMusicToggleBtn");
+const globalMusicIcon = el("globalMusicIcon");
+const globalMusicText = el("globalMusicText");
 const avatarInput = el("avatarInput");
 const avatarEditorModal = el("avatarEditorModal");
 const avatarCropStage = el("avatarCropStage");
@@ -1592,22 +1654,34 @@ return raw ? JSON.parse(raw) : null;
 } catch (error) {
 return null;
 }
+}
 
-function normalizeState(saved) {
+function normalizeState(saved, useLocalMusic = true) {
 if (!saved || typeof saved !== "object") return null;
 const fallback = createDefaultState();
+let savedMusic = "";
+if (useLocalMusic) try {
+savedMusic = localStorage.getItem(MUSIC_STORAGE_KEY) || "";
+} catch (error) {
+savedMusic = "";
+}
 return {
 ...fallback,
 ...saved,
+music: savedMusic || saved.music || fallback.music,
 star: { ...fallback.star, ...(saved.star || {}) },
 contents: { ...fallback.contents, ...(saved.contents || {}) }
 };
 }
-}
 
 function saveState(nextState) {
 state = nextState;
+try {
 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+return true;
+} catch (error) {
+return false;
+}
 }
 
 function showToast(message) {
@@ -1665,6 +1739,8 @@ spaceView.classList.toggle("is-visible", view === "space");
 publicView.classList.toggle("is-visible", view === "public");
 homeFooter.classList.toggle("hidden", view !== "home");
 resetBtn.classList.toggle("hidden", view === "home" || view === "public");
+saveSpaceBtn.classList.toggle("hidden", view !== "space");
+globalMusicToggleBtn.classList.toggle("hidden", view !== "space" && view !== "public");
 }
 
 function applyStar(node, data) {
@@ -1791,8 +1867,9 @@ const library = el("musicLibrary");
 if (!library) return;
 library.innerHTML = musicLibrary.map((track) => {
 const isSelected = track.src && track.name === selectedMusic;
+const isPreviewing = track.src && track.id === previewMusicTrackId && (isEmbeddedView || (previewMusicAudio && !previewMusicAudio.paused));
 const selectButton = track.src ? `<button class="tiny-btn" type="button" data-music-select="${track.id}">${isSelected ? "已选" : "选择"}</button>` : `<button class="tiny-btn" type="button" disabled>待添加</button>`;
-const previewButton = track.src ? `<button class="tiny-btn" type="button" data-music-preview="${track.id}">试听</button>` : `<button class="tiny-btn" type="button" disabled>试听</button>`;
+const previewButton = track.src ? `<button class="tiny-btn${isPreviewing ? " is-active" : ""}" type="button" data-music-preview="${track.id}" aria-pressed="${isPreviewing ? "true" : "false"}">${isPreviewing ? "停止" : "试听"}</button>` : `<button class="tiny-btn" type="button" disabled>试听</button>`;
 return `
 <div class="music-track${isSelected ? " is-selected" : ""}${track.src ? "" : " is-placeholder"}">
 <span class="music-track-info">
@@ -1806,18 +1883,25 @@ ${selectButton}
 }
 
 function stopPreviewMusic() {
-if (!previewMusicAudio) return;
+if (!previewMusicAudio) {
+previewMusicTrackId = "";
+return;
+}
 previewMusicAudio.pause();
 previewMusicAudio.src = "";
 previewMusicAudio.load();
 previewMusicAudio = null;
+previewMusicTrackId = "";
+renderMusicLibrary();
 }
 
 function updateSpaceMusicButton() {
 const button = el("spaceMusicToggleBtn");
-if (!button) return;
 const isPlaying = spaceMusicAudio && !spaceMusicAudio.paused;
-button.textContent = isPlaying ? "暂停" : "播放";
+if (button) button.textContent = isPlaying ? "暂停" : "播放";
+if (globalMusicIcon) globalMusicIcon.textContent = musicEnabled ? "🔊" : "🔇";
+if (globalMusicText) globalMusicText.textContent = musicEnabled ? "音乐开启" : "音乐关闭";
+if (globalMusicToggleBtn) globalMusicToggleBtn.setAttribute("aria-pressed", musicEnabled ? "true" : "false");
 }
 
 function stopSpaceMusic() {
@@ -1833,9 +1917,9 @@ spaceMusicTrack = null;
 updateSpaceMusicButton();
 }
 
-function playSpaceMusic(options = {}) {
-if (!state || !state.created) return;
-const track = getMusicTrackByName(state.music || selectedMusic);
+function playSpaceMusic(options = {}, sourceData = state) {
+if (!sourceData) return Promise.resolve(false);
+const track = getMusicTrackByName(sourceData.music || selectedMusic);
 if (!track || !track.src) return;
 stopPreviewMusic();
 
@@ -1851,48 +1935,125 @@ spaceMusicAudio.addEventListener("pause", updateSpaceMusicButton);
 spaceMusicAudio.addEventListener("play", updateSpaceMusicButton);
 }
 
-spaceMusicAudio.play().then(() => {
+return spaceMusicAudio.play().then(() => {
+spaceMusicAutoTried = true;
+try {
+sessionStorage.removeItem("lugu_space_autoplay");
+} catch (error) {}
 el("musicStatus").textContent = `正在播放：${track.name}`;
 updateSpaceMusicButton();
+return true;
 }).catch(() => {
 if (!options.silent) {
 el("musicStatus").textContent = "请点击播放按钮开始空间音乐。";
 }
 updateSpaceMusicButton();
+return false;
 });
 }
 
 function toggleSpaceMusic() {
+if (isEmbeddedView) {
+musicEnabled = !musicEnabled;
+updateSpaceMusicButton();
+window.parent.postMessage({ type: "lugu-toggle-space-music" }, window.location.origin);
+return;
+}
+if (previewMusicAudio && !previewMusicAudio.paused) {
+stopPreviewMusic();
+el("musicStatus").textContent = "试听已停止。再次点击音乐开关可播放已保存的空间音乐。";
+updateSpaceMusicButton();
+return;
+}
 if (spaceMusicAudio && !spaceMusicAudio.paused) {
+musicEnabled = false;
+localStorage.setItem(MUSIC_ENABLED_KEY, "0");
 spaceMusicAudio.pause();
 el("musicStatus").textContent = `已暂停：${spaceMusicTrack ? spaceMusicTrack.name : selectedMusic}`;
 updateSpaceMusicButton();
 return;
 }
-playSpaceMusic();
+musicEnabled = true;
+localStorage.setItem(MUSIC_ENABLED_KEY, "1");
+updateSpaceMusicButton();
+playSpaceMusic({}, publicSpaceData || state);
 }
 
 function tryAutoPlaySpaceMusic(event) {
+if (isEmbeddedView) return;
+if (!musicEnabled) return;
 if (spaceMusicAutoTried) return;
-if (!spaceView.classList.contains("is-visible")) return;
-if (event && event.target.closest(".module-music button")) return;
-spaceMusicAutoTried = true;
-playSpaceMusic({ silent: true });
+if (!spaceView.classList.contains("is-visible") && !publicView.classList.contains("is-visible")) return;
+if (event && event.target.closest(".module-music button, .space-music-control")) return;
+playSpaceMusic({ silent: true }, publicSpaceData || state);
+}
+
+function restartMusicWhenEnteringFromEarth() {
+if (isEmbeddedView) return;
+let shouldRestart = false;
+try {
+shouldRestart = sessionStorage.getItem("lugu_space_autoplay") === "1";
+} catch (error) {
+shouldRestart = false;
+}
+if (!shouldRestart) return;
+if (!spaceView.classList.contains("is-visible") && !publicView.classList.contains("is-visible")) return;
+
+spaceMusicAutoTried = false;
+musicEnabled = true;
+try {
+localStorage.setItem(MUSIC_ENABLED_KEY, "1");
+} catch (error) {}
+updateSpaceMusicButton();
+stopPreviewMusic();
+const sourceData = publicSpaceData || state;
+playSpaceMusic({ silent: true }, sourceData).then((started) => {
+if (!started) return;
+try {
+sessionStorage.removeItem("lugu_space_autoplay");
+} catch (error) {}
+});
 }
 
 function previewMusic(track) {
 if (!track || !track.src) return;
+if (isEmbeddedView) {
+if (previewMusicTrackId === track.id) {
+previewMusicTrackId = "";
+window.parent.postMessage({ type: "lugu-stop-preview-music" }, window.location.origin);
+el("musicStatus").textContent = `已停止试听：${track.name}`;
+renderMusicLibrary();
+return;
+}
+previewMusicTrackId = track.id;
+el("musicStatus").textContent = `正在试听：${track.name}`;
+renderMusicLibrary();
+window.parent.postMessage({ type: "lugu-preview-space-music", src: track.src, trackId: track.id }, window.location.origin);
+return;
+}
+if (previewMusicTrackId === track.id && previewMusicAudio && !previewMusicAudio.paused) {
+stopPreviewMusic();
+el("musicStatus").textContent = `已停止试听：${track.name}`;
+return;
+}
 stopSpaceMusic();
 stopPreviewMusic();
 previewMusicAudio = new Audio(track.src);
+previewMusicTrackId = track.id;
 previewMusicAudio.volume = .72;
 previewMusicAudio.preload = "auto";
 el("musicStatus").textContent = `正在试听：${track.name}`;
+renderMusicLibrary();
 previewMusicAudio.addEventListener("ended", () => {
 if (previewMusicAudio) previewMusicAudio = null;
-if (state) renderSpace();
+previewMusicTrackId = "";
+renderMusicLibrary();
+el("musicStatus").textContent = `试听结束：${track.name}`;
 }, { once: true });
 previewMusicAudio.play().catch(() => {
+previewMusicTrackId = "";
+previewMusicAudio = null;
+renderMusicLibrary();
 el("musicStatus").textContent = "请再次点击试听以播放音乐。";
 });
 }
@@ -2102,7 +2263,14 @@ list.innerHTML = items.length ? items.map((item) => (
 }
 
 function renderPublic() {
-const data = state && state.created ? state : {
+let sharedSpace = null;
+try {
+sharedSpace = JSON.parse(sessionStorage.getItem("lugu_public_space") || "null");
+} catch (error) {
+sharedSpace = null;
+}
+const requestedId = qs.get("id");
+const data = sharedSpace && (!requestedId || sharedSpace.id === requestedId) ? normalizeState(sharedSpace, false) : {
 id: "LX-2026-000001",
 nickname: "晨光星",
 intro: "每个人拥有一个属于自己的世界，用一颗心星连接另一个世界。",
@@ -2113,6 +2281,7 @@ contents: {
 story: [{ type: "文字", text: "这里是TA的世界入口。更多故事会在下一阶段继续长出来。" }]
 }
 };
+publicSpaceData = data;
 el("publicName").textContent = data.nickname;
 el("publicIntro").textContent = data.intro;
 el("publicStarId").textContent = data.id;
@@ -2140,6 +2309,27 @@ showStep(currentStep);
 }
 
 renderChoices();
+
+document.querySelectorAll('a[href="index.html"]').forEach((link) => {
+link.addEventListener("click", (event) => {
+if (!isEmbeddedView) return;
+event.preventDefault();
+window.parent.postMessage({ type: "lugu-close-space" }, window.location.origin);
+});
+});
+
+window.addEventListener("message", (event) => {
+if (!isEmbeddedView || event.origin !== window.location.origin || !event.data) return;
+if (event.data.type === "lugu-preview-music-state") {
+previewMusicTrackId = event.data.playing ? event.data.trackId || "" : "";
+renderMusicLibrary();
+if (event.data.ended) el("musicStatus").textContent = "试听结束。";
+return;
+}
+if (event.data.type !== "lugu-space-music-state") return;
+musicEnabled = Boolean(event.data.playing);
+updateSpaceMusicButton();
+});
 
 el("createBtn").addEventListener("click", startFlow);
 resetBtn.addEventListener("click", startFlow);
@@ -2208,21 +2398,60 @@ saveState(state);
 renderSpace();
 });
 
+saveSpaceBtn.addEventListener("click", () => {
+if (!state || !state.created) return;
+state.star.name = el("spaceStarName").value.trim() || state.star.name || "我的心星";
+state.music = resolveMusicName(selectedMusic || state.music);
+try {
+localStorage.setItem(MUSIC_STORAGE_KEY, state.music);
+} catch (error) {
+showToast("空间音乐保存失败，请清理浏览器存储后重试。");
+return;
+}
+if (!saveState(state)) {
+showToast("空间资料较大，保存失败，请更换较小的头像后重试。");
+return;
+}
+renderSpace();
+if (isEmbeddedView) {
+const track = getMusicTrackByName(state.music);
+window.parent.postMessage({ type: "lugu-set-space-music", src: track.src }, window.location.origin);
+}
+showToast("我的空间已保存");
+});
+
 el("launchBtn").addEventListener("click", () => {
 el("launchPanel").classList.toggle("is-visible");
 });
 
 el("saveMusicBtn").addEventListener("click", () => {
 if (!state) return;
-state.music = selectedMusic || el("musicSelect").value || "星河钢琴";
+const chosenMusic = resolveMusicName(selectedMusic || el("musicSelect").value || "星河钢琴");
+state.music = chosenMusic;
+selectedMusic = chosenMusic;
+try {
+localStorage.setItem(MUSIC_STORAGE_KEY, chosenMusic);
+} catch (error) {
+showToast("音乐设置暂时无法保存，请清理浏览器存储空间后重试。");
+return;
+}
 saveState(state);
 stopSpaceMusic();
 renderSpace();
+if (isEmbeddedView) {
+const track = getMusicTrackByName(chosenMusic);
+window.parent.postMessage({ type: "lugu-set-space-music", src: track.src }, window.location.origin);
+} else {
+playSpaceMusic({}, state);
+}
+showToast(`已保存空间音乐：${chosenMusic}`);
 });
 
 el("spaceMusicToggleBtn").addEventListener("click", toggleSpaceMusic);
+globalMusicToggleBtn.addEventListener("click", toggleSpaceMusic);
 
 document.addEventListener("pointerdown", tryAutoPlaySpaceMusic, { passive: true });
+window.addEventListener("pageshow", restartMusicWhenEnteringFromEarth);
 
 avatarInput.addEventListener("change", (event) => {
 const file = event.target.files && event.target.files[0];
@@ -2273,10 +2502,11 @@ renderSpace();
 
 if (isPublicView) {
 renderPublic();
+if (musicEnabled && !isEmbeddedView) playSpaceMusic({ silent: true }, publicSpaceData);
 } else if (state && state.created) {
 renderSpace();
 setView("space");
-playSpaceMusic({ silent: true });
+if (musicEnabled && !isEmbeddedView) playSpaceMusic({ silent: true }, state);
 } else {
 setView("home");
 }

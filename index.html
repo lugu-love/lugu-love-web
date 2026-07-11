@@ -130,6 +130,14 @@ pointer-events: none;
 overflow: hidden;
 }
 
+.heart-star-layer {
+position: fixed;
+inset: 0;
+z-index: 3;
+pointer-events: none;
+overflow: hidden;
+}
+
 .voice-star {
 position: absolute;
 left: 0;
@@ -176,6 +184,165 @@ radial-gradient(circle at 50% 50%, #fff 0 11%, var(--voice-core) 19%, rgba(255, 
 linear-gradient(135deg, rgba(255, 255, 255, .96), var(--voice-color) 46%, var(--voice-deep) 100%);
 clip-path: polygon(50% 0, 56% 41%, 100% 50%, 56% 59%, 50% 100%, 44% 59%, 0 50%, 44% 41%);
 filter: drop-shadow(0 0 9px var(--voice-core)) drop-shadow(0 0 24px var(--voice-glow));
+}
+
+.launched-heart-star {
+--heart-star-color: #ffd76a;
+--heart-star-core: #fff8dc;
+--heart-star-glow: rgba(255, 211, 104, .76);
+--heart-star-size: 34px;
+position: absolute;
+left: var(--heart-star-x, 70%);
+top: var(--heart-star-y, 22%);
+width: var(--heart-star-size);
+height: var(--heart-star-size);
+padding: 0;
+border: 0;
+background: transparent;
+opacity: .96;
+transform: translate(-50%, -50%);
+pointer-events: auto;
+cursor: pointer;
+filter: drop-shadow(0 0 16px var(--heart-star-glow)) drop-shadow(0 0 38px var(--heart-star-glow));
+animation: launched-heart-float 5.2s ease-in-out infinite, launched-heart-twinkle var(--heart-star-speed, 2.5s) ease-in-out infinite;
+}
+
+.launched-heart-star::before {
+content: "";
+position: absolute;
+inset: 0;
+background:
+radial-gradient(circle at 50% 50%, var(--heart-star-core) 0 12%, var(--heart-star-color) 23%, transparent 48%),
+linear-gradient(135deg, rgba(255, 255, 255, .92), var(--heart-star-color) 48%, rgba(255, 255, 255, .18));
+clip-path: polygon(50% 0, 59% 38%, 100% 50%, 59% 62%, 50% 100%, 41% 62%, 0 50%, 41% 38%);
+}
+
+.launched-heart-star::after {
+content: "";
+position: absolute;
+inset: -82%;
+border-radius: 50%;
+background: radial-gradient(circle, var(--heart-star-glow), rgba(255, 255, 255, 0) 64%);
+opacity: .72;
+}
+
+.launched-heart-star.shape-shine::before {
+clip-path: polygon(50% 0, 61% 34%, 96% 16%, 66% 48%, 100% 50%, 66% 52%, 96% 84%, 61% 66%, 50% 100%, 39% 66%, 4% 84%, 34% 52%, 0 50%, 34% 48%, 4% 16%, 39% 34%);
+}
+
+.launched-heart-star.shape-meteor::before {
+clip-path: polygon(36% 0, 48% 34%, 100% 8%, 62% 48%, 82% 100%, 45% 66%, 0 90%, 31% 53%);
+}
+
+.launched-heart-star.shape-nebula::before {
+border-radius: 42% 58% 48% 52%;
+clip-path: none;
+}
+
+.launched-heart-star.shape-nebula::after {
+inset: -120%;
+background:
+radial-gradient(circle at 30% 42%, var(--heart-star-glow), transparent 34%),
+radial-gradient(circle at 70% 58%, rgba(255, 255, 255, .34), transparent 32%);
+filter: blur(3px);
+}
+
+.launched-heart-label {
+position: absolute;
+left: 50%;
+top: calc(100% + 10px);
+min-width: 46px;
+padding: 4px 8px;
+border: 1px solid rgba(255, 244, 212, .3);
+border-radius: 999px;
+background: rgba(8, 11, 24, .56);
+color: rgba(255, 244, 212, .92);
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+font-size: 10px;
+letter-spacing: .12em;
+white-space: nowrap;
+transform: translateX(-50%);
+backdrop-filter: blur(10px);
+}
+
+.heart-star-card {
+position: fixed;
+left: 50%;
+bottom: max(28px, env(safe-area-inset-bottom));
+z-index: 9;
+width: min(calc(var(--stage-width) - 32px), 386px);
+padding: 18px;
+border: 1px solid rgba(255, 255, 255, .18);
+border-radius: 18px;
+background:
+radial-gradient(circle at 22% 0, rgba(255, 222, 148, .2), transparent 34%),
+rgba(12, 15, 30, .86);
+box-shadow: 0 22px 70px rgba(0, 0, 0, .44), inset 0 0 26px rgba(255, 255, 255, .05);
+backdrop-filter: blur(22px);
+color: #fff;
+font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+text-align: left;
+opacity: 0;
+visibility: hidden;
+transform: translate(-50%, 18px) scale(.98);
+transition: opacity .28s ease, visibility .28s ease, transform .28s ease;
+}
+
+.heart-star-card.is-visible {
+opacity: 1;
+visibility: visible;
+transform: translate(-50%, 0) scale(1);
+}
+
+.heart-star-card-close {
+position: absolute;
+right: 12px;
+top: 12px;
+width: 34px;
+height: 34px;
+border: 1px solid rgba(255, 255, 255, .2);
+border-radius: 50%;
+background: rgba(255, 255, 255, .08);
+color: #fff;
+font-size: 22px;
+line-height: 1;
+cursor: pointer;
+}
+
+.heart-star-card-no {
+margin: 0 38px 8px 0;
+color: rgba(255, 242, 210, .96);
+font-size: 17px;
+font-weight: 700;
+letter-spacing: .04em;
+}
+
+.heart-star-card-name {
+margin: 0 0 10px;
+font-size: 15px;
+font-weight: 650;
+}
+
+.heart-star-card-voice {
+margin: 0 0 15px;
+color: rgba(236, 247, 255, .8);
+font-size: 14px;
+line-height: 1.7;
+}
+
+.heart-star-card-link {
+display: flex;
+align-items: center;
+justify-content: center;
+min-height: 48px;
+border-radius: 14px;
+background: linear-gradient(135deg, #ff5d7f, #ffc857);
+box-shadow: 0 12px 34px rgba(255, 154, 95, .22);
+color: #fff;
+font-size: 15px;
+font-weight: 700;
+letter-spacing: .04em;
+text-decoration: none;
 }
 
 .voice-star.is-touched {
@@ -2137,6 +2304,28 @@ filter: brightness(2.1);
 transform: scale(1.35);
 }
 }
+
+@keyframes launched-heart-float {
+0%,
+100% {
+margin-top: 0;
+}
+
+50% {
+margin-top: -12px;
+}
+}
+
+@keyframes launched-heart-twinkle {
+0%,
+100% {
+opacity: .76;
+}
+
+50% {
+opacity: 1;
+}
+}
 </style>
 </head>
 <body>
@@ -2168,6 +2357,7 @@ transform: scale(1.35);
 <span class="star" style="--x: 86%; --y: 55%; --size: 2px; --color: #ffe0a6; --duration: 6.2s; --delay: -4.4s"></span>
 </div>
 <div class="voice-star-layer" aria-hidden="true"></div>
+<div class="heart-star-layer" aria-label="已发射心星"></div>
 <div class="approach">
 <div class="earth">
 <img src="earth.webp" alt="">
@@ -2213,9 +2403,10 @@ transform: scale(1.35);
 <div class="my-space-bg" id="mySpaceBg"></div>
 <button class="my-space-close" id="mySpaceClose" type="button" aria-label="关闭我的空间">×</button>
 <div class="my-space-shell" id="mySpaceMenu">
-<p class="my-space-kicker">MY SPACE V1</p>
-<h2 class="my-space-title">我的空间</h2>
-<button class="my-space-action my-space-primary" id="mySpaceGenerate" type="button">✨ 一键生成我的空间</button>
+<p class="my-space-kicker">My Space · My World</p>
+<h2 class="my-space-title">我的空间 · 我的世界</h2>
+<button class="my-space-action my-space-primary" id="mySpaceGenerate" type="button">创建我的空间</button>
+<p class="my-space-kicker">从此拥有一个属于自己的世界。</p>
 <button class="my-space-action my-space-secondary" id="mySpaceStyle" type="button">🎨 选择我的风格</button>
 <div class="my-space-panel" id="mySpaceStylePanel">
 <button class="my-space-style-choice" type="button" data-my-space-style="星空" style="--choice-bg:linear-gradient(135deg,#0b1320,#273469)">星空</button>
@@ -2235,6 +2426,13 @@ transform: scale(1.35);
 <button class="my-space-back" id="mySpaceBack" type="button">返回</button>
 </div>
 </div>
+<div class="heart-star-card" id="heartStarCard" role="dialog" aria-modal="false" aria-label="心星卡片" aria-hidden="true">
+<button class="heart-star-card-close" id="heartStarCardClose" type="button" aria-label="关闭心星卡片">×</button>
+<p class="heart-star-card-no" id="heartStarCardNo">🌟 LX-2026-000001</p>
+<p class="heart-star-card-name" id="heartStarCardName">晨光星</p>
+<p class="heart-star-card-voice" id="heartStarCardVoice">“希望世界因为爱重新连接。”</p>
+<a class="heart-star-card-link" id="heartStarCardLink" href="my.html?view=public">进入TA的世界</a>
+</div>
 <div class="footer-signature">心域·情感文明共创</div>
 <div id="audioControl">
 <button id="audioToggleBtn" type="button" aria-label="音乐开关">🔇</button>
@@ -2245,6 +2443,7 @@ transform: scale(1.35);
 (() => {
 const stage = document.getElementById("phoneStage");
 const layer = document.querySelector(".voice-star-layer");
+const heartStarLayer = document.querySelector(".heart-star-layer");
 const earth = document.querySelector(".earth");
 const mySpaceButton = document.querySelector(".my-space-button");
 const mySpaceModal = document.querySelector(".my-space-modal");
@@ -2262,6 +2461,20 @@ const mySpaceCustomText = document.getElementById("mySpaceCustomText");
 const mySpaceCustomApply = document.getElementById("mySpaceCustomApply");
 const mySpaceBack = document.getElementById("mySpaceBack");
 const mySpaceStyleButtons = document.querySelectorAll("[data-my-space-style]");
+const heartStarCard = document.getElementById("heartStarCard");
+const heartStarCardClose = document.getElementById("heartStarCardClose");
+const heartStarCardNo = document.getElementById("heartStarCardNo");
+const heartStarCardName = document.getElementById("heartStarCardName");
+const heartStarCardVoice = document.getElementById("heartStarCardVoice");
+const heartStarCardLink = document.getElementById("heartStarCardLink");
+const mySpaceStorageKey = "lugu_my_space_v11";
+const launchedHeartColors = {
+gold: { value: "#ffd76a", core: "#fff8dc", glow: "rgba(255, 211, 104, .78)", size: 42, speed: "2.5s" },
+blue: { value: "#5ed1ff", core: "#f2fdff", glow: "rgba(94, 209, 255, .74)", size: 38, speed: "2.1s" },
+purple: { value: "#b783ff", core: "#fff5ff", glow: "rgba(183, 131, 255, .74)", size: 46, speed: "2.9s" },
+green: { value: "#70f0b1", core: "#f2fff8", glow: "rgba(112, 240, 177, .72)", size: 37, speed: "2.2s" },
+pink: { value: "#ff8bc4", core: "#fff6fb", glow: "rgba(255, 139, 196, .74)", size: 44, speed: "2.7s" }
+};
 const colors = [
 ["#54c7ff", "rgba(72, 191, 255, .72)", "rgba(83, 202, 255, .28)", "#f5fcff", "#167dff"],
 ["#a672ff", "rgba(171, 111, 255, .68)", "rgba(190, 134, 255, .26)", "#fff4ff", "#7136ff"],
@@ -2353,6 +2566,208 @@ let worldMaintenanceRemoveTimer = 0;
 
 const random = (min, max) => min + Math.random() * (max - min);
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+function readMySpaceState() {
+try {
+const raw = localStorage.getItem(mySpaceStorageKey);
+return raw ? JSON.parse(raw) : null;
+} catch (error) {
+return null;
+}
+}
+
+function escapeHtml(value) {
+return String(value).replace(/[&<>"']/g, (char) => ({
+"&": "&amp;",
+"<": "&lt;",
+">": "&gt;",
+'"': "&quot;",
+"'": "&#39;"
+}[char]));
+}
+
+function closeHeartStarCard() {
+if (!heartStarCard) return;
+heartStarCard.classList.remove("is-visible");
+heartStarCard.setAttribute("aria-hidden", "true");
+}
+
+function getSpaceMusicSource(data) {
+const musicName = (data && data.music) || localStorage.getItem("lugu_my_space_music") || "星河钢琴";
+const namedSources = {
+"星河钢琴": "assets/music/p-aaa0536-54f92252.m4a",
+"温柔长笛": "assets/music/native-american-flute.m4a",
+"夜空冥想": "assets/music/p-mzpy00978-ccbf4fd7.m4a"
+};
+if (namedSources[musicName]) return namedSources[musicName];
+const match = musicName.match(/^乐曲\s*(\d{1,2})$/);
+return match ? `assets/music/${match[1]}.mp3` : namedSources["星河钢琴"];
+}
+
+let embeddedSpaceAudio = null;
+let embeddedPreviewAudio = null;
+let embeddedSpaceOverlay = null;
+
+function closeEmbeddedSpace() {
+if (embeddedSpaceOverlay) embeddedSpaceOverlay.remove();
+embeddedSpaceOverlay = null;
+if (embeddedSpaceAudio) {
+embeddedSpaceAudio.pause();
+embeddedSpaceAudio.src = "";
+embeddedSpaceAudio = null;
+}
+if (embeddedPreviewAudio) {
+embeddedPreviewAudio.pause();
+embeddedPreviewAudio.src = "";
+embeddedPreviewAudio = null;
+}
+}
+
+function openEmbeddedSpace(href) {
+if (embeddedSpaceOverlay) embeddedSpaceOverlay.remove();
+const separator = href.includes("?") ? "&" : "?";
+const overlay = document.createElement("div");
+overlay.style.cssText = "position:fixed;inset:0;z-index:99999;background:#050712";
+const frame = document.createElement("iframe");
+frame.src = `${href}${separator}embedded=1`;
+frame.title = "空间";
+frame.allow = "autoplay";
+frame.style.cssText = "display:block;width:100%;height:100%;border:0;background:#050712";
+overlay.appendChild(frame);
+document.body.appendChild(overlay);
+embeddedSpaceOverlay = overlay;
+}
+
+function enterSpaceWithMusic(event, href, data, isMyStar = true) {
+if (event) event.preventDefault();
+sessionStorage.setItem("lugu_space_autoplay", "1");
+localStorage.setItem("lugu_space_music_enabled", "1");
+if (!isMyStar && data) sessionStorage.setItem("lugu_public_space", JSON.stringify(data));
+
+const previousEarthAudio = window.audio;
+const previousFadingAudio = window.fadingAudio;
+if (previousEarthAudio && previousEarthAudio !== embeddedSpaceAudio && previousEarthAudio !== embeddedPreviewAudio) previousEarthAudio.pause();
+if (previousFadingAudio && previousFadingAudio !== embeddedSpaceAudio && previousFadingAudio !== embeddedPreviewAudio) previousFadingAudio.pause();
+if (typeof window.stopVoiceMusic === "function") window.stopVoiceMusic();
+if (typeof window.stopMusic === "function") window.stopMusic();
+
+if (embeddedSpaceAudio) embeddedSpaceAudio.pause();
+embeddedSpaceAudio = new Audio(getSpaceMusicSource(data));
+embeddedSpaceAudio.volume = .62;
+embeddedSpaceAudio.preload = "auto";
+embeddedSpaceAudio.loop = true;
+embeddedSpaceAudio.play().catch(() => {});
+openEmbeddedSpace(href);
+}
+
+window.addEventListener("message", (event) => {
+if (event.origin !== window.location.origin || !event.data) return;
+if (event.data.type === "lugu-close-space") closeEmbeddedSpace();
+if (event.data.type === "lugu-preview-space-music" && event.data.src) {
+if (embeddedSpaceAudio) embeddedSpaceAudio.pause();
+if (embeddedPreviewAudio) {
+embeddedPreviewAudio.pause();
+embeddedPreviewAudio.src = "";
+}
+embeddedPreviewAudio = new Audio(event.data.src);
+embeddedPreviewAudio.volume = .72;
+embeddedPreviewAudio.addEventListener("ended", () => {
+embeddedPreviewAudio = null;
+event.source.postMessage({ type: "lugu-preview-music-state", trackId: "", playing: false, ended: true }, event.origin);
+}, { once: true });
+embeddedPreviewAudio.play().then(() => {
+event.source.postMessage({ type: "lugu-preview-music-state", trackId: event.data.trackId || "", playing: true }, event.origin);
+}).catch(() => {
+embeddedPreviewAudio = null;
+event.source.postMessage({ type: "lugu-preview-music-state", trackId: "", playing: false }, event.origin);
+});
+}
+if (event.data.type === "lugu-stop-preview-music") {
+if (embeddedPreviewAudio) {
+embeddedPreviewAudio.pause();
+embeddedPreviewAudio.src = "";
+embeddedPreviewAudio = null;
+}
+event.source.postMessage({ type: "lugu-preview-music-state", trackId: "", playing: false }, event.origin);
+}
+if (event.data.type === "lugu-set-space-music" && event.data.src) {
+if (embeddedPreviewAudio) {
+embeddedPreviewAudio.pause();
+embeddedPreviewAudio.src = "";
+embeddedPreviewAudio = null;
+}
+if (embeddedSpaceAudio) {
+embeddedSpaceAudio.pause();
+embeddedSpaceAudio.src = "";
+}
+embeddedSpaceAudio = new Audio(event.data.src);
+embeddedSpaceAudio.volume = .62;
+embeddedSpaceAudio.loop = true;
+embeddedSpaceAudio.play().catch(() => {});
+event.source.postMessage({ type: "lugu-space-music-state", playing: !embeddedSpaceAudio.paused }, event.origin);
+}
+if (event.data.type === "lugu-toggle-space-music" && embeddedSpaceAudio) {
+if (embeddedPreviewAudio) {
+embeddedPreviewAudio.pause();
+embeddedPreviewAudio.src = "";
+embeddedPreviewAudio = null;
+event.source.postMessage({ type: "lugu-preview-music-state", trackId: "", playing: false }, event.origin);
+return;
+}
+if (embeddedSpaceAudio.paused) embeddedSpaceAudio.play().catch(() => {});
+else embeddedSpaceAudio.pause();
+event.source.postMessage({ type: "lugu-space-music-state", playing: !embeddedSpaceAudio.paused }, event.origin);
+}
+});
+
+function openHeartStarCard(data) {
+if (!heartStarCard || !data) return;
+const mySpace = readMySpaceState();
+const isMyStar = Boolean(mySpace && mySpace.created && mySpace.id && data.id && mySpace.id === data.id);
+const starName = data.star && data.star.name ? data.star.name : "我的心星";
+const voice = data.voice || "希望世界因为爱重新连接。";
+if (heartStarCardNo) heartStarCardNo.textContent = `🌟 ${data.id || "LX-2026-000001"}`;
+if (heartStarCardName) heartStarCardName.textContent = starName;
+if (heartStarCardVoice) heartStarCardVoice.textContent = `“${voice}”`;
+if (heartStarCardLink) {
+heartStarCardLink.href = isMyStar ? "my.html" : `my.html?view=public&id=${encodeURIComponent(data.id || "")}`;
+heartStarCardLink.textContent = isMyStar ? "进入我的空间" : "进入TA的世界";
+heartStarCardLink.onclick = (event) => enterSpaceWithMusic(event, heartStarCardLink.href, data, isMyStar);
+}
+heartStarCard.classList.add("is-visible");
+heartStarCard.setAttribute("aria-hidden", "false");
+}
+
+function renderLaunchedHeartStar() {
+if (!heartStarLayer) return;
+heartStarLayer.innerHTML = "";
+const data = readMySpaceState();
+if (!data || !data.created || data.launch !== "sea") {
+closeHeartStarCard();
+return;
+}
+
+const star = data.star || {};
+const color = launchedHeartColors[star.color] || launchedHeartColors.gold;
+const element = document.createElement("button");
+element.type = "button";
+element.className = `launched-heart-star shape-${star.shape || "normal"}`;
+element.setAttribute("aria-label", `打开我的心星 ${data.id || ""}`);
+element.style.setProperty("--heart-star-color", color.value);
+element.style.setProperty("--heart-star-core", color.core);
+element.style.setProperty("--heart-star-glow", color.glow);
+element.style.setProperty("--heart-star-size", `${color.size}px`);
+element.style.setProperty("--heart-star-speed", color.speed);
+element.style.setProperty("--heart-star-x", "72%");
+element.style.setProperty("--heart-star-y", "24%");
+element.innerHTML = '<span class="launched-heart-label">我的心星</span>';
+element.addEventListener("click", (event) => {
+event.stopPropagation();
+openHeartStarCard(data);
+});
+heartStarLayer.appendChild(element);
+}
+
 const mySpaceStyles = [
 {
 name: "星空",
@@ -2529,7 +2944,9 @@ glow.remove();
 setTimeout(openMySpace, 180);
 });
 
-if (mySpaceGenerate) mySpaceGenerate.addEventListener("click", generateMySpace);
+if (mySpaceGenerate) mySpaceGenerate.addEventListener("click", (event) => {
+enterSpaceWithMusic(event, "my.html", readMySpaceState(), true);
+});
 
 if (mySpaceStyle) mySpaceStyle.addEventListener("click", () => {
 const isOpen = mySpaceStylePanel && mySpaceStylePanel.classList.contains("is-open");
@@ -2557,10 +2974,25 @@ if (event.key === "Enter") applyCustomMySpace();
 
 if (mySpaceBack) mySpaceBack.addEventListener("click", showMySpaceHome);
 if (mySpaceClose) mySpaceClose.addEventListener("click", closeMySpace);
+if (heartStarCardClose) heartStarCardClose.addEventListener("click", closeHeartStarCard);
 
 document.addEventListener("keydown", (event) => {
 if (event.key === "Escape" && mySpaceModal && mySpaceModal.classList.contains("is-visible")) closeMySpace();
+if (event.key === "Escape" && heartStarCard && heartStarCard.classList.contains("is-visible")) closeHeartStarCard();
 });
+
+document.addEventListener("click", (event) => {
+if (!heartStarCard || !heartStarCard.classList.contains("is-visible")) return;
+if (heartStarCard.contains(event.target)) return;
+if (event.target.closest(".launched-heart-star")) return;
+closeHeartStarCard();
+});
+
+window.addEventListener("storage", (event) => {
+if (event.key === mySpaceStorageKey) renderLaunchedHeartStar();
+});
+
+renderLaunchedHeartStar();
 
 function randomLetterTilt() {
 let tilt;
