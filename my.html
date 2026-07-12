@@ -906,6 +906,25 @@ box-shadow: 0 0 16px rgba(255, 190, 82, .18);
 visibility: hidden;
 }
 
+.music-pagination {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+padding: 6px 0 2px;
+}
+
+.music-pagination .tiny-btn {
+min-width: 72px;
+}
+
+.music-page-label {
+min-width: 54px;
+color: rgba(226, 236, 255, .76);
+font-size: 12px;
+text-align: center;
+}
+
 .bottom-nav {
 position: fixed;
 left: 0;
@@ -1610,6 +1629,8 @@ let activeContentType = "文字";
 let selectedMusic = "";
 let previewMusicAudio = null;
 let previewMusicTrackId = "";
+let musicLibraryPage = 0;
+const MUSIC_PAGE_SIZE = 6;
 let spaceMusicAudio = null;
 let spaceMusicTrack = null;
 let spaceMusicAutoTried = false;
@@ -1865,7 +1886,11 @@ return musicLibrary.find((item) => item.src && item.name === name) || musicLibra
 function renderMusicLibrary() {
 const library = el("musicLibrary");
 if (!library) return;
-library.innerHTML = musicLibrary.map((track) => {
+const pageCount = Math.max(1, Math.ceil(musicLibrary.length / MUSIC_PAGE_SIZE));
+musicLibraryPage = Math.max(0, Math.min(musicLibraryPage, pageCount - 1));
+const pageStart = musicLibraryPage * MUSIC_PAGE_SIZE;
+const pageTracks = musicLibrary.slice(pageStart, pageStart + MUSIC_PAGE_SIZE);
+const tracksHtml = pageTracks.map((track) => {
 const isSelected = track.src && track.name === selectedMusic;
 const isPreviewing = track.src && track.id === previewMusicTrackId && (isEmbeddedView || (previewMusicAudio && !previewMusicAudio.paused));
 const selectButton = track.src ? `<button class="tiny-btn" type="button" data-music-select="${track.id}">${isSelected ? "已选" : "选择"}</button>` : `<button class="tiny-btn" type="button" disabled>待添加</button>`;
@@ -1880,6 +1905,13 @@ ${previewButton}
 ${selectButton}
 </div>`;
 }).join("");
+const paginationHtml = pageCount > 1 ? `
+<div class="music-pagination">
+<button class="tiny-btn" type="button" data-music-page="${musicLibraryPage - 1}"${musicLibraryPage === 0 ? " disabled" : ""}>上一页</button>
+<span class="music-page-label">${musicLibraryPage + 1} / ${pageCount}</span>
+<button class="tiny-btn" type="button" data-music-page="${musicLibraryPage + 1}"${musicLibraryPage === pageCount - 1 ? " disabled" : ""}>下一页</button>
+</div>` : "";
+library.innerHTML = tracksHtml + paginationHtml;
 }
 
 function stopPreviewMusic() {
@@ -2352,6 +2384,7 @@ const launchButton = event.target.closest("[data-launch]");
 const addButton = event.target.closest(".add-content");
 const musicPreviewButton = event.target.closest("[data-music-preview]");
 const musicSelectButton = event.target.closest("[data-music-select]");
+const musicPageButton = event.target.closest("[data-music-page]");
 
 if (colorButton) {
 draft.star.color = colorButton.dataset.starColor;
@@ -2380,6 +2413,10 @@ el("contentModal").classList.add("is-visible");
 if (musicPreviewButton) {
 const track = musicLibrary.find((item) => item.id === musicPreviewButton.dataset.musicPreview);
 previewMusic(track);
+}
+if (musicPageButton && !musicPageButton.disabled) {
+musicLibraryPage = Number(musicPageButton.dataset.musicPage) || 0;
+renderMusicLibrary();
 }
 if (musicSelectButton) {
 const track = musicLibrary.find((item) => item.id === musicSelectButton.dataset.musicSelect);
