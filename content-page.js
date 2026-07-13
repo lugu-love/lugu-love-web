@@ -88,15 +88,15 @@ const musicTracks = {
   "星河钢琴": "assets/music/p-aaa0536-54f92252.m4a",
   "温柔长笛": "assets/music/native-american-flute.m4a",
   "夜空冥想": "assets/music/p-mzpy00978-ccbf4fd7.m4a",
-  "乐曲 1": "assets/music/1.mp3",
-  "乐曲 2": "assets/music/2.mp3",
-  "乐曲 3": "assets/music/3.mp3",
-  "乐曲 6": "assets/music/6.mp3",
-  "乐曲 7": "assets/music/7.mp3",
-  "乐曲 8": "assets/music/8.mp3",
-  "乐曲 9": "assets/music/9.mp3",
-  "乐曲 10": "assets/music/10.mp3",
-  "乐曲 11": "assets/music/11.mp3"
+  "乐曲 1": "assets/music/1-web.m4a",
+  "乐曲 2": "assets/music/2-web.m4a",
+  "乐曲 3": "assets/music/3-web.m4a",
+  "乐曲 6": "assets/music/6-web.m4a",
+  "乐曲 7": "assets/music/7-web.m4a",
+  "乐曲 8": "assets/music/8-web.m4a",
+  "乐曲 9": "assets/music/9-web.m4a",
+  "乐曲 10": "assets/music/10-web.m4a",
+  "乐曲 11": "assets/music/11-web.m4a"
 };
 
 Object.keys(musicTracks).forEach((name) => {
