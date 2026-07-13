@@ -247,6 +247,15 @@ radial-gradient(circle at 70% 58%, rgba(255, 255, 255, .34), transparent 32%);
 filter: blur(3px);
 }
 
+.launched-heart-star.shape-crystal::before {
+clip-path: polygon(50% 0, 78% 20%, 100% 50%, 76% 82%, 50% 100%, 24% 82%, 0 50%, 22% 20%);
+}
+
+.launched-heart-star.shape-petal::before {
+border-radius: 50% 8% 50% 8%;
+clip-path: polygon(50% 0, 64% 34%, 100% 18%, 72% 50%, 100% 82%, 64% 66%, 50% 100%, 36% 66%, 0 82%, 28% 50%, 0 18%, 36% 34%);
+}
+
 .launched-heart-label {
 position: absolute;
 left: 50%;
@@ -1008,6 +1017,72 @@ opacity: .24;
 filter: blur(2px);
 transform: translateY(-1px) translateX(0) scale(1.18);
 pointer-events: none;
+}
+
+.voice-bottle-character {
+position: absolute;
+left: 50%;
+top: -12px;
+z-index: 5;
+width: 66px;
+height: 99px;
+object-fit: contain;
+object-position: center bottom;
+transform: translateX(-50%);
+transform-origin: 50% 92%;
+filter: drop-shadow(0 0 9px rgba(255, 235, 174, .72)) drop-shadow(0 0 18px rgba(111, 200, 255, .34));
+animation: bottle-character-hold 4.2s ease var(--letter-delay) forwards;
+pointer-events: none;
+user-select: none;
+}
+
+@keyframes bottle-character-hold {
+0% {
+opacity: 0;
+transform: translateX(-50%) translateY(8px) scale(.9);
+}
+
+9.5% {
+opacity: 1;
+transform: translateX(-50%) translateY(0) scale(1);
+filter: drop-shadow(0 0 9px rgba(255, 235, 174, .72)) drop-shadow(0 0 18px rgba(111, 200, 255, .34));
+}
+
+16% {
+opacity: 1;
+transform: translateX(-50%) translateY(-5px) rotate(-5deg) scale(1.025);
+filter: drop-shadow(0 0 14px rgba(255, 235, 174, .94)) drop-shadow(0 0 28px rgba(111, 200, 255, .52));
+}
+
+23% {
+opacity: 1;
+transform: translateX(-50%) translateY(-7px) rotate(5deg) scale(1.035);
+filter: drop-shadow(0 0 17px rgba(255, 240, 186, 1)) drop-shadow(0 0 34px rgba(111, 200, 255, .62));
+}
+
+30% {
+opacity: 1;
+transform: translateX(-50%) translateY(-5px) rotate(-4deg) scale(1.025);
+filter: drop-shadow(0 0 14px rgba(255, 235, 174, .94)) drop-shadow(0 0 28px rgba(111, 200, 255, .52));
+}
+
+37% {
+opacity: 1;
+transform: translateX(-50%) translateY(-3px) rotate(4deg) scale(1.015);
+filter: drop-shadow(0 0 12px rgba(255, 235, 174, .86)) drop-shadow(0 0 24px rgba(111, 200, 255, .44));
+}
+
+44%,
+81% {
+opacity: 1;
+transform: translateX(-50%) translateY(0) rotate(0) scale(1);
+filter: drop-shadow(0 0 9px rgba(255, 235, 174, .72)) drop-shadow(0 0 18px rgba(111, 200, 255, .34));
+}
+
+100% {
+opacity: 0;
+transform: translateX(-50%) translateY(-24px) scale(.82);
+}
 }
 
 .world-house-overlay {
@@ -2394,7 +2469,7 @@ opacity: 1;
 <span class="guide-sub">Gently touch a “heart star”, meet a “world”.</span>
 </div>
 <div class="guide-final-heart" aria-hidden="true">♥</div>
-<button class="my-space-button" type="button" aria-label="我的空间 My Space">
+<button class="my-space-button" type="button" aria-label="我的空间 My Space" onclick="window.location.href='my.html'">
 <span class="my-space-button-icon" aria-hidden="true">🏠</span>
 <span class="my-space-button-label">我的空间</span>
 <span class="my-space-button-sub">MY SPACE</span>
@@ -2407,19 +2482,6 @@ opacity: 1;
 <h2 class="my-space-title">我的空间 · 我的世界</h2>
 <button class="my-space-action my-space-primary" id="mySpaceGenerate" type="button">创建我的空间</button>
 <p class="my-space-kicker">从此拥有一个属于自己的世界。</p>
-<button class="my-space-action my-space-secondary" id="mySpaceStyle" type="button">🎨 选择我的风格</button>
-<div class="my-space-panel" id="mySpaceStylePanel">
-<button class="my-space-style-choice" type="button" data-my-space-style="星空" style="--choice-bg:linear-gradient(135deg,#0b1320,#273469)">星空</button>
-<button class="my-space-style-choice" type="button" data-my-space-style="日落" style="--choice-bg:linear-gradient(135deg,#ff7b00,#ff4d6d)">日落</button>
-<button class="my-space-style-choice" type="button" data-my-space-style="海洋" style="--choice-bg:linear-gradient(135deg,#0077b6,#48cae4)">海洋</button>
-<button class="my-space-style-choice" type="button" data-my-space-style="森林" style="--choice-bg:linear-gradient(135deg,#1b4332,#74c69d)">森林</button>
-<button class="my-space-style-choice" type="button" data-my-space-style="梦境" style="--choice-bg:linear-gradient(135deg,#5a189a,#f15bb5)">梦境</button>
-</div>
-<button class="my-space-action my-space-third" id="mySpaceCustom" type="button">🧠 我自己设计</button>
-<div class="my-space-custom" id="mySpaceCustomPanel">
-<input class="my-space-input" id="mySpaceCustomText" type="text" maxlength="32" placeholder="输入你的空间文字">
-<button class="my-space-mini-button" id="mySpaceCustomApply" type="button">生成</button>
-</div>
 </div>
 <div class="my-space-result" id="mySpaceResult" aria-live="polite">
 <div class="my-space-card" id="mySpaceCard">我的空间已生成</div>
@@ -2439,8 +2501,12 @@ opacity: 1;
 <input id="audioVolumeSlider" type="range" min="0" max="1" step="0.01" value="0.6" aria-label="背景音乐音量">
 </div>
 </main>
+<script src="assets/js/lugu-music-coordinator.js?v=20260713-2"></script>
 <script>
 (() => {
+if (!window.LuguMusic) {
+window.LuguMusic = { register() { return () => {}; }, claim() {}, release() {} };
+}
 const stage = document.getElementById("phoneStage");
 const layer = document.querySelector(".voice-star-layer");
 const heartStarLayer = document.querySelector(".heart-star-layer");
@@ -2473,7 +2539,14 @@ gold: { value: "#ffd76a", core: "#fff8dc", glow: "rgba(255, 211, 104, .78)", siz
 blue: { value: "#5ed1ff", core: "#f2fdff", glow: "rgba(94, 209, 255, .74)", size: 38, speed: "2.1s" },
 purple: { value: "#b783ff", core: "#fff5ff", glow: "rgba(183, 131, 255, .74)", size: 46, speed: "2.9s" },
 green: { value: "#70f0b1", core: "#f2fff8", glow: "rgba(112, 240, 177, .72)", size: 37, speed: "2.2s" },
-pink: { value: "#ff8bc4", core: "#fff6fb", glow: "rgba(255, 139, 196, .74)", size: 44, speed: "2.7s" }
+pink: { value: "#ff8bc4", core: "#fff6fb", glow: "rgba(255, 139, 196, .74)", size: 44, speed: "2.7s" },
+red: { value: "#ff5f6d", core: "#fff4f4", glow: "rgba(255, 95, 109, .76)", size: 42, speed: "2.4s" },
+orange: { value: "#ff9f43", core: "#fff7e8", glow: "rgba(255, 159, 67, .76)", size: 41, speed: "2.6s" },
+cyan: { value: "#55f2e1", core: "#efffff", glow: "rgba(85, 242, 225, .74)", size: 39, speed: "2.2s" },
+white: { value: "#f4f7ff", core: "#ffffff", glow: "rgba(220, 232, 255, .84)", size: 42, speed: "3s" },
+indigo: { value: "#6677ff", core: "#f1f3ff", glow: "rgba(102, 119, 255, .76)", size: 45, speed: "2.8s" },
+rose: { value: "#ff668f", core: "#fff3f7", glow: "rgba(255, 102, 143, .76)", size: 43, speed: "2.5s" },
+lime: { value: "#b8f05a", core: "#fbffed", glow: "rgba(184, 240, 90, .72)", size: 39, speed: "2.3s" }
 };
 const colors = [
 ["#54c7ff", "rgba(72, 191, 255, .72)", "rgba(83, 202, 255, .28)", "#f5fcff", "#167dff"],
@@ -2526,6 +2599,15 @@ const rosePalettes = [
 ["rgba(255, 235, 210, .96)", "rgba(226, 174, 128, .96)", "rgba(135, 85, 48, .94)"]
 ];
 const flowerClasses = ["flower-rose", "flower-blossom", "flower-daisy"];
+const sevenStarCharacters = [
+{ id: "xingyu-deer", name: "星语鹿", src: "assets/characters/seven-stars/xingyu-deer/main.png" },
+{ id: "xinguang-fox", name: "心光狐", src: "assets/characters/seven-stars/xinguang-fox/main.png" },
+{ id: "menghu-whale", name: "梦湖鲸", src: "assets/characters/seven-stars/menghu-whale/main.png" },
+{ id: "guangwei-cat", name: "光尾猫", src: "assets/characters/seven-stars/guangwei-cat/main.png" },
+{ id: "shouye-bear", name: "守夜熊", src: "assets/characters/seven-stars/shouye-bear/main.png" },
+{ id: "fengxin-rabbit", name: "风信兔", src: "assets/characters/seven-stars/fengxin-rabbit/main.png" },
+{ id: "gongming-gull", name: "共鸣鸥", src: "assets/characters/seven-stars/gongming-gull/main.png" }
+];
 const backgroundMusicSrc = "assets/music/piano-earth-loop-6s.mp3";
 const voiceMusicList = [
 "assets/music/native-american-flute.m4a",
@@ -2543,6 +2625,8 @@ let musicSession = 0;
 let backgroundMusicPlayCount = 0;
 let openingAfterLaughScheduled = false;
 let musicVolume = .6;
+window.earthMusicEnabled = true;
+try { window.earthMusicEnabled = localStorage.getItem("lugu_earth_music_enabled") !== "0"; } catch (error) {}
 let voiceMusicIndex = 0;
 let voiceMusicFadeFrame = 0;
 let voiceMusicStartTimer = 0;
@@ -2607,20 +2691,75 @@ return match ? `assets/music/${match[1]}.mp3` : namedSources["星河钢琴"];
 let embeddedSpaceAudio = null;
 let embeddedPreviewAudio = null;
 let embeddedSpaceOverlay = null;
+let embeddedSpaceFrame = null;
+let embeddedSpaceMusicButton = null;
+let resumeSpaceAfterPreview = false;
+let embeddedSpaceSource = "";
+let embeddedSpaceStartTimer = 0;
+const embeddedSpaceStartDelay = 4000;
+
+window.LuguMusic.register("earth-music", () => {
+if (typeof window.stopVoiceMusic === "function") window.stopVoiceMusic({ immediate: true });
+if (typeof window.stopMusic === "function") window.stopMusic({ immediate: true });
+});
+window.LuguMusic.register("embedded-space", () => {
+clearTimeout(embeddedSpaceStartTimer);
+destroyEmbeddedAudio(embeddedSpaceAudio);
+embeddedSpaceAudio = null;
+destroyEmbeddedAudio(embeddedPreviewAudio);
+embeddedPreviewAudio = null;
+resumeSpaceAfterPreview = false;
+});
+
+function destroyEmbeddedAudio(audio) {
+if (!audio) return;
+audio.pause();
+audio.removeAttribute("src");
+audio.load();
+}
+
+function stopAllSpaceAudio(source = embeddedSpaceFrame && embeddedSpaceFrame.contentWindow) {
+clearTimeout(embeddedSpaceStartTimer);
+resumeSpaceAfterPreview = false;
+destroyEmbeddedAudio(embeddedPreviewAudio);
+embeddedPreviewAudio = null;
+destroyEmbeddedAudio(embeddedSpaceAudio);
+embeddedSpaceAudio = null;
+if (embeddedSpaceMusicButton) embeddedSpaceMusicButton.textContent = "🔇";
+if (typeof window.stopVoiceMusic === "function") window.stopVoiceMusic({ immediate: true });
+if (typeof window.stopMusic === "function") window.stopMusic({ immediate: true });
+if (typeof stopTypingKeySound === "function") stopTypingKeySound();
+postToSpace(source, { type: "lugu-preview-music-state", trackId: "", playing: false });
+postToSpace(source, { type: "lugu-space-music-state", playing: false });
+}
+
+function postToSpace(source, message) {
+if (!source) return;
+source.postMessage(message, window.location.origin === "null" ? "*" : window.location.origin);
+}
+
+function stopEmbeddedPreview(shouldResume = false, source = embeddedSpaceFrame && embeddedSpaceFrame.contentWindow) {
+destroyEmbeddedAudio(embeddedPreviewAudio);
+embeddedPreviewAudio = null;
+postToSpace(source, { type: "lugu-preview-music-state", trackId: "", playing: false });
+if (shouldResume && resumeSpaceAfterPreview && embeddedSpaceAudio && embeddedSpaceAudio.paused) {
+embeddedSpaceAudio.play().then(() => {
+postToSpace(source, { type: "lugu-space-music-state", playing: true });
+}).catch(() => {});
+}
+resumeSpaceAfterPreview = false;
+}
 
 function closeEmbeddedSpace() {
+clearTimeout(embeddedSpaceStartTimer);
 if (embeddedSpaceOverlay) embeddedSpaceOverlay.remove();
 embeddedSpaceOverlay = null;
-if (embeddedSpaceAudio) {
-embeddedSpaceAudio.pause();
-embeddedSpaceAudio.src = "";
+embeddedSpaceFrame = null;
+embeddedSpaceMusicButton = null;
+destroyEmbeddedAudio(embeddedSpaceAudio);
 embeddedSpaceAudio = null;
-}
-if (embeddedPreviewAudio) {
-embeddedPreviewAudio.pause();
-embeddedPreviewAudio.src = "";
-embeddedPreviewAudio = null;
-}
+stopEmbeddedPreview(false, null);
+if (typeof window.startMusic === "function") window.startMusic();
 }
 
 function openEmbeddedSpace(href) {
@@ -2634,8 +2773,46 @@ frame.title = "空间";
 frame.allow = "autoplay";
 frame.style.cssText = "display:block;width:100%;height:100%;border:0;background:#050712";
 overlay.appendChild(frame);
+const musicButton = document.createElement("button");
+musicButton.type = "button";
+musicButton.textContent = "🔊";
+musicButton.setAttribute("aria-label", "空间音乐开关");
+musicButton.style.cssText = "position:absolute;right:14px;top:14px;z-index:3;width:46px;height:46px;padding:0;border:1px solid rgba(210,226,255,.38);border-radius:50%;background:rgba(12,18,42,.92);color:#fff;font-size:18px;box-shadow:0 10px 32px rgba(0,0,0,.4);cursor:pointer;pointer-events:auto";
+musicButton.addEventListener("click", (event) => {
+event.preventDefault();
+event.stopPropagation();
+const isPlaying = Boolean(embeddedSpaceAudio && !embeddedSpaceAudio.paused);
+if (isPlaying || embeddedSpaceStartTimer) {
+clearTimeout(embeddedSpaceStartTimer);
+embeddedSpaceStartTimer = 0;
+stopEmbeddedPreview(false, frame.contentWindow);
+if (embeddedSpaceAudio) embeddedSpaceAudio.pause();
+try { localStorage.setItem("lugu_space_music_enabled", "0"); } catch (error) {}
+musicButton.textContent = "🔇";
+postToSpace(frame.contentWindow, { type: "lugu-space-music-state", playing: false });
+return;
+}
+try { localStorage.setItem("lugu_space_music_enabled", "1"); } catch (error) {}
+window.LuguMusic.claim("embedded-space");
+if (!embeddedSpaceAudio && embeddedSpaceSource) {
+embeddedSpaceAudio = new Audio(embeddedSpaceSource);
+embeddedSpaceAudio.volume = .62;
+embeddedSpaceAudio.preload = "auto";
+embeddedSpaceAudio.loop = true;
+}
+if (embeddedSpaceAudio) embeddedSpaceAudio.play().then(() => {
+musicButton.textContent = "🔊";
+postToSpace(frame.contentWindow, { type: "lugu-space-music-state", playing: true });
+}).catch(() => {
+musicButton.textContent = "🔇";
+});
+});
+overlay.appendChild(musicButton);
 document.body.appendChild(overlay);
 embeddedSpaceOverlay = overlay;
+embeddedSpaceFrame = frame;
+embeddedSpaceMusicButton = musicButton;
+return frame;
 }
 
 function enterSpaceWithMusic(event, href, data, isMyStar = true) {
@@ -2648,75 +2825,142 @@ const previousEarthAudio = window.audio;
 const previousFadingAudio = window.fadingAudio;
 if (previousEarthAudio && previousEarthAudio !== embeddedSpaceAudio && previousEarthAudio !== embeddedPreviewAudio) previousEarthAudio.pause();
 if (previousFadingAudio && previousFadingAudio !== embeddedSpaceAudio && previousFadingAudio !== embeddedPreviewAudio) previousFadingAudio.pause();
-if (typeof window.stopVoiceMusic === "function") window.stopVoiceMusic();
-if (typeof window.stopMusic === "function") window.stopMusic();
+if (typeof closeActiveVoiceExperience === "function") closeActiveVoiceExperience();
+if (typeof window.stopVoiceMusic === "function") window.stopVoiceMusic({ immediate: true });
+if (typeof window.stopMusic === "function") window.stopMusic({ immediate: true });
+if (typeof stopTypingKeySound === "function") stopTypingKeySound();
 
-if (embeddedSpaceAudio) embeddedSpaceAudio.pause();
-embeddedSpaceAudio = new Audio(getSpaceMusicSource(data));
+window.LuguMusic.claim("embedded-space");
+destroyEmbeddedAudio(embeddedSpaceAudio);
+embeddedSpaceAudio = null;
+const frame = openEmbeddedSpace(href);
+embeddedSpaceSource = getSpaceMusicSource(data);
+frame.addEventListener("load", () => {
+if (frame !== embeddedSpaceFrame || !embeddedSpaceOverlay) return;
+if (data && data.created) {
+postToSpace(frame.contentWindow, { type: "lugu-load-space-data", data: data });
+}
+if (!data || (isMyStar && !data.created)) {
+if (embeddedSpaceMusicButton) embeddedSpaceMusicButton.textContent = "🔇";
+postToSpace(frame.contentWindow, { type: "lugu-space-music-state", playing: false });
+return;
+}
+clearTimeout(embeddedSpaceStartTimer);
+embeddedSpaceStartTimer = setTimeout(() => {
+embeddedSpaceStartTimer = 0;
+if (frame !== embeddedSpaceFrame || !embeddedSpaceOverlay) return;
+let shouldPlay = true;
+try { shouldPlay = localStorage.getItem("lugu_space_music_enabled") !== "0"; } catch (error) {}
+if (!shouldPlay) {
+postToSpace(frame.contentWindow, { type: "lugu-space-music-state", playing: false });
+return;
+}
+window.LuguMusic.claim("embedded-space");
+embeddedSpaceAudio = new Audio(embeddedSpaceSource);
 embeddedSpaceAudio.volume = .62;
 embeddedSpaceAudio.preload = "auto";
 embeddedSpaceAudio.loop = true;
-embeddedSpaceAudio.play().catch(() => {});
-openEmbeddedSpace(href);
+embeddedSpaceAudio.play().then(() => {
+if (embeddedSpaceMusicButton) embeddedSpaceMusicButton.textContent = "🔊";
+postToSpace(frame.contentWindow, { type: "lugu-space-music-state", playing: true });
+}).catch(() => {
+if (embeddedSpaceMusicButton) embeddedSpaceMusicButton.textContent = "🔇";
+postToSpace(frame.contentWindow, { type: "lugu-space-music-state", playing: false });
+});
+}, embeddedSpaceStartDelay);
+}, { once: true });
 }
 
 window.addEventListener("message", (event) => {
-if (event.origin !== window.location.origin || !event.data) return;
-if (event.data.type === "lugu-close-space") closeEmbeddedSpace();
-if (event.data.type === "lugu-preview-space-music" && event.data.src) {
-if (embeddedSpaceAudio) embeddedSpaceAudio.pause();
-if (embeddedPreviewAudio) {
-embeddedPreviewAudio.pause();
-embeddedPreviewAudio.src = "";
+const trustedOrigin = window.location.origin === "null" || event.origin === window.location.origin;
+const trustedSource = !embeddedSpaceFrame || event.source === embeddedSpaceFrame.contentWindow;
+if (!trustedOrigin || !trustedSource || !event.data) return;
+if (event.data.type === "lugu-save-space-data" && event.data.data && event.data.data.created) {
+try {
+localStorage.setItem(mySpaceStorageKey, JSON.stringify(event.data.data));
+renderLaunchedHeartStar();
+} catch (error) {}
+return;
 }
+if (event.data.type === "lugu-close-space") closeEmbeddedSpace();
+if (event.data.type === "lugu-stop-all-space-audio") {
+stopAllSpaceAudio(event.source);
+try { localStorage.setItem("lugu_space_music_enabled", "0"); } catch (error) {}
+return;
+}
+if (event.data.type === "lugu-preview-space-music" && event.data.src) {
+stopEmbeddedPreview(false, event.source);
+resumeSpaceAfterPreview = Boolean(embeddedSpaceAudio && !embeddedSpaceAudio.paused);
+if (embeddedSpaceAudio) embeddedSpaceAudio.pause();
+window.LuguMusic.claim("embedded-space");
 embeddedPreviewAudio = new Audio(event.data.src);
-embeddedPreviewAudio.volume = .72;
+const currentPreview = embeddedPreviewAudio;
+embeddedPreviewAudio.volume = Number.isFinite(Number(event.data.volume)) ? Math.max(0, Math.min(1, Number(event.data.volume))) : .62;
 embeddedPreviewAudio.addEventListener("ended", () => {
+if (embeddedPreviewAudio !== currentPreview) return;
 embeddedPreviewAudio = null;
-event.source.postMessage({ type: "lugu-preview-music-state", trackId: "", playing: false, ended: true }, event.origin);
+postToSpace(event.source, { type: "lugu-preview-music-state", trackId: "", playing: false, ended: true });
+if (resumeSpaceAfterPreview && embeddedSpaceAudio) embeddedSpaceAudio.play().catch(() => {});
+resumeSpaceAfterPreview = false;
 }, { once: true });
 embeddedPreviewAudio.play().then(() => {
-event.source.postMessage({ type: "lugu-preview-music-state", trackId: event.data.trackId || "", playing: true }, event.origin);
+postToSpace(event.source, { type: "lugu-preview-music-state", trackId: event.data.trackId || "", playing: true });
 }).catch(() => {
 embeddedPreviewAudio = null;
-event.source.postMessage({ type: "lugu-preview-music-state", trackId: "", playing: false }, event.origin);
+postToSpace(event.source, { type: "lugu-preview-music-state", trackId: "", playing: false });
+if (resumeSpaceAfterPreview && embeddedSpaceAudio) embeddedSpaceAudio.play().catch(() => {});
+resumeSpaceAfterPreview = false;
 });
 }
 if (event.data.type === "lugu-stop-preview-music") {
-if (embeddedPreviewAudio) {
-embeddedPreviewAudio.pause();
-embeddedPreviewAudio.src = "";
-embeddedPreviewAudio = null;
-}
-event.source.postMessage({ type: "lugu-preview-music-state", trackId: "", playing: false }, event.origin);
+stopEmbeddedPreview(true, event.source);
 }
 if (event.data.type === "lugu-set-space-music" && event.data.src) {
-if (embeddedPreviewAudio) {
-embeddedPreviewAudio.pause();
-embeddedPreviewAudio.src = "";
-embeddedPreviewAudio = null;
-}
-if (embeddedSpaceAudio) {
-embeddedSpaceAudio.pause();
-embeddedSpaceAudio.src = "";
-}
-embeddedSpaceAudio = new Audio(event.data.src);
-embeddedSpaceAudio.volume = .62;
-embeddedSpaceAudio.loop = true;
-embeddedSpaceAudio.play().catch(() => {});
-event.source.postMessage({ type: "lugu-space-music-state", playing: !embeddedSpaceAudio.paused }, event.origin);
-}
-if (event.data.type === "lugu-toggle-space-music" && embeddedSpaceAudio) {
-if (embeddedPreviewAudio) {
-embeddedPreviewAudio.pause();
-embeddedPreviewAudio.src = "";
-embeddedPreviewAudio = null;
-event.source.postMessage({ type: "lugu-preview-music-state", trackId: "", playing: false }, event.origin);
+stopEmbeddedPreview(false, event.source);
+destroyEmbeddedAudio(embeddedSpaceAudio);
+embeddedSpaceSource = event.data.src;
+let shouldPlaySavedMusic = true;
+try { shouldPlaySavedMusic = localStorage.getItem("lugu_space_music_enabled") !== "0"; } catch (error) {}
+if (!shouldPlaySavedMusic) {
+postToSpace(event.source, { type: "lugu-space-music-state", playing: false });
 return;
 }
+embeddedSpaceAudio = new Audio(event.data.src);
+embeddedSpaceAudio.volume = Number.isFinite(Number(event.data.volume)) ? Math.max(0, Math.min(1, Number(event.data.volume))) : .62;
+embeddedSpaceAudio.loop = true;
+embeddedSpaceAudio.play().catch(() => {});
+postToSpace(event.source, { type: "lugu-space-music-state", playing: !embeddedSpaceAudio.paused });
+}
+if (event.data.type === "lugu-set-space-music-playing") {
+clearTimeout(embeddedSpaceStartTimer);
+stopEmbeddedPreview(false, event.source);
+const shouldPlay = Boolean(event.data.playing);
+if (!shouldPlay) {
+stopAllSpaceAudio(event.source);
+return;
+}
+if (shouldPlay) window.LuguMusic.claim("embedded-space");
+if (!embeddedSpaceAudio && shouldPlay && embeddedSpaceSource) {
+embeddedSpaceAudio = new Audio(embeddedSpaceSource);
+embeddedSpaceAudio.volume = .62;
+embeddedSpaceAudio.loop = true;
+}
+if (embeddedSpaceAudio) {
+if (shouldPlay) embeddedSpaceAudio.play().catch(() => {});
+else embeddedSpaceAudio.pause();
+}
+postToSpace(event.source, { type: "lugu-space-music-state", playing: Boolean(embeddedSpaceAudio && !embeddedSpaceAudio.paused) });
+}
+if (event.data.type === "lugu-set-space-music-volume") {
+const nextSpaceVolume = Math.max(0, Math.min(1, Number(event.data.volume) || 0));
+if (embeddedSpaceAudio) embeddedSpaceAudio.volume = nextSpaceVolume;
+if (embeddedPreviewAudio) embeddedPreviewAudio.volume = nextSpaceVolume;
+}
+if (event.data.type === "lugu-toggle-space-music" && embeddedSpaceAudio) {
+stopEmbeddedPreview(false, event.source);
 if (embeddedSpaceAudio.paused) embeddedSpaceAudio.play().catch(() => {});
 else embeddedSpaceAudio.pause();
-event.source.postMessage({ type: "lugu-space-music-state", playing: !embeddedSpaceAudio.paused }, event.origin);
+postToSpace(event.source, { type: "lugu-space-music-state", playing: !embeddedSpaceAudio.paused });
 }
 });
 
@@ -2929,20 +3173,6 @@ houseStars.forEach((star) => star.remove());
 setTimeout(() => overlay.remove(), 1200);
 }, 1900);
 }
-
-if (mySpaceButton) mySpaceButton.addEventListener("click", (event) => {
-event.stopPropagation();
-mySpaceButton.blur();
-mySpaceButton.classList.add("is-entering");
-const glow = document.createElement("span");
-glow.className = "my-space-glow";
-(stage || document.body).appendChild(glow);
-setTimeout(() => {
-mySpaceButton.classList.remove("is-entering");
-glow.remove();
-}, 900);
-setTimeout(openMySpace, 180);
-});
 
 if (mySpaceGenerate) mySpaceGenerate.addEventListener("click", (event) => {
 enterSpaceWithMusic(event, "my.html", readMySpaceState(), true);
@@ -3200,6 +3430,7 @@ if (backgroundMusicPlayCount >= backgroundMusicMaxPlays) return;
 backgroundMusicPlayCount += 1;
 const audio = new Audio(backgroundMusicSrc);
 audio.loop = false;
+audio.muted = !window.earthMusicEnabled;
 audio.volume = 0;
 audio.preload = "auto";
 window.audio = audio;
@@ -3233,6 +3464,7 @@ backgroundMusicPlayCount += 1;
 
 const nextAudio = new Audio(backgroundMusicSrc);
 nextAudio.loop = false;
+nextAudio.muted = !window.earthMusicEnabled;
 nextAudio.volume = 0;
 nextAudio.preload = "auto";
 window.audio = nextAudio;
@@ -3264,6 +3496,9 @@ syncMusicMotion();
 }
 
 function startMusic() {
+if (!window.earthMusicEnabled) return;
+stopVoiceMusic({ immediate: true });
+window.LuguMusic.claim("earth-music");
 clearTimeout(backgroundMusicTimer);
 cancelMusicAnimations();
 Array.from(activeMusicAudios).forEach(destroyAudioNow);
@@ -3275,7 +3510,7 @@ backgroundMusicPlayCount = 0;
 playBackgroundTrack(musicSession);
 }
 
-function stopMusic() {
+function stopMusic(options = {}) {
 clearTimeout(backgroundMusicTimer);
 cancelMusicAnimations();
 musicSession += 1;
@@ -3283,6 +3518,15 @@ backgroundMusicPlayCount = 0;
 const audios = new Set(activeMusicAudios);
 if (window.audio && window.audio !== voiceAudio && window.audio !== fadingVoiceAudio) audios.add(window.audio);
 if (window.fadingAudio && window.fadingAudio !== voiceAudio && window.fadingAudio !== fadingVoiceAudio) audios.add(window.fadingAudio);
+if (options.immediate) {
+window.audio = null;
+window.fadingAudio = null;
+audios.forEach(destroyAudioNow);
+activeMusicAudios.clear();
+syncMusicMotion();
+if (window.syncAudioUI) window.syncAudioUI();
+return;
+}
 if (audios.size === 0) {
 syncMusicMotion();
 if (window.syncAudioUI) window.syncAudioUI();
@@ -3308,6 +3552,9 @@ if (window.syncAudioUI) window.syncAudioUI();
 
 function startVoiceMusic() {
 if (voiceMusicList.length === 0) return;
+if (!window.earthMusicEnabled) return;
+stopMusic({ immediate: true });
+window.LuguMusic.claim("earth-music");
 
 clearTimeout(voiceMusicStartTimer);
 cancelAnimationFrame(voiceMusicFadeFrame);
@@ -3322,6 +3569,7 @@ const audio = new Audio(src);
 voiceAudio = audio;
 window.audio = audio;
 audio.loop = true;
+audio.muted = !window.earthMusicEnabled;
 audio.volume = 0;
 audio.play().then(() => {
 syncMusicMotion();
@@ -3353,9 +3601,21 @@ startVoiceMusic();
 }, delay);
 }
 
-function stopVoiceMusic() {
+function stopVoiceMusic(options = {}) {
 clearTimeout(voiceMusicStartTimer);
 const audio = voiceAudio;
+const fading = fadingVoiceAudio;
+if (options.immediate) {
+cancelAnimationFrame(voiceMusicFadeFrame);
+voiceAudio = null;
+fadingVoiceAudio = null;
+if (window.audio === audio || window.audio === fading) window.audio = null;
+destroyAudioNow(audio);
+destroyAudioNow(fading);
+syncMusicMotion();
+if (window.syncAudioUI) window.syncAudioUI();
+return;
+}
 if (!audio) return;
 
 cancelAnimationFrame(voiceMusicFadeFrame);
@@ -3389,6 +3649,18 @@ window.startMusic = startMusic;
 window.stopVoiceMusic = stopVoiceMusic;
 window.startVoiceMusic = startVoiceMusic;
 window.syncMusicMotion = syncMusicMotion;
+window.setEarthMusicEnabled = function (enabled) {
+window.earthMusicEnabled = Boolean(enabled);
+try { localStorage.setItem("lugu_earth_music_enabled", window.earthMusicEnabled ? "1" : "0"); } catch (error) {}
+const earthAudios = new Set(activeMusicAudios);
+if (window.audio) earthAudios.add(window.audio);
+if (window.fadingAudio) earthAudios.add(window.fadingAudio);
+if (voiceAudio) earthAudios.add(voiceAudio);
+if (fadingVoiceAudio) earthAudios.add(fadingVoiceAudio);
+earthAudios.forEach((audio) => { audio.muted = !window.earthMusicEnabled; });
+if (typingKeyAudio) typingKeyAudio.muted = !window.earthMusicEnabled;
+if (window.syncAudioUI) window.syncAudioUI();
+};
 window.destroyAudioNow = destroyAudioNow;
 window.setMusicVolume = setMusicVolume;
 window.getMusicVolume = getMusicVolume;
@@ -3520,7 +3792,8 @@ born: performance.now(),
 clicked: false,
 heartStarNo: String(++heartStarCounter).padStart(4, "0"),
 message: messages[Math.floor(Math.random() * messages.length)],
-origin: origins[Math.floor(Math.random() * origins.length)]
+origin: origins[Math.floor(Math.random() * origins.length)],
+character: sevenStarCharacters[Math.floor(Math.random() * sevenStarCharacters.length)]
 };
 
 element.addEventListener("click", () => openVoiceBottle(star), { once: true });
@@ -3656,7 +3929,7 @@ bottle.innerHTML = `
 </button>
 </div>
 <div class="voice-bottle-heart-rays"></div>
-<div class="voice-bottle-heart"><span class="diamond-facet"></span></div>
+<img class="voice-bottle-character" src="${star.character.src}" alt="${star.character.name}">
 <div class="voice-bottle-tie"></div>`;
 (stage || document.body).appendChild(bottle);
 
@@ -3790,39 +4063,19 @@ const slider = document.getElementById("audioVolumeSlider");
 if (!btn || !slider) return;
 
 function syncUI() {
-if (!window.audio) {
+if (!window.earthMusicEnabled) {
 btn.innerText = "🔇";
 return;
 }
-
-const currentVolume = window.getMusicVolume ? window.getMusicVolume() : Number(slider.value);
-btn.innerText = window.audio.paused || currentVolume <= 0 ? "🔇" : "🔊";
+btn.innerText = "🔊";
 }
 
 window.syncAudioUI = syncUI;
 
-btn.onclick = function () {
-if (!window.audio) {
-if (window.startMusic) {
-window.startMusic();
-setTimeout(syncUI, 120);
-}
-return;
-}
-
-if (window.audio.paused) {
-window.audio.play().then(() => {
-if (window.syncMusicMotion) window.syncMusicMotion();
-syncUI();
-}).catch(syncUI);
-} else {
-window.audio.pause();
-if (window.syncMusicMotion) window.syncMusicMotion();
-syncUI();
-return;
-}
-
-syncUI();
+btn.onclick = function (event) {
+event.preventDefault();
+event.stopPropagation();
+if (window.setEarthMusicEnabled) window.setEarthMusicEnabled(!window.earthMusicEnabled);
 };
 
 slider.oninput = function () {

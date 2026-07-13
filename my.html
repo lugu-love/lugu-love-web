@@ -41,6 +41,74 @@ pointer-events: none;
 animation: star-drift 24s linear infinite;
 }
 
+body,
+body::before {
+transition: background 520ms ease, opacity 520ms ease;
+}
+
+body[data-space-theme="warm"] {
+background:
+radial-gradient(circle at 18% 14%, rgba(255, 190, 92, .4), transparent 31%),
+radial-gradient(circle at 82% 28%, rgba(255, 105, 112, .3), transparent 34%),
+linear-gradient(155deg, #180b1b 0%, #3a1729 50%, #171126 100%);
+}
+
+body[data-space-theme="deep"] {
+background:
+radial-gradient(circle at 76% 14%, rgba(50, 131, 255, .28), transparent 28%),
+radial-gradient(circle at 18% 62%, rgba(30, 83, 185, .22), transparent 36%),
+linear-gradient(160deg, #01040c 0%, #03142d 48%, #061d3f 100%);
+}
+
+body[data-space-theme="garden"] {
+background:
+radial-gradient(ellipse at 22% 18%, rgba(68, 238, 159, .34), transparent 34%),
+radial-gradient(ellipse at 82% 54%, rgba(82, 180, 119, .27), transparent 38%),
+linear-gradient(155deg, #03120f 0%, #092c25 50%, #081628 100%);
+}
+
+body[data-space-theme="sunset"] {
+background:
+radial-gradient(circle at 20% 18%, rgba(255, 205, 112, .48), transparent 30%),
+radial-gradient(circle at 78% 38%, rgba(255, 93, 111, .36), transparent 38%),
+linear-gradient(155deg, #29101d 0%, #6b2533 46%, #25142d 100%);
+}
+
+body[data-space-theme="rose"] {
+background:
+radial-gradient(ellipse at 26% 20%, rgba(255, 175, 190, .38), transparent 34%),
+radial-gradient(ellipse at 80% 62%, rgba(216, 112, 180, .34), transparent 39%),
+linear-gradient(155deg, #210d20 0%, #4b193f 48%, #24132f 100%);
+}
+
+body[data-space-theme="warm"]::before {
+background-image:
+radial-gradient(circle, rgba(255, 240, 190, .9) 0 1px, transparent 1.7px),
+radial-gradient(circle, rgba(255, 155, 116, .65) 0 1px, transparent 1.8px);
+}
+
+body[data-space-theme="deep"]::before {
+background-image:
+radial-gradient(circle, rgba(190, 222, 255, .76) 0 1px, transparent 1.5px),
+radial-gradient(circle, rgba(68, 132, 255, .5) 0 1px, transparent 1.7px);
+opacity: .42;
+}
+
+body[data-space-theme="garden"]::before {
+background-image:
+radial-gradient(circle, rgba(210, 255, 227, .8) 0 1px, transparent 1.6px),
+radial-gradient(circle, rgba(82, 239, 166, .56) 0 1px, transparent 1.9px);
+opacity: .4;
+}
+
+body[data-space-theme="sunset"]::before,
+body[data-space-theme="rose"]::before {
+background-image:
+radial-gradient(circle, rgba(255, 244, 215, .86) 0 1px, transparent 1.6px),
+radial-gradient(circle, rgba(255, 165, 177, .62) 0 1px, transparent 1.8px);
+opacity: .38;
+}
+
 button,
 input,
 textarea,
@@ -58,16 +126,11 @@ z-index: 1;
 width: min(100%, 430px);
 min-height: 100svh;
 margin: 0 auto;
-padding: max(18px, env(safe-area-inset-top)) 16px calc(124px + env(safe-area-inset-bottom));
+padding: max(18px, env(safe-area-inset-top)) 16px calc(190px + env(safe-area-inset-bottom));
 }
 
 .topbar {
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 12px;
-min-height: 44px;
-margin-bottom: 14px;
+display: none;
 }
 
 .earth-link,
@@ -192,14 +255,14 @@ display: none;
 .primary-btn,
 .solid-btn {
 width: 100%;
-min-height: 56px;
-padding: 15px 18px;
+min-height: 48px;
+padding: 11px 16px;
 border: 0;
 border-radius: 16px;
 background: linear-gradient(135deg, #ff5d7f, #ffc857);
 box-shadow: 0 18px 46px rgba(255, 112, 99, .25), 0 0 28px rgba(255, 214, 126, .18);
 color: #fff;
-font-size: 16px;
+font-size: 14px;
 font-weight: 800;
 letter-spacing: .04em;
 }
@@ -269,7 +332,8 @@ display: block;
 }
 
 .flow-card {
-padding: 18px;
+padding: 16px;
+border-radius: 26px;
 }
 
 .flow-card,
@@ -283,20 +347,40 @@ padding: 18px;
 
 .step-list {
 display: grid;
-grid-template-columns: repeat(4, minmax(0, 1fr));
-gap: 7px;
-margin: 0 0 16px;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 9px;
+margin: 0 0 12px;
 }
 
 .step-pill {
-min-height: 46px;
-padding: 7px 4px;
+display: grid;
+grid-template-columns: 28px 1fr;
+align-items: center;
+gap: 8px;
+min-height: 54px;
+padding: 8px 10px;
 border: 1px solid rgba(255, 255, 255, .14);
-border-radius: 13px;
+border-radius: 16px;
 background: rgba(255, 255, 255, .06);
 color: rgba(255, 255, 255, .56);
-font-size: 11px;
-line-height: 1.25;
+font-size: 12px;
+line-height: 1.35;
+text-align: left;
+transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.step-pill:active {
+transform: scale(.98);
+}
+
+.step-number {
+display: grid;
+place-items: center;
+width: 28px;
+height: 28px;
+border-radius: 50%;
+background: rgba(255, 255, 255, .1);
+font-weight: 800;
 }
 
 .step-pill.is-active {
@@ -304,6 +388,33 @@ border-color: rgba(255, 220, 156, .72);
 background: rgba(255, 223, 156, .15);
 color: #fff;
 box-shadow: 0 0 20px rgba(255, 215, 139, .16);
+}
+
+.step-pill.is-active .step-number {
+background: linear-gradient(135deg, #ffd681, #ff8f7c);
+color: #241426;
+}
+
+.creation-mode-actions {
+display: flex;
+justify-content: center;
+gap: 8px;
+margin: 0 0 18px;
+padding-bottom: 15px;
+border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.creation-mode-actions button {
+width: auto;
+min-height: 34px;
+padding: 0 11px;
+border-radius: 999px;
+font-size: 11px;
+}
+
+.flow-step {
+min-height: 330px;
+padding: 4px 3px 2px;
 }
 
 .flow-title,
@@ -382,6 +493,29 @@ color: #fff;
 font-size: 14px;
 font-weight: 700;
 }
+
+#styleChoices .choice {
+min-height: 66px;
+background: linear-gradient(135deg, rgba(255,255,255,.11), rgba(255,255,255,.035));
+}
+
+#styleChoices .choice::before {
+content: "";
+display: inline-block;
+width: 15px;
+height: 15px;
+margin-right: 7px;
+border-radius: 50%;
+vertical-align: -2px;
+background: var(--theme-dot, #8dbdff);
+box-shadow: 0 0 14px var(--theme-dot, #8dbdff);
+}
+
+#styleChoices [data-space-style="warm"] { --theme-dot: #ffad66; }
+#styleChoices [data-space-style="deep"] { --theme-dot: #397dff; }
+#styleChoices [data-space-style="garden"] { --theme-dot: #55df9c; }
+#styleChoices [data-space-style="sunset"] { --theme-dot: #ff7a68; }
+#styleChoices [data-space-style="rose"] { --theme-dot: #f58bad; }
 
 .choice.is-active {
 border-color: rgba(255, 228, 168, .78);
@@ -464,6 +598,15 @@ radial-gradient(circle at 70% 58%, rgba(255, 255, 255, .34), transparent 32%);
 filter: blur(3px);
 }
 
+.heart-star.shape-crystal::before {
+clip-path: polygon(50% 0, 78% 20%, 100% 50%, 76% 82%, 50% 100%, 24% 82%, 0 50%, 22% 20%);
+}
+
+.heart-star.shape-petal::before {
+border-radius: 50% 8% 50% 8%;
+clip-path: polygon(50% 0, 64% 34%, 100% 18%, 72% 50%, 100% 82%, 64% 66%, 50% 100%, 36% 66%, 0 82%, 28% 50%, 0 18%, 36% 34%);
+}
+
 .meta-box {
 display: grid;
 gap: 7px;
@@ -504,6 +647,48 @@ padding: 17px;
 margin-bottom: 16px;
 }
 
+.avatar-area {
+position: relative;
+}
+
+.profile-actions {
+display: flex;
+justify-content: flex-end;
+margin-top: 12px;
+}
+
+.space-management-bar {
+display: grid;
+grid-template-columns: 1fr 1.25fr;
+width: min(100%, 218px);
+padding: 3px;
+border: 1px solid rgba(190, 224, 255, .2);
+border-radius: 999px;
+background: linear-gradient(135deg, rgba(18, 36, 66, .72), rgba(37, 31, 63, .62));
+box-shadow: 0 9px 26px rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .07);
+}
+
+.space-management-bar button {
+min-height: 29px;
+padding: 0 10px;
+border: 0;
+border-radius: 999px;
+background: transparent;
+color: rgba(229, 240, 252, .72);
+font-size: 10px;
+white-space: nowrap;
+}
+
+.space-management-bar .profile-save-btn {
+background: linear-gradient(135deg, rgba(255, 205, 112, .3), rgba(255, 124, 146, .22));
+color: #fff8e9;
+box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+
+.space-management-bar button:active {
+transform: scale(.97);
+}
+
 .avatar {
 position: relative;
 width: 86px;
@@ -541,15 +726,15 @@ display: none;
 display: inline-flex;
 align-items: center;
 justify-content: center;
-min-height: 36px;
+min-height: 30px;
 margin-top: 8px;
-padding: 0 12px;
+padding: 0 10px;
 border: 1px solid rgba(206, 230, 255, .2);
 border-radius: 999px;
 background:
 linear-gradient(135deg, rgba(139, 190, 255, .14), rgba(255, 255, 255, .06));
 color: rgba(255, 255, 255, .86);
-font-size: 12px;
+font-size: 10px;
 box-shadow: inset 0 0 14px rgba(255, 255, 255, .035);
 transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
@@ -627,6 +812,7 @@ z-index: 1;
 --panel-c: rgba(54, 42, 96, .28);
 }
 
+
 .module[data-category="voice"] {
 --accent: rgba(105, 232, 219, .52);
 --accent-soft: rgba(86, 222, 204, .18);
@@ -673,6 +859,53 @@ color: rgba(248, 252, 255, .96);
 font-size: 18px;
 letter-spacing: .03em;
 text-shadow: 0 0 14px var(--accent-soft, rgba(120, 190, 255, .16));
+}
+
+.module-title-link {
+color: inherit;
+text-decoration: none;
+}
+
+.content-page-grid {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 10px;
+}
+
+.content-page-entry {
+display: flex;
+align-items: center;
+min-height: 62px;
+padding: 12px 13px;
+border: 1px solid rgba(190, 224, 255, .16);
+border-radius: 16px;
+background: linear-gradient(135deg, rgba(52, 82, 126, .38), rgba(255, 255, 255, .05));
+color: #fff;
+text-decoration: none;
+}
+
+.content-page-entry:nth-child(1) {
+border-color: rgba(90, 230, 211, .26);
+background: linear-gradient(135deg, rgba(33, 111, 112, .42), rgba(45, 67, 103, .2));
+}
+
+.content-page-entry:nth-child(2) {
+border-color: rgba(255, 184, 112, .27);
+background: linear-gradient(135deg, rgba(133, 76, 50, .42), rgba(92, 52, 91, .22));
+}
+
+.content-page-entry:nth-child(3) {
+border-color: rgba(112, 220, 145, .26);
+background: linear-gradient(135deg, rgba(44, 111, 72, .42), rgba(43, 69, 93, .22));
+}
+
+.content-page-entry:nth-child(4) {
+border-color: rgba(191, 158, 255, .28);
+background: linear-gradient(135deg, rgba(91, 66, 143, .44), rgba(51, 66, 110, .23));
+}
+
+.content-page-entry strong {
+font-size: 14px;
 }
 
 .mini {
@@ -801,6 +1034,85 @@ white-space: pre-wrap;
 word-break: break-word;
 }
 
+.content-media {
+display: block;
+width: 100%;
+margin-top: 9px;
+border-radius: 12px;
+}
+
+img.content-media {
+max-height: 320px;
+object-fit: cover;
+}
+
+audio.content-media {
+height: 42px;
+}
+
+.content-manage-link {
+display: inline-flex;
+margin-top: 10px;
+padding: 7px 11px;
+border: 1px solid rgba(190, 224, 255, .2);
+border-radius: 999px;
+color: rgba(235, 245, 255, .86);
+font-size: 12px;
+text-decoration: none;
+}
+
+.content-upload {
+display: none;
+gap: 10px;
+margin-top: 14px;
+padding: 12px;
+border: 1px dashed rgba(190, 224, 255, .28);
+border-radius: 15px;
+background: rgba(255, 255, 255, .045);
+}
+
+.content-upload.is-visible {
+display: grid;
+}
+
+.content-file-label {
+display: flex;
+align-items: center;
+justify-content: center;
+min-height: 44px;
+border-radius: 12px;
+background: linear-gradient(135deg, rgba(72, 198, 239, .32), rgba(91, 124, 250, .28));
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+}
+
+.content-file-label input {
+position: absolute;
+width: 1px;
+height: 1px;
+opacity: 0;
+}
+
+.content-upload-status {
+margin: 0;
+color: rgba(232, 243, 255, .72);
+font-size: 12px;
+line-height: 1.5;
+}
+
+.content-preview {
+display: none;
+width: 100%;
+max-height: 220px;
+border-radius: 12px;
+object-fit: contain;
+}
+
+.content-preview.is-visible {
+display: block;
+}
+
 .music-row {
 display: grid;
 grid-template-columns: 1fr auto;
@@ -819,6 +1131,32 @@ linear-gradient(135deg, rgba(13, 31, 58, .54), rgba(17, 23, 45, .42));
 color: #fff;
 outline: none;
 }
+
+.module-music > select {
+width: 100%;
+height: 46px;
+padding: 0 12px;
+border: 1px solid rgba(190, 224, 255, .16);
+border-radius: 13px;
+background: linear-gradient(135deg, rgba(13, 31, 58, .54), rgba(17, 23, 45, .42));
+color: #fff;
+outline: none;
+}
+
+.module-music .music-actions { justify-content: stretch; }
+.module-music .music-actions .tiny-btn { flex: 1; }
+
+.music-volume-control {
+display: grid;
+grid-template-columns: auto 1fr 38px;
+align-items: center;
+gap: 10px;
+margin-top: 10px;
+color: rgba(220, 235, 247, .78);
+font-size: 12px;
+}
+.music-volume-control input { width: 100%; accent-color: #72d7ff; }
+.music-volume-control output { text-align: right; color: rgba(244, 250, 255, .9); }
 
 .music-actions {
 display: flex;
@@ -927,29 +1265,37 @@ text-align: center;
 
 .bottom-nav {
 position: fixed;
-left: 0;
-right: 0;
-bottom: 0;
+left: 50%;
+right: auto;
+bottom: max(12px, env(safe-area-inset-bottom));
 z-index: 8;
-display: flex;
-width: min(100%, 430px);
-margin: 0 auto;
-padding: 9px 8px max(10px, env(safe-area-inset-bottom));
-border-top: 1px solid rgba(190, 224, 255, .14);
-background:
-linear-gradient(180deg, rgba(17, 28, 52, .72), rgba(7, 10, 22, .84));
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+width: min(calc(100% - 24px), 406px);
+margin: 0;
+gap: 10px;
+padding: 9px;
+border: 1px solid rgba(190, 224, 255, .14);
+border-radius: 24px;
+background: linear-gradient(145deg, rgba(23, 38, 65, .92), rgba(9, 14, 32, .95));
 backdrop-filter: blur(22px) saturate(1.08);
-box-shadow: 0 -14px 38px rgba(0, 0, 0, .24), inset 0 1px 0 rgba(255, 255, 255, .05);
+box-shadow: 0 18px 50px rgba(0, 0, 0, .5), inset 0 1px 0 rgba(255, 255, 255, .07);
+transform: translateX(-50%);
 }
 
 .bottom-nav a {
-flex: 1;
-min-height: 46px;
+min-width: 0;
+min-height: 58px;
 display: grid;
+grid-template-rows: 24px auto;
 place-items: center;
-border-radius: 13px;
+align-content: center;
+gap: 4px;
+border: 1px solid rgba(190, 224, 255, .1);
+border-radius: 17px;
+background: linear-gradient(145deg, rgba(38, 58, 91, .6), rgba(23, 29, 56, .66));
 color: rgba(255, 255, 255, .72);
-font-size: 12px;
+font-size: 10px;
 text-decoration: none;
 }
 
@@ -957,6 +1303,74 @@ text-decoration: none;
 background:
 linear-gradient(135deg, rgba(125, 179, 255, .16), rgba(255, 255, 255, .06));
 color: #fff;
+border-color: rgba(151, 203, 255, .22);
+box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 5px 18px rgba(0,0,0,.16);
+}
+
+.bottom-nav .earth-nav {
+background: linear-gradient(145deg, rgba(38, 58, 91, .6), rgba(23, 29, 56, .66));
+border: 1px solid rgba(190, 224, 255, .1);
+color: rgba(255, 255, 255, .72);
+box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 7px 20px rgba(0,0,0,.22);
+}
+
+.home-world-action-nav {
+position: fixed;
+left: 50%;
+bottom: calc(103px + env(safe-area-inset-bottom));
+z-index: 9;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 6px;
+width: min(calc(100% - 76px), 310px);
+padding: 5px;
+border: 1px solid rgba(190, 223, 255, .15);
+border-radius: 16px;
+background: linear-gradient(145deg, rgba(25, 44, 73, .95), rgba(11, 18, 39, .96));
+backdrop-filter: blur(24px);
+box-shadow: 0 10px 28px rgba(0, 0, 0, .46), inset 0 1px 0 rgba(255, 255, 255, .08);
+transform: translateX(-50%);
+}
+
+.home-world-action-nav a,
+.home-world-action-nav button {
+display: grid;
+grid-template-rows: 15px auto;
+place-items: center;
+align-content: center;
+gap: 1px;
+min-height: 31px;
+padding: 3px 4px;
+border: 1px solid rgba(203, 229, 255, .16);
+border-radius: 10px;
+background: linear-gradient(145deg, rgba(49, 76, 114, .6), rgba(29, 41, 72, .74));
+color: rgba(232, 243, 251, .92);
+font: inherit;
+font-size: 8px;
+text-decoration: none;
+white-space: nowrap;
+}
+
+.home-world-action-nav .add-content {
+background: linear-gradient(145deg, rgba(69, 142, 188, .6), rgba(105, 88, 184, .66));
+border-color: rgba(158, 215, 255, .24);
+color: #fff;
+}
+
+.home-world-action-nav .action-icon {
+display: grid;
+place-items: center;
+width: 14px;
+height: 14px;
+border-radius: 50%;
+background: rgba(255, 255, 255, .06);
+font-size: 12px;
+line-height: 1;
+}
+
+.earth-nav-icon {
+font-size: 20px;
+filter: drop-shadow(0 0 7px rgba(85, 202, 255, .55));
 }
 
 .modal {
@@ -990,6 +1404,14 @@ backdrop-filter: blur(22px);
 .solid-btn.pink {
 background: linear-gradient(135deg, rgba(255, 118, 183, .92), rgba(134, 116, 255, .9));
 box-shadow: 0 14px 38px rgba(196, 108, 255, .18), 0 0 24px rgba(255, 156, 200, .14);
+}
+
+.star-facts .solid-btn.pink {
+min-height: 40px;
+padding: 9px 12px;
+border-radius: 13px;
+font-size: 12px;
+box-shadow: 0 9px 24px rgba(196, 108, 255, .14);
 }
 
 .avatar-editor-card {
@@ -1127,37 +1549,39 @@ display: none !important;
 
 .space-music-control {
 position: fixed;
-right: max(18px, calc((100vw - 430px) / 2 + 18px));
-top: calc(72px + env(safe-area-inset-top));
+right: max(12px, calc((100vw - 430px) / 2 + 12px));
+top: calc(10px + env(safe-area-inset-top));
 bottom: auto;
-z-index: 100;
+z-index: 2147483647;
 display: inline-flex;
 align-items: center;
-gap: 8px;
-min-height: 48px;
-padding: 7px 14px 7px 9px;
+gap: 0;
+width: 46px;
+height: 46px;
+min-height: 46px;
+padding: 2px;
 border: 1px solid rgba(210, 226, 255, .34);
 border-radius: 999px;
 background: rgba(12, 18, 42, .88);
 color: #fff;
 box-shadow: 0 10px 32px rgba(0, 0, 0, .36), 0 0 22px rgba(123, 154, 255, .18);
 backdrop-filter: blur(18px);
+pointer-events: auto !important;
+touch-action: manipulation;
 }
 
 .space-music-control-icon {
 display: grid;
 place-items: center;
-width: 34px;
-height: 34px;
+width: 26px;
+height: 26px;
 border-radius: 50%;
 background: linear-gradient(145deg, rgba(135, 160, 255, .38), rgba(120, 84, 214, .28));
-font-size: 17px;
+font-size: 13px;
 }
 
 .space-music-control-text {
-font-size: 13px;
-font-weight: 700;
-letter-spacing: .04em;
+display: none;
 }
 
 @keyframes star-drift {
@@ -1202,16 +1626,35 @@ font-size: 10px;
 grid-template-columns: 1fr;
 }
 }
+
+/* Mobile density and button hierarchy */
+@media (max-width: 520px) {
+.page { padding-left: 14px; padding-right: 14px; }
+.panel { border-radius: 18px; }
+.module { padding: 14px; margin-bottom: 12px; }
+.space-head { padding: 14px; gap: 12px; margin-bottom: 12px; }
+.avatar { width: 74px; height: 74px; border-radius: 23px; }
+.primary-btn, .solid-btn { min-height: 43px; padding: 9px 14px; border-radius: 13px; font-size: 13px; }
+.ghost-btn, .earth-link { min-height: 34px; padding: 0 10px; font-size: 11px; }
+.tiny-btn { min-height: 32px; padding: 0 9px; font-size: 10px; }
+.upload-label { min-height: 27px; padding: 0 8px; font-size: 9px; }
+.space-management-bar { width: 196px; }
+.space-management-bar button { min-height: 26px; font-size: 9px; }
+.star-facts .solid-btn.pink { min-height: 36px; padding: 7px 10px; font-size: 11px; }
+.content-page-grid { gap: 8px; }
+.content-page-entry { min-height: 52px; padding: 10px 11px; border-radius: 14px; }
+.content-page-entry strong { font-size: 13px; }
+.bottom-nav { gap: 8px; padding: 7px; border-radius: 21px; }
+.bottom-nav a { min-height: 48px; grid-template-rows: 20px auto; gap: 2px; border-radius: 14px; font-size: 9px; }
+.earth-nav-icon { font-size: 17px; }
+.space-music-control { width: 46px; height: 46px; min-height: 46px; }
+.space-music-control-icon { width: 23px; height: 23px; font-size: 12px; }
+}
 </style>
 </head>
 <body>
 <main class="page">
-<div class="topbar">
-<a class="earth-link" href="index.html">🌍 地球</a>
-<button class="ghost-btn hidden" id="saveSpaceBtn" type="button">保存空间</button>
-<button class="ghost-btn hidden" id="resetBtn" type="button">重新创建</button>
-</div>
-<button class="space-music-control hidden" id="globalMusicToggleBtn" type="button" aria-label="空间音乐开关">
+<button class="space-music-control hidden" id="globalMusicToggleBtn" type="button" aria-label="空间音乐开关" onclick="window.__toggleSpaceControl(this,event)">
 <span class="space-music-control-icon" id="globalMusicIcon" aria-hidden="true">🔊</span>
 <span class="space-music-control-text" id="globalMusicText">音乐开启</span>
 </button>
@@ -1228,10 +1671,15 @@ grid-template-columns: 1fr;
 <section class="flow" id="flowView" aria-live="polite">
 <div class="flow-card panel">
 <div class="step-list" aria-label="创建流程">
-<div class="step-pill" data-step-pill="0">1<br>创建个人空间</div>
-<div class="step-pill" data-step-pill="1">2<br>生成我的心星</div>
-<div class="step-pill" data-step-pill="2">3<br>设置空间风格</div>
-<div class="step-pill" data-step-pill="3">4<br>进入我的空间</div>
+<button class="step-pill" data-step-pill="0" type="button"><span class="step-number">1</span><span>创建个人空间</span></button>
+<button class="step-pill" data-step-pill="1" type="button"><span class="step-number">2</span><span>生成我的心星</span></button>
+<button class="step-pill" data-step-pill="2" type="button"><span class="step-number">3</span><span>设置空间风格</span></button>
+<button class="step-pill" data-step-pill="3" type="button"><span class="step-number">4</span><span>进入我的空间</span></button>
+</div>
+
+<div class="creation-mode-actions" aria-label="重新创建方式">
+<button class="solid-btn blue" id="chooseStyleBtn" type="button">🎨 选择我的风格</button>
+<button class="ghost-btn" id="designMyselfBtn" type="button">🧠 我自己设计</button>
 </div>
 
 <div class="flow-step" data-step="0">
@@ -1299,7 +1747,7 @@ grid-template-columns: 1fr;
 
 <section class="space" id="spaceView">
 <div class="space-head panel">
-<div>
+<div class="avatar-area">
 <div class="avatar" id="avatarBox">
 <span class="avatar-placeholder">我</span>
 <img id="avatarImg" alt="头像">
@@ -1310,6 +1758,7 @@ grid-template-columns: 1fr;
 <p class="kicker" style="margin-bottom:6px">我的世界·由我创造</p>
 <h2 class="nickname" id="profileName">我的空间</h2>
 <p class="intro" id="profileIntro">从此拥有一个属于自己的世界。</p>
+<div class="profile-actions"><div class="space-management-bar"><button class="hidden" id="resetBtn" type="button">重新创建</button><button class="profile-save-btn hidden" id="saveSpaceBtn" type="button">✦ 保存空间</button></div></div>
 </div>
 </div>
 
@@ -1341,64 +1790,48 @@ grid-template-columns: 1fr;
 
 <section class="module panel module-music">
 <div class="module-head">
-<h3 class="module-title">我的音乐</h3>
-<div class="music-actions">
-<button class="tiny-btn" id="spaceMusicToggleBtn" type="button">播放</button>
-<button class="tiny-btn" id="saveMusicBtn" type="button">设置</button>
+<div><h3 class="module-title">🎵 世界音乐</h3><p class="mini" id="musicStatus">为这个世界选择音乐</p></div>
 </div>
-</div>
-<select class="music-select-hidden" id="musicSelect" aria-label="选择背景音乐">
+<select id="musicSelect" aria-label="选择世界音乐">
 <option value="星河钢琴">星河钢琴</option>
 <option value="温柔长笛">温柔长笛</option>
 <option value="夜空冥想">夜空冥想</option>
+<option value="乐曲 1">乐曲 1</option>
+<option value="乐曲 2">乐曲 2</option>
+<option value="乐曲 3">乐曲 3</option>
+<option value="乐曲 6">乐曲 6</option>
+<option value="乐曲 7">乐曲 7</option>
+<option value="乐曲 8">乐曲 8</option>
+<option value="乐曲 9">乐曲 9</option>
+<option value="乐曲 10">乐曲 10</option>
+<option value="乐曲 11">乐曲 11</option>
 </select>
-<div class="music-library" id="musicLibrary" aria-label="音乐库"></div>
-<p class="mini" id="musicStatus">已连接平台音乐库，可选择背景音乐。</p>
+<label class="music-volume-control" for="homeMusicVolume"><span>音量</span><input id="homeMusicVolume" type="range" min="0" max="100" step="1" value="62"><output id="homeMusicVolumeValue" for="homeMusicVolume">62%</output></label>
+<div class="music-actions" style="margin-top:10px">
+<button class="tiny-btn" id="spaceMusicToggleBtn" type="button" aria-pressed="true">音乐开启</button>
+<button class="tiny-btn" id="homeMusicPreviewBtn" type="button">试听</button>
+<button class="tiny-btn" id="saveMusicBtn" type="button">保存音乐</button>
+</div>
 </section>
 
-<section class="module panel" data-category="voice">
-<div class="module-head">
-<div>
-<h3 class="module-title">我的心声</h3>
-<p class="mini">一句想告诉世界的话。未来预留语音心声。</p>
+<section class="module panel">
+<div class="module-head"><div><h3 class="module-title">我的世界</h3></div></div>
+<div class="content-page-grid">
+<a class="content-page-entry" href="voice.html"><strong>💬 我的心声</strong></a>
+<a class="content-page-entry" href="story.html"><strong>📖 我的故事</strong></a>
+<a class="content-page-entry" href="growth.html"><strong>🌱 我的成长</strong></a>
+<a class="content-page-entry" href="collection.html"><strong>✨ 我的收藏</strong></a>
 </div>
-<button class="icon-btn add-content" type="button" aria-label="添加心声" data-target="voice">＋</button>
-</div>
-<div class="content-list" id="voiceList"></div>
 </section>
-
-<section class="module panel" data-category="story">
-<div class="module-head">
-<div>
-<h3 class="module-title">我的故事</h3>
-<p class="mini">支持文字、照片，记录生活。</p>
-</div>
-<button class="icon-btn add-content" type="button" aria-label="添加故事" data-target="story">＋</button>
-</div>
-<div class="content-list" id="storyList"></div>
+<section class="module panel">
+<div class="module-head"><h3 class="module-title">🏠 主页内容</h3></div>
+<div class="content-list" id="homeList"></div>
 </section>
-
-<section class="module panel" data-category="growth">
-<div class="module-head">
-<div>
-<h3 class="module-title">我的成长</h3>
-<p class="mini">成长记录、重要事件。我的世界·由我创造</p>
-</div>
-<button class="icon-btn add-content" type="button" aria-label="添加成长" data-target="growth">＋</button>
-</div>
-<div class="content-list" id="growthList"></div>
-</section>
-
-<section class="module panel" data-category="collection">
-<div class="module-head">
-<div>
-<h3 class="module-title">我的收藏</h3>
-<p class="mini">喜欢的内容、收藏的故事、美好瞬间。</p>
-</div>
-<button class="icon-btn add-content" type="button" aria-label="添加收藏" data-target="collection">＋</button>
-</div>
-<div class="content-list" id="collectionList"></div>
-</section>
+<nav class="home-world-action-nav" aria-label="内容操作">
+<a href="collection.html"><span class="action-icon">‹</span><span>上一步</span></a>
+<button class="add-content" type="button" data-target="home"><span class="action-icon">＋</span><span>增加内容</span></button>
+<a href="voice.html"><span class="action-icon">›</span><span>下一步</span></a>
+</nav>
 </section>
 
 <section class="public-space" id="publicView">
@@ -1442,9 +1875,16 @@ grid-template-columns: 1fr;
 <button class="choice" type="button" data-content-type="语音">语音</button>
 <button class="choice" type="button" data-content-type="视频">视频</button>
 </div>
+<div class="content-upload" id="contentUpload">
+<label class="content-file-label" for="contentFile"><span id="contentFileLabel">选择文件</span><input id="contentFile" type="file"></label>
+<p class="content-upload-status" id="contentUploadStatus">请选择需要上传的文件。</p>
+<img class="content-preview" id="contentImagePreview" alt="照片预览">
+<audio class="content-preview" id="contentAudioPreview" controls></audio>
+<video class="content-preview" id="contentVideoPreview" controls playsinline></video>
+</div>
 <div class="field">
 <label for="contentText">内容</label>
-<textarea id="contentText" maxlength="300" placeholder="写下这一刻。照片、语音、视频会在下一阶段接入上传。"></textarea>
+<textarea id="contentText" maxlength="300" placeholder="写下这一刻。"></textarea>
 </div>
 <button class="primary-btn" id="saveContentBtn" type="button">添加内容</button>
 </div>
@@ -1454,8 +1894,8 @@ grid-template-columns: 1fr;
 <div class="modal-card avatar-editor-card">
 <div class="module-head" style="margin-bottom:0">
 <div>
-<h3 class="avatar-editor-title">调整头像</h3>
-<p class="avatar-editor-sub">拖动图片选择位置，使用滑块或双指缩放。</p>
+<h3 class="avatar-editor-title" id="avatarEditorTitle">调整头像</h3>
+<p class="avatar-editor-sub" id="avatarEditorSub">拖动图片选择位置，使用滑块或双指缩放。</p>
 </div>
 <button class="icon-btn" id="avatarCancelTopBtn" type="button" aria-label="取消头像编辑">×</button>
 </div>
@@ -1479,37 +1919,81 @@ grid-template-columns: 1fr;
 </div>
 
 <nav class="bottom-nav" aria-label="全局导航">
-<a href="index.html">地球</a>
-<a class="is-active" href="my.html">我的空间</a>
-<a href="my.html?view=public">TA空间</a>
+<a class="earth-nav" href="index.html" target="_top"><span class="earth-nav-icon">🌍</span><span>地球首页</span></a>
+<a class="is-active" href="my.html"><span class="earth-nav-icon">🏠</span><span>我的空间</span></a>
+<a href="my.html?view=public"><span class="earth-nav-icon">✨</span><span>TA空间</span></a>
 </nav>
 
 <div class="footer-copy" id="homeFooter">我们的世界·共同来创造</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="assets/js/lugu-music-coordinator.js?v=20260713-2"></script>
 <script>
+if (!window.LuguMusic) {
+window.LuguMusic = { register() { return () => {}; }, claim() {}, release() {} };
+}
+window.__spaceToggleAt = 0;
+window.__toggleSpaceControl = function (button, event) {
+const now = Date.now();
+if (now - window.__spaceToggleAt < 350) return;
+window.__spaceToggleAt = now;
+if (event) {
+event.preventDefault();
+event.stopPropagation();
+}
+const icon = document.getElementById("globalMusicIcon");
+const text = document.getElementById("globalMusicText");
+const currentlyOn = !icon || icon.textContent !== "🔇";
+const next = !currentlyOn;
+button.setAttribute("aria-pressed", next ? "true" : "false");
+if (icon) icon.textContent = next ? "🔊" : "🔇";
+if (text) text.textContent = next ? "音乐开启" : "音乐关闭";
+try { localStorage.setItem("lugu_space_music_enabled", next ? "1" : "0"); } catch (error) {}
+if (window.parent !== window) {
+window.parent.postMessage(next ? { type: "lugu-set-space-music-playing", playing: true } : { type: "lugu-stop-all-space-audio" }, "*");
+} else if (window.handleGlobalMusicToggle) {
+window.handleGlobalMusicToggle();
+}
+};
+document.addEventListener("pointerdown", function (event) {
+const button = event.target.closest && event.target.closest("#globalMusicToggleBtn");
+if (!button) return;
+window.__toggleSpaceControl(button, event);
+}, true);
 const STORAGE_KEY = "lugu_my_space_v11";
 const MUSIC_STORAGE_KEY = "lugu_my_space_music";
 const MUSIC_ENABLED_KEY = "lugu_space_music_enabled";
+const MUSIC_VOLUME_KEY = "lugu_world_music_volume";
 const year = "2026";
 const colors = {
 gold: { label: "金色", value: "#ffd76a", core: "#fff8dc", glow: "rgba(255, 211, 104, .76)", size: 58, speed: "2.5s" },
 blue: { label: "蓝色", value: "#5ed1ff", core: "#f2fdff", glow: "rgba(94, 209, 255, .72)", size: 54, speed: "2.1s" },
 purple: { label: "紫色", value: "#b783ff", core: "#fff5ff", glow: "rgba(183, 131, 255, .72)", size: 62, speed: "2.9s" },
 green: { label: "绿色", value: "#70f0b1", core: "#f2fff8", glow: "rgba(112, 240, 177, .7)", size: 52, speed: "2.2s" },
-pink: { label: "粉色", value: "#ff8bc4", core: "#fff6fb", glow: "rgba(255, 139, 196, .72)", size: 60, speed: "2.7s" }
+pink: { label: "粉色", value: "#ff8bc4", core: "#fff6fb", glow: "rgba(255, 139, 196, .72)", size: 60, speed: "2.7s" },
+red: { label: "红色", value: "#ff5f6d", core: "#fff4f4", glow: "rgba(255, 95, 109, .74)", size: 58, speed: "2.4s" },
+orange: { label: "橙色", value: "#ff9f43", core: "#fff7e8", glow: "rgba(255, 159, 67, .74)", size: 56, speed: "2.6s" },
+cyan: { label: "青色", value: "#55f2e1", core: "#efffff", glow: "rgba(85, 242, 225, .72)", size: 54, speed: "2.2s" },
+white: { label: "月白", value: "#f4f7ff", core: "#ffffff", glow: "rgba(220, 232, 255, .82)", size: 57, speed: "3s" },
+indigo: { label: "靛蓝", value: "#6677ff", core: "#f1f3ff", glow: "rgba(102, 119, 255, .74)", size: 61, speed: "2.8s" },
+rose: { label: "玫瑰", value: "#ff668f", core: "#fff3f7", glow: "rgba(255, 102, 143, .74)", size: 59, speed: "2.5s" },
+lime: { label: "青柠", value: "#b8f05a", core: "#fbffed", glow: "rgba(184, 240, 90, .7)", size: 53, speed: "2.3s" }
 };
 const shapes = {
 normal: "普通星",
 shine: "闪耀星",
 meteor: "流星星",
-nebula: "星云星"
+nebula: "星云星",
+crystal: "水晶星",
+petal: "花瓣星"
 };
 const styles = {
 star: "星空玻璃",
 warm: "温暖宇宙",
 deep: "深空蓝",
-garden: "绿色星云"
+garden: "绿色星云",
+sunset: "暖阳星河",
+rose: "玫瑰晨曦"
 };
 const launchLabels = {
 private: "已发射 · 私密",
@@ -1551,18 +2035,6 @@ meta: "正式音乐 · 我的空间音乐库"
 id: "music-03",
 name: "乐曲 3",
 src: "assets/music/3.mp3",
-meta: "正式音乐 · 我的空间音乐库"
-},
-{
-id: "music-04",
-name: "乐曲 4",
-src: "assets/music/4.mp3",
-meta: "正式音乐 · 我的空间音乐库"
-},
-{
-id: "music-05",
-name: "乐曲 5",
-src: "assets/music/5.mp3",
 meta: "正式音乐 · 我的空间音乐库"
 },
 {
@@ -1615,6 +2087,7 @@ meta: "未来可继续扩展"
 }
 ];
 const categoryLabels = {
+home: "主页内容",
 voice: "我的心声",
 story: "我的故事",
 growth: "我的成长",
@@ -1626,25 +2099,45 @@ let draft = createDefaultState();
 let currentStep = 0;
 let activeCategory = "voice";
 let activeContentType = "文字";
+let pendingContentMedia = null;
 let selectedMusic = "";
 let previewMusicAudio = null;
 let previewMusicTrackId = "";
+let resumeStandaloneSpaceAfterPreview = false;
 let musicLibraryPage = 0;
 const MUSIC_PAGE_SIZE = 6;
 let spaceMusicAudio = null;
 let spaceMusicTrack = null;
 let spaceMusicAutoTried = false;
 let musicEnabled = true;
+let musicVolume = .62;
 try {
 musicEnabled = localStorage.getItem(MUSIC_ENABLED_KEY) !== "0";
+const savedVolumeRaw = localStorage.getItem(MUSIC_VOLUME_KEY);
+const savedVolume = Number(savedVolumeRaw);
+if (savedVolumeRaw !== null && Number.isFinite(savedVolume)) musicVolume = Math.max(0, Math.min(1, savedVolume));
 } catch (error) {
 musicEnabled = true;
 }
 let publicSpaceData = null;
 
+window.LuguMusic.register("space-music", () => {
+if (spaceMusicAudio) spaceMusicAudio.pause();
+updateSpaceMusicButton();
+});
+window.LuguMusic.register("space-preview", () => {
+if (previewMusicAudio) previewMusicAudio.pause();
+previewMusicAudio = null;
+previewMusicTrackId = "";
+resumeStandaloneSpaceAfterPreview = false;
+renderMusicLibrary();
+});
+
 const qs = new URLSearchParams(window.location.search);
 const isPublicView = qs.get("view") === "public";
-const isEmbeddedView = qs.get("embedded") === "1" && window.parent !== window;
+const isEmbeddedView = window.parent !== window;
+const parentMessageOrigin = window.location.origin === "null" ? "*" : window.location.origin;
+const isTrustedParentMessage = (event) => event.source === window.parent && (window.location.origin === "null" || event.origin === window.location.origin);
 
 const el = (id) => document.getElementById(id);
 const homeView = el("homeView");
@@ -1667,6 +2160,7 @@ const avatarEditorMessage = el("avatarEditorMessage");
 const toast = el("toast");
 let toastTimer = 0;
 let avatarEdit = null;
+let avatarEditPurpose = "avatar";
 
 function readState() {
 try {
@@ -1699,6 +2193,9 @@ function saveState(nextState) {
 state = nextState;
 try {
 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+if (window.parent !== window) {
+window.parent.postMessage({ type: "lugu-save-space-data", data: state }, "*");
+}
 return true;
 } catch (error) {
 return false;
@@ -1734,6 +2231,7 @@ launch: "",
 music: "星河钢琴",
 voice: "希望世界因为爱重新连接。",
 contents: {
+home: [],
 voice: [],
 story: [],
 growth: [],
@@ -1761,7 +2259,7 @@ publicView.classList.toggle("is-visible", view === "public");
 homeFooter.classList.toggle("hidden", view !== "home");
 resetBtn.classList.toggle("hidden", view === "home" || view === "public");
 saveSpaceBtn.classList.toggle("hidden", view !== "space");
-globalMusicToggleBtn.classList.toggle("hidden", view !== "space" && view !== "public");
+globalMusicToggleBtn.classList.toggle("hidden", isEmbeddedView || (view !== "space" && view !== "public"));
 }
 
 function applyStar(node, data) {
@@ -1800,6 +2298,10 @@ button.classList.toggle("is-active", button.dataset.spaceStyle === draft.style);
 });
 }
 
+function applySpaceTheme(style) {
+document.body.dataset.spaceTheme = styles[style] ? style : "star";
+}
+
 function showStep(step) {
 currentStep = Math.max(0, Math.min(3, step));
 document.querySelectorAll("[data-step]").forEach((section, index) => {
@@ -1826,6 +2328,7 @@ el("introInput").value = draft.intro || "";
 el("starNameInput").value = draft.star.name || "我的心星";
 el("voiceInput").value = draft.voice || "";
 setView("flow");
+applySpaceTheme(draft.style);
 showStep(0);
 }
 
@@ -1854,11 +2357,14 @@ saveState(draft);
 renderSpace();
 setView("space");
 spaceMusicAutoTried = true;
-playSpaceMusic({ silent: true });
+setTimeout(() => {
+if (musicEnabled && spaceView.classList.contains("is-visible")) playSpaceMusic({ silent: true });
+}, 4000);
 }
 
 function renderSpace() {
 if (!state || !state.created) return;
+applySpaceTheme(state.style);
 el("profileName").textContent = state.nickname;
 el("profileIntro").textContent = state.intro;
 el("spaceStarId").textContent = state.id;
@@ -1886,10 +2392,7 @@ return musicLibrary.find((item) => item.src && item.name === name) || musicLibra
 function renderMusicLibrary() {
 const library = el("musicLibrary");
 if (!library) return;
-const pageCount = Math.max(1, Math.ceil(musicLibrary.length / MUSIC_PAGE_SIZE));
-musicLibraryPage = Math.max(0, Math.min(musicLibraryPage, pageCount - 1));
-const pageStart = musicLibraryPage * MUSIC_PAGE_SIZE;
-const pageTracks = musicLibrary.slice(pageStart, pageStart + MUSIC_PAGE_SIZE);
+const pageTracks = musicLibrary.filter((track) => track.src);
 const tracksHtml = pageTracks.map((track) => {
 const isSelected = track.src && track.name === selectedMusic;
 const isPreviewing = track.src && track.id === previewMusicTrackId && (isEmbeddedView || (previewMusicAudio && !previewMusicAudio.paused));
@@ -1905,18 +2408,24 @@ ${previewButton}
 ${selectButton}
 </div>`;
 }).join("");
-const paginationHtml = pageCount > 1 ? `
-<div class="music-pagination">
-<button class="tiny-btn" type="button" data-music-page="${musicLibraryPage - 1}"${musicLibraryPage === 0 ? " disabled" : ""}>上一页</button>
-<span class="music-page-label">${musicLibraryPage + 1} / ${pageCount}</span>
-<button class="tiny-btn" type="button" data-music-page="${musicLibraryPage + 1}"${musicLibraryPage === pageCount - 1 ? " disabled" : ""}>下一页</button>
-</div>` : "";
-library.innerHTML = tracksHtml + paginationHtml;
+library.innerHTML = tracksHtml;
 }
 
-function stopPreviewMusic() {
+function renderHomeMusicControls() {
+const button = el("homeMusicPreviewBtn");
+if (!button) return;
+const track = getMusicTrackByName(el("musicSelect").value);
+const isPlaying = track.id === previewMusicTrackId && (isEmbeddedView || (previewMusicAudio && !previewMusicAudio.paused));
+button.textContent = isPlaying ? "停止" : "试听";
+button.setAttribute("aria-pressed", isPlaying ? "true" : "false");
+}
+
+function stopPreviewMusic(shouldResumeSpace = false) {
 if (!previewMusicAudio) {
 previewMusicTrackId = "";
+const resumeSpace = shouldResumeSpace && resumeStandaloneSpaceAfterPreview && musicEnabled;
+resumeStandaloneSpaceAfterPreview = false;
+if (resumeSpace) playSpaceMusic({ silent: true }, publicSpaceData || state);
 return;
 }
 previewMusicAudio.pause();
@@ -1925,12 +2434,18 @@ previewMusicAudio.load();
 previewMusicAudio = null;
 previewMusicTrackId = "";
 renderMusicLibrary();
+const resumeSpace = shouldResumeSpace && resumeStandaloneSpaceAfterPreview && musicEnabled;
+resumeStandaloneSpaceAfterPreview = false;
+if (resumeSpace) playSpaceMusic({ silent: true }, publicSpaceData || state);
 }
 
 function updateSpaceMusicButton() {
 const button = el("spaceMusicToggleBtn");
 const isPlaying = spaceMusicAudio && !spaceMusicAudio.paused;
-if (button) button.textContent = isPlaying ? "暂停" : "播放";
+if (button) {
+button.textContent = musicEnabled ? (isPlaying ? "音乐开启" : "开启音乐") : "音乐关闭";
+button.setAttribute("aria-pressed", musicEnabled ? "true" : "false");
+}
 if (globalMusicIcon) globalMusicIcon.textContent = musicEnabled ? "🔊" : "🔇";
 if (globalMusicText) globalMusicText.textContent = musicEnabled ? "音乐开启" : "音乐关闭";
 if (globalMusicToggleBtn) globalMusicToggleBtn.setAttribute("aria-pressed", musicEnabled ? "true" : "false");
@@ -1953,13 +2468,20 @@ function playSpaceMusic(options = {}, sourceData = state) {
 if (!sourceData) return Promise.resolve(false);
 const track = getMusicTrackByName(sourceData.music || selectedMusic);
 if (!track || !track.src) return;
+if (isEmbeddedView) {
+stopPreviewMusic();
+window.LuguMusic.claim("space-music");
+stopSpaceMusic();
+window.parent.postMessage({ type: "lugu-set-space-music", src: track.src, volume: musicVolume }, parentMessageOrigin);
+return Promise.resolve(true);
+}
 stopPreviewMusic();
 
 if (!spaceMusicAudio || !spaceMusicTrack || spaceMusicTrack.src !== track.src) {
 stopSpaceMusic();
 spaceMusicAudio = new Audio(track.src);
 spaceMusicAudio.loop = true;
-spaceMusicAudio.volume = .62;
+spaceMusicAudio.volume = musicVolume;
 spaceMusicAudio.preload = "auto";
 spaceMusicTrack = track;
 spaceMusicAudio.addEventListener("ended", updateSpaceMusicButton);
@@ -1987,29 +2509,43 @@ return false;
 function toggleSpaceMusic() {
 if (isEmbeddedView) {
 musicEnabled = !musicEnabled;
+try { localStorage.setItem(MUSIC_ENABLED_KEY, musicEnabled ? "1" : "0"); } catch (error) {}
+if (!musicEnabled) {
+stopPreviewMusic(false);
+stopSpaceMusic();
+window.parent.postMessage({ type: "lugu-stop-all-space-audio" }, parentMessageOrigin);
+} else {
+window.parent.postMessage({ type: "lugu-set-space-music-playing", playing: true }, parentMessageOrigin);
+}
+
 updateSpaceMusicButton();
-window.parent.postMessage({ type: "lugu-toggle-space-music" }, window.location.origin);
+el("musicStatus").textContent = musicEnabled ? "正在开启空间音乐…" : "空间音乐已关闭。";
 return;
 }
-if (previewMusicAudio && !previewMusicAudio.paused) {
-stopPreviewMusic();
-el("musicStatus").textContent = "试听已停止。再次点击音乐开关可播放已保存的空间音乐。";
-updateSpaceMusicButton();
-return;
-}
-if (spaceMusicAudio && !spaceMusicAudio.paused) {
+if (musicEnabled) {
 musicEnabled = false;
 localStorage.setItem(MUSIC_ENABLED_KEY, "0");
-spaceMusicAudio.pause();
-el("musicStatus").textContent = `已暂停：${spaceMusicTrack ? spaceMusicTrack.name : selectedMusic}`;
+spaceMusicAutoTried = true;
+stopPreviewMusic();
+stopSpaceMusic();
+el("musicStatus").textContent = "空间音乐已关闭。";
 updateSpaceMusicButton();
 return;
 }
 musicEnabled = true;
 localStorage.setItem(MUSIC_ENABLED_KEY, "1");
+spaceMusicAutoTried = true;
 updateSpaceMusicButton();
 playSpaceMusic({}, publicSpaceData || state);
 }
+
+window.handleGlobalMusicToggle = function (event) {
+if (event) {
+event.preventDefault();
+event.stopPropagation();
+}
+toggleSpaceMusic();
+};
 
 function tryAutoPlaySpaceMusic(event) {
 if (isEmbeddedView) return;
@@ -2052,40 +2588,53 @@ if (!track || !track.src) return;
 if (isEmbeddedView) {
 if (previewMusicTrackId === track.id) {
 previewMusicTrackId = "";
-window.parent.postMessage({ type: "lugu-stop-preview-music" }, window.location.origin);
+window.parent.postMessage({ type: "lugu-stop-preview-music" }, parentMessageOrigin);
 el("musicStatus").textContent = `已停止试听：${track.name}`;
 renderMusicLibrary();
+renderHomeMusicControls();
 return;
 }
 previewMusicTrackId = track.id;
 el("musicStatus").textContent = `正在试听：${track.name}`;
 renderMusicLibrary();
-window.parent.postMessage({ type: "lugu-preview-space-music", src: track.src, trackId: track.id }, window.location.origin);
+renderHomeMusicControls();
+window.parent.postMessage({ type: "lugu-preview-space-music", src: track.src, trackId: track.id, volume: musicVolume }, parentMessageOrigin);
 return;
 }
 if (previewMusicTrackId === track.id && previewMusicAudio && !previewMusicAudio.paused) {
-stopPreviewMusic();
+stopPreviewMusic(true);
 el("musicStatus").textContent = `已停止试听：${track.name}`;
 return;
 }
-stopSpaceMusic();
+const wasSpacePlaying = Boolean(spaceMusicAudio && !spaceMusicAudio.paused);
 stopPreviewMusic();
+stopSpaceMusic();
+resumeStandaloneSpaceAfterPreview = wasSpacePlaying;
+window.LuguMusic.claim("space-preview");
 previewMusicAudio = new Audio(track.src);
 previewMusicTrackId = track.id;
-previewMusicAudio.volume = .72;
+previewMusicAudio.volume = musicVolume;
 previewMusicAudio.preload = "auto";
 el("musicStatus").textContent = `正在试听：${track.name}`;
 renderMusicLibrary();
+renderHomeMusicControls();
 previewMusicAudio.addEventListener("ended", () => {
 if (previewMusicAudio) previewMusicAudio = null;
 previewMusicTrackId = "";
 renderMusicLibrary();
+renderHomeMusicControls();
 el("musicStatus").textContent = `试听结束：${track.name}`;
+const resumeSpace = resumeStandaloneSpaceAfterPreview && musicEnabled;
+resumeStandaloneSpaceAfterPreview = false;
+if (resumeSpace) playSpaceMusic({ silent: true }, publicSpaceData || state);
 }, { once: true });
-previewMusicAudio.play().catch(() => {
+previewMusicAudio.play().then(() => {
+renderHomeMusicControls();
+}).catch(() => {
 previewMusicTrackId = "";
 previewMusicAudio = null;
 renderMusicLibrary();
+renderHomeMusicControls();
 el("musicStatus").textContent = "请再次点击试听以播放音乐。";
 });
 }
@@ -2111,10 +2660,11 @@ function closeAvatarEditor() {
 if (avatarEditorModal) avatarEditorModal.classList.remove("is-visible");
 cleanupAvatarEdit();
 resetAvatarInput();
+if (avatarEditPurpose === "content" && el("contentFile")) el("contentFile").value = "";
 if (avatarEditorMessage) avatarEditorMessage.textContent = "";
 }
 
-function openAvatarEditor(file) {
+function openAvatarEditor(file, purpose = "avatar") {
 if (!file || !file.type || !file.type.startsWith("image/")) {
 showToast("请选择图片文件。");
 resetAvatarInput();
@@ -2122,6 +2672,7 @@ return;
 }
 
 cleanupAvatarEdit();
+avatarEditPurpose = purpose;
 const objectUrl = URL.createObjectURL(file);
 const image = new Image();
 image.onload = () => {
@@ -2138,6 +2689,9 @@ pinchScale: 1
 };
 if (avatarZoom) avatarZoom.value = "1";
 if (avatarEditorMessage) avatarEditorMessage.textContent = "";
+el("avatarEditorTitle").textContent = purpose === "content" ? "调整照片" : "调整头像";
+el("avatarEditorSub").textContent = purpose === "content" ? "拖动照片选择位置，使用滑块或双指缩放。" : "拖动图片选择位置，使用滑块或双指缩放。";
+el("avatarSaveBtn").textContent = purpose === "content" ? "确认使用照片" : "确认保存";
 if (avatarEditorModal) avatarEditorModal.classList.add("is-visible");
 drawAvatarEditor();
 };
@@ -2152,12 +2706,14 @@ image.src = objectUrl;
 function avatarMetrics(targetSize = 800) {
 if (!avatarEdit || !avatarEdit.image) return null;
 const image = avatarEdit.image;
-const baseScale = Math.max(targetSize / image.naturalWidth, targetSize / image.naturalHeight);
+const baseScale = avatarEditPurpose === "content"
+? Math.min(targetSize / image.naturalWidth, targetSize / image.naturalHeight)
+: Math.max(targetSize / image.naturalWidth, targetSize / image.naturalHeight);
 const drawScale = baseScale * avatarEdit.scale;
 const drawWidth = image.naturalWidth * drawScale;
 const drawHeight = image.naturalHeight * drawScale;
-const maxOffsetX = Math.max(0, (drawWidth - targetSize) / 2);
-const maxOffsetY = Math.max(0, (drawHeight - targetSize) / 2);
+const maxOffsetX = avatarEditPurpose === "content" ? Math.max(0, (targetSize + drawWidth) / 2) : Math.max(0, (drawWidth - targetSize) / 2);
+const maxOffsetY = avatarEditPurpose === "content" ? Math.max(0, (targetSize + drawHeight) / 2) : Math.max(0, (drawHeight - targetSize) / 2);
 avatarEdit.offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, avatarEdit.offsetX));
 avatarEdit.offsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, avatarEdit.offsetY));
 return {
@@ -2268,14 +2824,27 @@ function saveEditedAvatar() {
 if (!state || !avatarEdit) return;
 try {
 const output = document.createElement("canvas");
-output.width = 800;
-output.height = 800;
+output.width = 360;
+output.height = 360;
 drawAvatarToCanvas(output);
-let dataUrl = output.toDataURL("image/jpeg", .86);
-if (dataUrl.length > 700000) dataUrl = output.toDataURL("image/jpeg", .76);
+let dataUrl = output.toDataURL("image/jpeg", .66);
+if (dataUrl.length > 220000) dataUrl = output.toDataURL("image/jpeg", .48);
+if (avatarEditPurpose === "content") {
+pendingContentMedia = dataUrl;
+el("contentImagePreview").src = dataUrl;
+el("contentImagePreview").classList.add("is-visible");
+el("contentUploadStatus").textContent = "照片已调整并确认。";
+} else {
+const previousAvatar = state.avatar || "";
 state.avatar = dataUrl;
-saveState(state);
+if (!saveState(state)) {
+state.avatar = previousAvatar;
+if (avatarEditorMessage) avatarEditorMessage.textContent = "浏览器保存空间已满，请先删除旧媒体内容后再试。";
+return;
+}
 renderSpace();
+showToast("头像已保存，可在“我的空间”顶部查看。");
+}
 closeAvatarEditor();
 } catch (error) {
 if (avatarEditorMessage) {
@@ -2287,11 +2856,141 @@ avatarEditorMessage.textContent = "头像保存失败，请换一张图片再试
 function renderContentLists() {
 Object.keys(categoryLabels).forEach((category) => {
 const list = el(`${category}List`);
+if (!list) return;
 const items = (state.contents && state.contents[category]) || [];
 list.innerHTML = items.length ? items.map((item) => (
-`<div class="content-item"><strong>${escapeHtml(item.type)}</strong><br>${escapeHtml(item.text)}</div>`
+`<div class="content-item"><strong>${escapeHtml(item.type)}</strong>${item.text ? `<br>${escapeHtml(item.text)}` : ""}${renderContentMedia(item)}${category === "home" ? "" : `<a class="content-manage-link" href="${category}.html">修改或删除</a>`}</div>`
 )).join("") : `<div class="content-item">${categoryLabels[category]}还没有内容。</div>`;
 });
+hydrateSpaceMedia();
+}
+
+function renderContentMedia(item) {
+if (item && item.mediaRef) {
+if (item.type === "照片") return `<img class="content-media" data-media-ref="${escapeHtml(item.mediaRef)}" alt="上传的照片">`;
+if (item.type === "语音") return `<audio class="content-media" data-media-ref="${escapeHtml(item.mediaRef)}" controls preload="metadata"></audio>`;
+if (item.type === "视频") return `<video class="content-media" data-media-ref="${escapeHtml(item.mediaRef)}" controls playsinline preload="metadata"></video>`;
+}
+if (!item || !item.media || !item.media.startsWith("data:")) return "";
+if (item.type === "照片") return `<img class="content-media" src="${item.media}" alt="上传的照片">`;
+if (item.type === "语音") return `<audio class="content-media" src="${item.media}" controls preload="metadata"></audio>`;
+if (item.type === "视频") return `<video class="content-media" src="${item.media}" controls playsinline preload="metadata"></video>`;
+return "";
+}
+
+function readFileAsDataUrl(file) {
+return new Promise((resolve, reject) => {
+const reader = new FileReader();
+reader.onload = () => resolve(String(reader.result || ""));
+reader.onerror = reject;
+reader.readAsDataURL(file);
+});
+}
+
+function openSpaceMediaDb() {
+return new Promise((resolve, reject) => {
+const request = indexedDB.open("lugu_space_media", 1);
+request.onupgradeneeded = () => {
+if (!request.result.objectStoreNames.contains("files")) request.result.createObjectStore("files");
+};
+request.onsuccess = () => resolve(request.result);
+request.onerror = () => reject(request.error);
+});
+}
+
+async function saveSpaceMediaFile(dataUrl) {
+const parts = String(dataUrl || "").split(",");
+const mime = (parts[0].match(/data:([^;]+)/) || [])[1] || "application/octet-stream";
+const binary = atob(parts[1] || "");
+const bytes = new Uint8Array(binary.length);
+for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+const key = `media-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const db = await openSpaceMediaDb();
+await new Promise((resolve, reject) => {
+const transaction = db.transaction("files", "readwrite");
+transaction.objectStore("files").put(new Blob([bytes], { type: mime }), key);
+transaction.oncomplete = resolve;
+transaction.onerror = () => reject(transaction.error);
+transaction.onabort = () => reject(transaction.error || new Error("照片存储被中止"));
+});
+db.close();
+return key;
+}
+
+async function deleteSpaceMediaFile(key) {
+if (!key) return;
+const db = await openSpaceMediaDb();
+await new Promise((resolve, reject) => {
+const transaction = db.transaction("files", "readwrite");
+transaction.objectStore("files").delete(key);
+transaction.oncomplete = resolve;
+transaction.onerror = () => reject(transaction.error);
+transaction.onabort = () => reject(transaction.error || new Error("照片删除被中止"));
+});
+db.close();
+}
+
+async function readSpaceMediaFile(key) {
+const db = await openSpaceMediaDb();
+const blob = await new Promise((resolve, reject) => {
+const request = db.transaction("files").objectStore("files").get(key);
+request.onsuccess = () => resolve(request.result);
+request.onerror = () => reject(request.error);
+});
+db.close();
+return blob;
+}
+
+function hydrateSpaceMedia() {
+document.querySelectorAll("[data-media-ref]").forEach(async (node) => {
+if (node.dataset.mediaLoaded === "true") return;
+try {
+const blob = await readSpaceMediaFile(node.dataset.mediaRef);
+if (!blob) return;
+node.src = URL.createObjectURL(blob);
+node.dataset.mediaLoaded = "true";
+} catch (error) {}
+});
+}
+
+async function compressContentPhoto(file) {
+const source = await readFileAsDataUrl(file);
+const image = await new Promise((resolve, reject) => {
+const node = new Image();
+node.onload = () => resolve(node);
+node.onerror = reject;
+node.src = source;
+});
+const maxSide = 1280;
+const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+const canvas = document.createElement("canvas");
+canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+return canvas.toDataURL("image/jpeg", .78);
+}
+
+function resetContentUpload() {
+pendingContentMedia = null;
+el("contentFile").value = "";
+el("contentUploadStatus").textContent = "请选择需要上传的文件。";
+el("contentImagePreview").classList.remove("is-visible");
+el("contentImagePreview").removeAttribute("src");
+el("contentAudioPreview").classList.remove("is-visible");
+el("contentAudioPreview").removeAttribute("src");
+el("contentVideoPreview").classList.remove("is-visible");
+el("contentVideoPreview").removeAttribute("src");
+}
+
+function syncContentTypeUi() {
+const isPhoto = activeContentType === "照片";
+const isAudio = activeContentType === "语音";
+const isVideo = activeContentType === "视频";
+el("contentUpload").classList.toggle("is-visible", isPhoto || isAudio || isVideo);
+el("contentFile").accept = isPhoto ? "image/*" : isAudio ? "audio/*" : isVideo ? "video/*" : "";
+el("contentFileLabel").textContent = activeContentType === "文字" ? "选择文件" : `选择${activeContentType}`;
+el("contentText").placeholder = activeContentType === "文字" ? "写下这一刻。" : "可以为这条内容添加说明（选填）。";
+resetContentUpload();
 }
 
 function renderPublic() {
@@ -2322,13 +3021,16 @@ el("publicVoice").textContent = `“${data.voice || "希望世界因为爱重新
 applyStar(el("publicStarPreview"), data.star);
 renderAvatar("publicAvatarBox", "publicAvatarImg", data.avatar);
 const content = [
+...(data.contents?.home || []),
+...(data.contents?.voice || []),
 ...(data.contents?.story || []),
 ...(data.contents?.growth || []),
 ...(data.contents?.collection || [])
 ];
 el("publicContent").innerHTML = content.length ? content.map((item) => (
-`<div class="content-item"><strong>${escapeHtml(item.type)}</strong><br>${escapeHtml(item.text)}</div>`
+`<div class="content-item"><strong>${escapeHtml(item.type)}</strong>${item.text ? `<br>${escapeHtml(item.text)}` : ""}${renderContentMedia(item)}</div>`
 )).join("") : `<div class="content-item">TA的世界正在慢慢生成。</div>`;
+hydrateSpaceMedia();
 setView("public");
 }
 
@@ -2341,20 +3043,24 @@ showStep(currentStep);
 }
 
 renderChoices();
-
-document.querySelectorAll('a[href="index.html"]').forEach((link) => {
-link.addEventListener("click", (event) => {
-if (!isEmbeddedView) return;
-event.preventDefault();
-window.parent.postMessage({ type: "lugu-close-space" }, window.location.origin);
-});
-});
+renderHomeMusicControls();
 
 window.addEventListener("message", (event) => {
-if (!isEmbeddedView || event.origin !== window.location.origin || !event.data) return;
+if (!isEmbeddedView || !isTrustedParentMessage(event) || !event.data) return;
+if (event.data.type === "lugu-load-space-data" && event.data.data) {
+const incomingState = normalizeState(event.data.data, false);
+if (incomingState && incomingState.created) {
+state = incomingState;
+try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (error) {}
+renderSpace();
+setView("space");
+}
+return;
+}
 if (event.data.type === "lugu-preview-music-state") {
 previewMusicTrackId = event.data.playing ? event.data.trackId || "" : "";
 renderMusicLibrary();
+renderHomeMusicControls();
 if (event.data.ended) el("musicStatus").textContent = "试听结束。";
 return;
 }
@@ -2365,6 +3071,17 @@ updateSpaceMusicButton();
 
 el("createBtn").addEventListener("click", startFlow);
 resetBtn.addEventListener("click", startFlow);
+el("chooseStyleBtn").addEventListener("click", () => {
+collectCurrentStep();
+showStep(2);
+});
+el("designMyselfBtn").addEventListener("click", () => showStep(0));
+document.querySelectorAll("[data-step-pill]").forEach((button) => {
+button.addEventListener("click", () => {
+collectCurrentStep();
+showStep(Number(button.dataset.stepPill));
+});
+});
 el("prevBtn").addEventListener("click", () => {
 collectCurrentStep();
 showStep(currentStep - 1);
@@ -2396,6 +3113,7 @@ showStep(currentStep);
 }
 if (styleButton) {
 draft.style = styleButton.dataset.spaceStyle;
+applySpaceTheme(draft.style);
 syncChoiceState();
 }
 if (launchButton && state) {
@@ -2406,8 +3124,11 @@ renderSpace();
 }
 if (addButton) {
 activeCategory = addButton.dataset.target;
+activeContentType = "文字";
+document.querySelectorAll("[data-content-type]").forEach((item) => item.classList.toggle("is-active", item.dataset.contentType === "文字"));
 el("modalTitle").textContent = `添加到${categoryLabels[activeCategory]}`;
 el("contentText").value = "";
+syncContentTypeUi();
 el("contentModal").classList.add("is-visible");
 }
 if (musicPreviewButton) {
@@ -2452,7 +3173,7 @@ return;
 renderSpace();
 if (isEmbeddedView) {
 const track = getMusicTrackByName(state.music);
-window.parent.postMessage({ type: "lugu-set-space-music", src: track.src }, window.location.origin);
+window.parent.postMessage({ type: "lugu-set-space-music", src: track.src, volume: musicVolume }, parentMessageOrigin);
 }
 showToast("我的空间已保存");
 });
@@ -2477,7 +3198,7 @@ stopSpaceMusic();
 renderSpace();
 if (isEmbeddedView) {
 const track = getMusicTrackByName(chosenMusic);
-window.parent.postMessage({ type: "lugu-set-space-music", src: track.src }, window.location.origin);
+window.parent.postMessage({ type: "lugu-set-space-music", src: track.src, volume: musicVolume }, parentMessageOrigin);
 } else {
 playSpaceMusic({}, state);
 }
@@ -2485,7 +3206,25 @@ showToast(`已保存空间音乐：${chosenMusic}`);
 });
 
 el("spaceMusicToggleBtn").addEventListener("click", toggleSpaceMusic);
-globalMusicToggleBtn.addEventListener("click", toggleSpaceMusic);
+el("homeMusicPreviewBtn").addEventListener("click", () => {
+previewMusic(getMusicTrackByName(el("musicSelect").value));
+renderHomeMusicControls();
+});
+el("musicSelect").addEventListener("change", () => {
+selectedMusic = resolveMusicName(el("musicSelect").value);
+el("musicStatus").textContent = `已选择：${selectedMusic}`;
+renderHomeMusicControls();
+});
+el("homeMusicVolume").value = String(Math.round(musicVolume * 100));
+el("homeMusicVolumeValue").textContent = `${Math.round(musicVolume * 100)}%`;
+el("homeMusicVolume").addEventListener("input", () => {
+musicVolume = Number(el("homeMusicVolume").value) / 100;
+el("homeMusicVolumeValue").textContent = `${Math.round(musicVolume * 100)}%`;
+try { localStorage.setItem(MUSIC_VOLUME_KEY, String(musicVolume)); } catch (error) {}
+if (spaceMusicAudio) spaceMusicAudio.volume = musicVolume;
+if (previewMusicAudio) previewMusicAudio.volume = musicVolume;
+if (isEmbeddedView) window.parent.postMessage({ type: "lugu-set-space-music-volume", volume: musicVolume }, parentMessageOrigin);
+});
 
 document.addEventListener("pointerdown", tryAutoPlaySpaceMusic, { passive: true });
 window.addEventListener("pageshow", restartMusicWhenEnteringFromEarth);
@@ -2516,34 +3255,95 @@ el("avatarSaveBtn").addEventListener("click", saveEditedAvatar);
 
 document.querySelectorAll("[data-content-type]").forEach((button) => {
 button.addEventListener("click", () => {
+if (button.disabled) return;
 activeContentType = button.dataset.contentType;
 document.querySelectorAll("[data-content-type]").forEach((item) => item.classList.toggle("is-active", item === button));
+syncContentTypeUi();
 });
+});
+
+el("contentFile").addEventListener("change", async (event) => {
+const file = event.target.files && event.target.files[0];
+if (!file) return;
+const isPhoto = activeContentType === "照片" && file.type.startsWith("image/");
+const isAudio = activeContentType === "语音" && file.type.startsWith("audio/");
+const isVideo = activeContentType === "视频" && file.type.startsWith("video/");
+if (!isPhoto && !isAudio && !isVideo) {
+resetContentUpload();
+el("contentUploadStatus").textContent = "文件类型不符合当前选择，请重新选择。";
+return;
+}
+if ((isAudio || isVideo) && file.size > (isVideo ? 4 : 3) * 1024 * 1024) {
+resetContentUpload();
+el("contentUploadStatus").textContent = `${activeContentType}文件请控制在 ${isVideo ? 4 : 3}MB 以内。`;
+return;
+}
+if (isPhoto) {
+el("contentUploadStatus").textContent = `已选择：${file.name}，请调整照片。`;
+openAvatarEditor(file, "content");
+return;
+}
+el("contentUploadStatus").textContent = "正在处理文件…";
+try {
+pendingContentMedia = await readFileAsDataUrl(file);
+el("contentUploadStatus").textContent = `已选择：${file.name}`;
+if (isPhoto) {
+el("contentImagePreview").src = pendingContentMedia;
+el("contentImagePreview").classList.add("is-visible");
+} else if (isAudio) {
+el("contentAudioPreview").src = pendingContentMedia;
+el("contentAudioPreview").classList.add("is-visible");
+} else {
+el("contentVideoPreview").src = pendingContentMedia;
+el("contentVideoPreview").classList.add("is-visible");
+}
+} catch (error) {
+resetContentUpload();
+el("contentUploadStatus").textContent = "文件读取失败，请重新选择。";
+}
 });
 
 el("closeModalBtn").addEventListener("click", () => {
 el("contentModal").classList.remove("is-visible");
 });
 
-el("saveContentBtn").addEventListener("click", () => {
+el("saveContentBtn").addEventListener("click", async () => {
 const text = el("contentText").value.trim();
-if (!text || !state) {
+const needsMedia = activeContentType === "照片" || activeContentType === "语音" || activeContentType === "视频";
+if (!state || (activeContentType === "文字" && !text) || (needsMedia && !pendingContentMedia)) {
+if (needsMedia) el("contentUploadStatus").textContent = `请先选择${activeContentType}文件。`;
 el("contentText").focus();
 return;
 }
-state.contents[activeCategory].unshift({ type: activeContentType, text, time: Date.now() });
-saveState(state);
+const item = { type: activeContentType, text, media: pendingContentMedia || "", time: Date.now() };
+if (activeContentType === "照片") {
+el("contentUploadStatus").textContent = "正在保存照片…";
+try {
+item.mediaRef = await saveSpaceMediaFile(pendingContentMedia);
+item.media = "";
+} catch (error) {
+el("contentUploadStatus").textContent = "照片媒体库暂时不可用，正在使用兼容方式保存…";
+}
+}
+state.contents[activeCategory].unshift(item);
+if (!saveState(state)) {
+state.contents[activeCategory].shift();
+if (item.mediaRef) await deleteSpaceMediaFile(item.mediaRef).catch(() => {});
+el("contentUploadStatus").textContent = "保存空间不足，请换用更小的文件。";
+return;
+}
 el("contentModal").classList.remove("is-visible");
 renderSpace();
+showToast(`已保存到${categoryLabels[activeCategory]}`);
 });
 
 if (isPublicView) {
 renderPublic();
-if (musicEnabled && !isEmbeddedView) playSpaceMusic({ silent: true }, publicSpaceData);
+if (musicEnabled && !isEmbeddedView) setTimeout(() => playSpaceMusic({ silent: true }, publicSpaceData), 4000);
 } else if (state && state.created) {
 renderSpace();
 setView("space");
-if (musicEnabled && !isEmbeddedView) playSpaceMusic({ silent: true }, state);
+if (musicEnabled && !isEmbeddedView) setTimeout(() => playSpaceMusic({ silent: true }, state), 4000);
 } else {
 setView("home");
 }
