@@ -1043,7 +1043,7 @@ border-radius: 12px;
 
 img.content-media {
 max-height: 320px;
-object-fit: cover;
+object-fit: contain;
 }
 
 audio.content-media {
@@ -1458,6 +1458,12 @@ overflow: hidden;
 box-shadow: inset 0 0 28px rgba(255, 255, 255, .04), 0 16px 42px rgba(0, 0, 0, .22);
 touch-action: none;
 }
+.avatar-crop-stage.content-portrait { aspect-ratio: 3 / 4; }
+.avatar-crop-stage.content-landscape { aspect-ratio: 4 / 3; }
+.content-frame-options { display: none; grid-template-columns: 1fr 1fr; gap: 8px; }
+.content-frame-options.is-visible { display: grid; }
+.content-frame-options button { min-height: 38px; border: 1px solid rgba(190,224,255,.18); border-radius: 11px; background: rgba(255,255,255,.06); color: rgba(230,242,250,.86); }
+.content-frame-options button.is-active { border-color: rgba(114,215,255,.5); background: linear-gradient(135deg,rgba(50,141,176,.45),rgba(105,95,196,.45)); color: #fff; }
 
 .avatar-crop-stage canvas {
 display: block;
@@ -1911,6 +1917,7 @@ grid-template-columns: 1fr;
 </div>
 <button class="icon-btn" id="avatarCancelTopBtn" type="button" aria-label="取消头像编辑">×</button>
 </div>
+<div class="content-frame-options" id="contentFrameOptions"><button class="is-active" type="button" data-content-frame="portrait">▯ 竖屏 3:4</button><button type="button" data-content-frame="landscape">▭ 横屏 4:3</button></div>
 <div class="avatar-crop-stage" id="avatarCropStage">
 <canvas id="avatarCropCanvas" width="800" height="800" aria-label="头像裁剪预览区"></canvas>
 </div>
@@ -2175,6 +2182,7 @@ const toast = el("toast");
 let toastTimer = 0;
 let avatarEdit = null;
 let avatarEditPurpose = "avatar";
+let contentFrame = "portrait";
 
 function readState() {
 try {
@@ -2702,6 +2710,7 @@ pinchDistance: 0,
 pinchScale: 1
 };
 if (avatarZoom) avatarZoom.value = "1";
+setContentFrame(purpose === "content" ? contentFrame : "square");
 if (avatarEditorMessage) avatarEditorMessage.textContent = "";
 el("avatarEditorTitle").textContent = purpose === "content" ? "调整照片" : "调整头像";
 el("avatarEditorSub").textContent = purpose === "content" ? "拖动照片选择位置，使用滑块或双指缩放。" : "拖动图片选择位置，使用滑块或双指缩放。";
@@ -2717,43 +2726,66 @@ resetAvatarInput();
 image.src = objectUrl;
 }
 
-function avatarMetrics(targetSize = 800) {
+function setContentFrame(frame) {
+contentFrame = frame === "landscape" ? "landscape" : "portrait";
+const isContent = avatarEditPurpose === "content" && frame !== "square";
+el("contentFrameOptions").classList.toggle("is-visible", isContent);
+avatarCropStage.classList.toggle("content-portrait", isContent && contentFrame === "portrait");
+avatarCropStage.classList.toggle("content-landscape", isContent && contentFrame === "landscape");
+document.querySelectorAll("[data-content-frame]").forEach((button) => button.classList.toggle("is-active", button.dataset.contentFrame === contentFrame));
+if (isContent && contentFrame === "landscape") {
+avatarCropCanvas.width = 800; avatarCropCanvas.height = 600;
+avatarPreviewCanvas.width = 160; avatarPreviewCanvas.height = 120;
+avatarPreviewCanvas.parentElement.style.width = "64px"; avatarPreviewCanvas.parentElement.style.height = "48px";
+} else if (isContent) {
+avatarCropCanvas.width = 600; avatarCropCanvas.height = 800;
+avatarPreviewCanvas.width = 120; avatarPreviewCanvas.height = 160;
+avatarPreviewCanvas.parentElement.style.width = "48px"; avatarPreviewCanvas.parentElement.style.height = "64px";
+} else {
+avatarCropCanvas.width = 800; avatarCropCanvas.height = 800;
+avatarPreviewCanvas.width = 160; avatarPreviewCanvas.height = 160;
+avatarPreviewCanvas.parentElement.style.width = "64px"; avatarPreviewCanvas.parentElement.style.height = "64px";
+}
+if (avatarEdit) { avatarEdit.offsetX = 0; avatarEdit.offsetY = 0; drawAvatarEditor(); }
+}
+
+function avatarMetrics(targetWidth = 800, targetHeight = targetWidth) {
 if (!avatarEdit || !avatarEdit.image) return null;
 const image = avatarEdit.image;
-const baseScale = avatarEditPurpose === "content"
-? Math.min(targetSize / image.naturalWidth, targetSize / image.naturalHeight)
-: Math.max(targetSize / image.naturalWidth, targetSize / image.naturalHeight);
+const baseScale = Math.max(targetWidth / image.naturalWidth, targetHeight / image.naturalHeight);
 const drawScale = baseScale * avatarEdit.scale;
 const drawWidth = image.naturalWidth * drawScale;
 const drawHeight = image.naturalHeight * drawScale;
-const maxOffsetX = avatarEditPurpose === "content" ? Math.max(0, (targetSize + drawWidth) / 2) : Math.max(0, (drawWidth - targetSize) / 2);
-const maxOffsetY = avatarEditPurpose === "content" ? Math.max(0, (targetSize + drawHeight) / 2) : Math.max(0, (drawHeight - targetSize) / 2);
+const maxOffsetX = Math.max(0, (drawWidth - targetWidth) / 2);
+const maxOffsetY = Math.max(0, (drawHeight - targetHeight) / 2);
 avatarEdit.offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, avatarEdit.offsetX));
 avatarEdit.offsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, avatarEdit.offsetY));
 return {
 drawWidth,
 drawHeight,
-drawX: (targetSize - drawWidth) / 2 + avatarEdit.offsetX,
-drawY: (targetSize - drawHeight) / 2 + avatarEdit.offsetY
+drawX: (targetWidth - drawWidth) / 2 + avatarEdit.offsetX,
+drawY: (targetHeight - drawHeight) / 2 + avatarEdit.offsetY
 };
 }
 
 function drawAvatarToCanvas(canvas) {
 if (!canvas || !avatarEdit) return;
 const ctx = canvas.getContext("2d");
-const size = canvas.width;
-const metrics = avatarMetrics(800);
+const referenceWidth = avatarCropCanvas.width;
+const referenceHeight = avatarCropCanvas.height;
+const metrics = avatarMetrics(referenceWidth, referenceHeight);
 if (!ctx || !metrics) return;
-const ratio = size / 800;
-ctx.clearRect(0, 0, size, size);
+const ratioX = canvas.width / referenceWidth;
+const ratioY = canvas.height / referenceHeight;
+ctx.clearRect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "#10182d";
-ctx.fillRect(0, 0, size, size);
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.drawImage(
 avatarEdit.image,
-metrics.drawX * ratio,
-metrics.drawY * ratio,
-metrics.drawWidth * ratio,
-metrics.drawHeight * ratio
+metrics.drawX * ratioX,
+metrics.drawY * ratioY,
+metrics.drawWidth * ratioX,
+metrics.drawHeight * ratioY
 );
 }
 
@@ -2778,8 +2810,8 @@ const rect = avatarCropStage.getBoundingClientRect();
 return {
 x: event.clientX,
 y: event.clientY,
-cropX: ((event.clientX - rect.left) / rect.width) * 800,
-cropY: ((event.clientY - rect.top) / rect.height) * 800
+cropX: ((event.clientX - rect.left) / rect.width) * avatarCropCanvas.width,
+cropY: ((event.clientY - rect.top) / rect.height) * avatarCropCanvas.height
 };
 }
 
@@ -2838,8 +2870,8 @@ function saveEditedAvatar() {
 if (!state || !avatarEdit) return;
 try {
 const output = document.createElement("canvas");
-output.width = 360;
-output.height = 360;
+output.width = avatarEditPurpose === "content" ? (contentFrame === "landscape" ? 560 : 420) : 360;
+output.height = avatarEditPurpose === "content" ? (contentFrame === "landscape" ? 420 : 560) : 360;
 drawAvatarToCanvas(output);
 let dataUrl = output.toDataURL("image/jpeg", .66);
 if (dataUrl.length > 220000) dataUrl = output.toDataURL("image/jpeg", .48);
@@ -3277,6 +3309,7 @@ avatarCropStage.addEventListener("pointerleave", endAvatarPointer);
 el("avatarCancelBtn").addEventListener("click", closeAvatarEditor);
 el("avatarCancelTopBtn").addEventListener("click", closeAvatarEditor);
 el("avatarSaveBtn").addEventListener("click", saveEditedAvatar);
+document.querySelectorAll("[data-content-frame]").forEach((button) => button.addEventListener("click", () => setContentFrame(button.dataset.contentFrame)));
 
 document.querySelectorAll("[data-content-type]").forEach((button) => {
 button.addEventListener("click", () => {

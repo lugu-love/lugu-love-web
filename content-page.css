@@ -16,7 +16,7 @@ body:before{content:"";position:fixed;inset:0;background-image:radial-gradient(c
 .list{display:grid;gap:12px}
 .item{padding:14px;color:#e7f1fccc;line-height:1.65;white-space:pre-wrap}
 .item strong{color:#fff}
-.media{display:block;width:100%;margin-top:10px;border-radius:14px;max-height:360px;object-fit:cover}
+.media{display:block;width:100%;margin-top:10px;border-radius:14px;max-height:420px;object-fit:contain}
 .item audio{height:42px}
 .empty{text-align:center;padding:38px 16px;color:#d6e3f088}
 .composer{display:none;padding:16px;margin-bottom:16px}
@@ -35,10 +35,14 @@ textarea{width:100%;min-height:90px;margin-top:12px;padding:12px;border:1px soli
 .save{width:100%;margin-top:12px;font:inherit}
 .photo-editor{display:none;margin-top:10px}
 .photo-editor.open{display:grid;gap:9px}
-.photo-stage{height:230px;overflow:hidden;border-radius:14px;background:#050914;display:grid;place-items:center;touch-action:none;cursor:grab}
+.photo-frame-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.photo-frame-options button{min-height:38px;border:1px solid #ffffff25;border-radius:11px;background:#ffffff0c;color:#dcebf2;font-size:12px}
+.photo-frame-options button.active{border-color:#80d9ff66;background:linear-gradient(135deg,#328db066,#695fc466);color:#fff;box-shadow:0 0 16px #68cfff1f}
+.photo-stage{width:min(100%,360px);aspect-ratio:3/4;margin:0 auto;overflow:hidden;border-radius:14px;background:#050914;display:grid;place-items:center;touch-action:none;cursor:grab;transition:aspect-ratio .2s}
+.photo-stage.frame-landscape{aspect-ratio:4/3}
 .photo-stage:active{cursor:grabbing}
 .photo-help{margin:0;color:#dce9f0bb;font-size:12px;text-align:center}
-.photo-stage .preview{display:block;width:100%;height:100%;max-height:none;object-fit:contain;transition:transform .1s}
+.photo-stage .preview{display:block;width:100%;height:100%;max-height:none;object-fit:cover;object-position:50% 50%;transition:transform .1s,object-position .1s}
 .photo-editor label{display:grid;grid-template-columns:70px 1fr;align-items:center;gap:8px;font-size:12px;color:#dce9f0bb}
 .photo-editor input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:20px;margin:0;background:transparent;outline:none}
 .photo-editor input[type="range"]::-webkit-slider-runnable-track{height:4px;border:1px solid #b9dfff2e;border-radius:999px;background:linear-gradient(90deg,#385f86,#7464b7);box-shadow:inset 0 1px 2px #0005}

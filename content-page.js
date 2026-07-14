@@ -263,22 +263,35 @@ function selectType(nextType) {
 }
 
 function applyPhotoTransform() {
-  const scale = Number($("photoZoom").value);
+  const scale = Math.max(1, Number($("photoZoom").value));
   const x = Number($("photoX").value);
   const y = Number($("photoY").value);
-  $("photo").style.transform = `translate(${x}%, ${y}%) scale(${scale})`;
+  $("photoZoom").value = String(scale);
+  $("photo").style.objectPosition = `${50 + x}% ${50 + y}%`;
+  $("photo").style.transform = `scale(${scale})`;
+}
+
+let photoFrame = "portrait";
+function setPhotoFrame(frame) {
+  photoFrame = frame === "landscape" ? "landscape" : "portrait";
+  $("photoStage").classList.toggle("frame-landscape", photoFrame === "landscape");
+  document.querySelectorAll("[data-photo-frame]").forEach((button) => button.classList.toggle("active", button.dataset.photoFrame === photoFrame));
+  applyPhotoTransform();
 }
 
 async function confirmPhoto() {
   if (!photoSource) return;
   const image = await new Promise((resolve, reject) => { const node = new Image(); node.onload = () => resolve(node); node.onerror = reject; node.src = photoSource; });
-  const outputSize = 420;
-  const canvas = document.createElement("canvas"); canvas.width = outputSize; canvas.height = outputSize;
-  const context = canvas.getContext("2d"); context.fillStyle = "#0b1020"; context.fillRect(0, 0, outputSize, outputSize);
-  const scale = Math.min(outputSize / image.naturalWidth, outputSize / image.naturalHeight) * Number($("photoZoom").value);
+  const outputWidth = photoFrame === "landscape" ? 560 : 420;
+  const outputHeight = photoFrame === "landscape" ? 420 : 560;
+  const canvas = document.createElement("canvas"); canvas.width = outputWidth; canvas.height = outputHeight;
+  const context = canvas.getContext("2d"); context.fillStyle = "#0b1020"; context.fillRect(0, 0, outputWidth, outputHeight);
+  const scale = Math.max(outputWidth / image.naturalWidth, outputHeight / image.naturalHeight) * Math.max(1, Number($("photoZoom").value));
   const width = image.naturalWidth * scale; const height = image.naturalHeight * scale;
-  const x = (outputSize - width) / 2 + Number($("photoX").value) * 3.2;
-  const y = (outputSize - height) / 2 + Number($("photoY").value) * 3.2;
+  const positionX = Math.max(0, Math.min(1, (50 + Number($("photoX").value)) / 100));
+  const positionY = Math.max(0, Math.min(1, (50 + Number($("photoY").value)) / 100));
+  const x = -(width - outputWidth) * positionX;
+  const y = -(height - outputHeight) * positionY;
   context.drawImage(image, x, y, width, height);
   media = canvas.toDataURL("image/jpeg", .62);
   $("status").textContent = "照片调整已确认。";
@@ -309,6 +322,13 @@ $("file").onchange = async (event) => {
   } catch (error) { $("status").textContent = "文件读取失败。"; }
 };
 
+$("photoZoom").min = "1";
+const photoFrameOptions = document.createElement("div");
+photoFrameOptions.className = "photo-frame-options";
+photoFrameOptions.innerHTML = '<button class="active" type="button" data-photo-frame="portrait">▯ 竖屏 3:4</button><button type="button" data-photo-frame="landscape">▭ 横屏 4:3</button>';
+$("photoStage").insertAdjacentElement("beforebegin", photoFrameOptions);
+document.querySelectorAll("[data-photo-frame]").forEach((button) => button.onclick = () => setPhotoFrame(button.dataset.photoFrame));
+setPhotoFrame("portrait");
 ["photoZoom", "photoX", "photoY"].forEach((id) => $(id).oninput = applyPhotoTransform);
 $("photoStage").onpointerdown = (event) => {
   event.preventDefault(); $("photoStage").setPointerCapture(event.pointerId);
@@ -319,7 +339,7 @@ $("photoStage").onpointerdown = (event) => {
 $("photoStage").onpointermove = (event) => {
   if (!photoPointers.has(event.pointerId)) return; event.preventDefault();
   photoPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-  if (photoPointers.size >= 2) { const points = [...photoPointers.values()]; const distance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y); $("photoZoom").value = String(Math.max(.25, Math.min(3, photoPinchZoom * distance / photoPinchDistance))); applyPhotoTransform(); return; }
+  if (photoPointers.size >= 2) { const points = [...photoPointers.values()]; const distance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y); $("photoZoom").value = String(Math.max(1, Math.min(3, photoPinchZoom * distance / photoPinchDistance))); applyPhotoTransform(); return; }
   if (photoDragPoint) { $("photoX").value = String(Math.max(-50, Math.min(50, Number($("photoX").value) + (event.clientX - photoDragPoint.x) / 2))); $("photoY").value = String(Math.max(-50, Math.min(50, Number($("photoY").value) + (event.clientY - photoDragPoint.y) / 2))); photoDragPoint = { x: event.clientX, y: event.clientY }; applyPhotoTransform(); }
 };
 const endPhotoPointer = (event) => { photoPointers.delete(event.pointerId); photoDragPoint = photoPointers.size === 1 ? [...photoPointers.values()][0] : null; if (photoPointers.size < 2) photoPinchDistance = 0; };
