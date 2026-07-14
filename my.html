@@ -1061,6 +1061,18 @@ font-size: 12px;
 text-decoration: none;
 }
 
+.home-content-actions { display: flex; gap: 8px; margin-top: 10px; }
+.home-content-actions button {
+flex: 1;
+min-height: 34px;
+border: 1px solid rgba(190, 224, 255, .2);
+border-radius: 10px;
+background: rgba(255, 255, 255, .07);
+color: rgba(235, 245, 255, .9);
+font-size: 11px;
+}
+.home-content-actions .danger { border-color: rgba(255, 116, 143, .3); color: #ffd7df; }
+
 .content-upload {
 display: none;
 gap: 10px;
@@ -2100,6 +2112,8 @@ let currentStep = 0;
 let activeCategory = "voice";
 let activeContentType = "文字";
 let pendingContentMedia = null;
+let editingHomeIndex = -1;
+let editingHomePreviousItem = null;
 let selectedMusic = "";
 let previewMusicAudio = null;
 let previewMusicTrackId = "";
@@ -2858,8 +2872,8 @@ Object.keys(categoryLabels).forEach((category) => {
 const list = el(`${category}List`);
 if (!list) return;
 const items = (state.contents && state.contents[category]) || [];
-list.innerHTML = items.length ? items.map((item) => (
-`<div class="content-item"><strong>${escapeHtml(item.type)}</strong>${item.text ? `<br>${escapeHtml(item.text)}` : ""}${renderContentMedia(item)}${category === "home" ? "" : `<a class="content-manage-link" href="${category}.html">修改或删除</a>`}</div>`
+list.innerHTML = items.length ? items.map((item, index) => (
+`<div class="content-item"><strong>${escapeHtml(item.type)}</strong>${item.text ? `<br>${escapeHtml(item.text)}` : ""}${renderContentMedia(item)}${category === "home" ? `<div class="home-content-actions"><button type="button" data-home-edit="${index}">修改</button><button class="danger" type="button" data-home-delete="${index}">删除</button></div>` : `<a class="content-manage-link" href="${category}.html">修改或删除</a>`}</div>`
 )).join("") : `<div class="content-item">${categoryLabels[category]}还没有内容。</div>`;
 });
 hydrateSpaceMedia();
@@ -2884,6 +2898,15 @@ const reader = new FileReader();
 reader.onload = () => resolve(String(reader.result || ""));
 reader.onerror = reject;
 reader.readAsDataURL(file);
+});
+}
+
+function blobToSpaceDataUrl(blob) {
+return new Promise((resolve, reject) => {
+const reader = new FileReader();
+reader.onload = () => resolve(String(reader.result || ""));
+reader.onerror = () => reject(reader.error);
+reader.readAsDataURL(blob);
 });
 }
 
@@ -3124,6 +3147,8 @@ renderSpace();
 }
 if (addButton) {
 activeCategory = addButton.dataset.target;
+editingHomeIndex = -1;
+editingHomePreviousItem = null;
 activeContentType = "文字";
 document.querySelectorAll("[data-content-type]").forEach((item) => item.classList.toggle("is-active", item.dataset.contentType === "文字"));
 el("modalTitle").textContent = `添加到${categoryLabels[activeCategory]}`;
@@ -3305,6 +3330,55 @@ el("contentUploadStatus").textContent = "文件读取失败，请重新选择。
 
 el("closeModalBtn").addEventListener("click", () => {
 el("contentModal").classList.remove("is-visible");
+editingHomeIndex = -1;
+editingHomePreviousItem = null;
+});
+
+el("homeList").addEventListener("click", async (event) => {
+const editButton = event.target.closest("[data-home-edit]");
+const deleteButton = event.target.closest("[data-home-delete]");
+if (deleteButton) {
+const index = Number(deleteButton.dataset.homeDelete);
+const item = state.contents.home[index];
+if (!item || !window.confirm("确定删除这条主页内容吗？")) return;
+state.contents.home.splice(index, 1);
+if (!saveState(state)) {
+state.contents.home.splice(index, 0, item);
+showToast("删除失败，请稍后再试");
+return;
+}
+if (item.mediaRef) await deleteSpaceMediaFile(item.mediaRef).catch(() => {});
+renderSpace();
+showToast("主页内容已删除");
+return;
+}
+if (!editButton) return;
+const index = Number(editButton.dataset.homeEdit);
+const item = state.contents.home[index];
+if (!item) return;
+activeCategory = "home";
+editingHomeIndex = index;
+editingHomePreviousItem = item;
+activeContentType = item.type || "文字";
+document.querySelectorAll("[data-content-type]").forEach((button) => button.classList.toggle("is-active", button.dataset.contentType === activeContentType));
+syncContentTypeUi();
+el("modalTitle").textContent = "修改主页内容";
+el("contentText").value = item.text || "";
+try {
+pendingContentMedia = item.media || "";
+if (!pendingContentMedia && item.mediaRef) {
+const blob = await readSpaceMediaFile(item.mediaRef);
+if (blob) pendingContentMedia = await blobToSpaceDataUrl(blob);
+}
+if (pendingContentMedia && activeContentType === "照片") {
+el("contentImagePreview").src = pendingContentMedia;
+el("contentImagePreview").classList.add("is-visible");
+el("contentUploadStatus").textContent = "原照片已载入，可直接保存或重新选择。";
+}
+} catch (error) {
+el("contentUploadStatus").textContent = "原照片读取失败，请重新选择照片。";
+}
+el("contentModal").classList.add("is-visible");
 });
 
 el("saveContentBtn").addEventListener("click", async () => {
@@ -3315,7 +3389,7 @@ if (needsMedia) el("contentUploadStatus").textContent = `请先选择${activeCon
 el("contentText").focus();
 return;
 }
-const item = { type: activeContentType, text, media: pendingContentMedia || "", time: Date.now() };
+const item = { type: activeContentType, text, media: pendingContentMedia || "", time: editingHomePreviousItem?.time || Date.now() };
 if (activeContentType === "照片") {
 el("contentUploadStatus").textContent = "正在保存照片…";
 try {
@@ -3325,14 +3399,21 @@ item.media = "";
 el("contentUploadStatus").textContent = "照片媒体库暂时不可用，正在使用兼容方式保存…";
 }
 }
-state.contents[activeCategory].unshift(item);
+if (activeCategory === "home" && editingHomeIndex >= 0) state.contents.home[editingHomeIndex] = item;
+else state.contents[activeCategory].unshift(item);
 if (!saveState(state)) {
-state.contents[activeCategory].shift();
+if (activeCategory === "home" && editingHomeIndex >= 0) state.contents.home[editingHomeIndex] = editingHomePreviousItem;
+else state.contents[activeCategory].shift();
 if (item.mediaRef) await deleteSpaceMediaFile(item.mediaRef).catch(() => {});
 el("contentUploadStatus").textContent = "保存空间不足，请换用更小的文件。";
 return;
 }
 el("contentModal").classList.remove("is-visible");
+if (editingHomePreviousItem?.mediaRef && editingHomePreviousItem.mediaRef !== item.mediaRef) {
+await deleteSpaceMediaFile(editingHomePreviousItem.mediaRef).catch(() => {});
+}
+editingHomeIndex = -1;
+editingHomePreviousItem = null;
 renderSpace();
 showToast(`已保存到${categoryLabels[activeCategory]}`);
 });
