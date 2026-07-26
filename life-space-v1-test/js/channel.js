@@ -270,9 +270,10 @@
     $(".prompt-card > p").textContent = moduleConfig.prompt;
     $(".prompt-record-button").href = `editor.html?module=${encodeURIComponent(moduleType)}`;
     $(".prompt-record-button").innerHTML = `<span aria-hidden="true">＋</span> 新增${moduleConfig.shortName}内容`;
-    $("#lifePhotoFrame").setAttribute("aria-label", `${moduleConfig.name}相框`);
+    $("#lifePhotoFrame").setAttribute("aria-label", `${moduleConfig.name}头像`);
     $("#framePlaceholder span").textContent = moduleConfig.shortName.toUpperCase();
-    $("#framePlaceholder strong").textContent = `放一张属于${moduleConfig.shortName}的照片`;
+    $("#framePlaceholder strong").textContent = `添加${moduleConfig.shortName}头像`;
+    $("#framePhoto").alt = `${moduleConfig.name}头像照片`;
   }
 
   function initializeVisitorView() {
@@ -768,9 +769,9 @@
       $("#framePhoto").style.display = "block";
       $("#framePlaceholder").hidden = true;
       $("#framePlaceholder").style.display = "none";
-      showNotice("相框照片已更换，可以拖动和缩放");
+      showNotice("头像已更换，可以拖动和缩放");
     } catch (error) {
-      showNotice(error.message || "相框照片更换失败");
+      showNotice(error.message || "头像更换失败");
     }
   });
   $("#framePhotoZoom").addEventListener("input", (event) => {

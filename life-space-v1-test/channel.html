@@ -7,7 +7,7 @@
   <title>我的生活｜我的生命空间</title>
   <link rel="icon" href="../assets/icons/lugu-logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/main.css?v=20260726-1">
-  <link rel="stylesheet" href="css/channel.css?v=20260726-6">
+  <link rel="stylesheet" href="css/channel.css?v=20260727-1">
   <link rel="stylesheet" href="css/life-card.css?v=20260726-2">
 </head>
 <body>
@@ -19,23 +19,20 @@
       </div>
       <button class="my-music-button" id="openMusicPanel" type="button"><span aria-hidden="true">♫</span> 我的音乐</button>
     </nav>
-    <section class="life-photo-frame" id="lifePhotoFrame" aria-label="我的生活相框">
+    <section class="module-avatar-card" id="lifePhotoFrame" aria-label="我的生活头像">
       <div class="frame-photo-stage" id="framePhotoStage">
-        <img id="framePhoto" alt="我的生活相框照片" hidden>
+        <img id="framePhoto" alt="我的生活头像照片" hidden>
         <div class="frame-placeholder" id="framePlaceholder">
           <span>MY LIFE</span>
-          <strong>放一张喜欢的照片</strong>
+          <strong>添加头像</strong>
         </div>
       </div>
-      <div class="frame-caption">
-        <span>Life, framed with love</span>
-        <button class="frame-edit-button" id="openFrameEditor" type="button">更换 · 调整</button>
-      </div>
+      <button class="frame-edit-button" id="openFrameEditor" type="button">更换照片</button>
       <div class="frame-editor" id="frameEditor" hidden>
-        <button class="frame-upload-button" id="chooseFramePhoto" type="button">选择照片</button>
+        <button class="frame-upload-button" id="chooseFramePhoto" type="button">选择新头像</button>
         <input class="visually-hidden" id="framePhotoInput" type="file" accept="image/*">
         <label class="frame-zoom-control" for="framePhotoZoom"><span>缩放</span><input id="framePhotoZoom" type="range" min="100" max="240" value="100"></label>
-        <p>在照片上拖动，可以调整画面位置。</p>
+        <p>拖动头像可以调整位置，也可以使用滑杆缩放。</p>
         <button class="frame-done-button" id="closeFrameEditor" type="button">完成</button>
       </div>
     </section>
@@ -103,6 +100,6 @@
   <script src="js/data/local-adapter.js?v=20260726-2"></script>
   <script src="js/data/data-service.js?v=20260726-2"></script>
   <script src="js/life-card-renderer.js?v=20260726-5"></script>
-  <script src="js/channel.js?v=20260726-10"></script>
+  <script src="js/channel.js?v=20260727-1"></script>
 </body>
 </html>

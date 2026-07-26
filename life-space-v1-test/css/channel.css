@@ -5,20 +5,20 @@
 .my-music-button { min-height: 42px; display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; border: 1px solid rgba(83,94,76,.14); border-radius: 999px; color: var(--sage-dark); font-size: 12px; font-weight: 700; background: rgba(255,253,248,.86); box-shadow: 0 7px 20px rgba(68,62,49,.08); cursor: pointer; }
 .my-music-button span { font-size: 16px; }
 .add-button { min-height: 46px; padding: 0 18px; border: 0; border-radius: 999px; color: #fff; background: var(--sage-dark); box-shadow: 0 8px 20px rgba(66,85,59,.2); cursor: pointer; }
-.life-photo-frame { position: relative; width: min(100%, 580px); margin: 0 auto 24px; padding: 10px 10px 0; border: 1px solid rgba(92,76,58,.14); border-radius: 6px; background: linear-gradient(145deg, #f8f1e3, #d8c7ac 48%, #f3e8d6); box-shadow: 0 18px 45px rgba(62,51,39,.14), inset 0 0 0 4px rgba(255,255,255,.42); transform: rotate(-.35deg); }
-.frame-photo-stage { position: relative; height: clamp(220px, 56vw, 340px); overflow: hidden; border: 7px solid #fffdf8; background: #d6d8cf; box-shadow: inset 0 0 16px rgba(31,35,29,.12); touch-action: none; cursor: grab; }
+.module-avatar-card { position: relative; width: min(100%, 260px); display: grid; justify-items: center; gap: 12px; margin: 4px auto 26px; }
+.frame-photo-stage { position: relative; width: clamp(118px, 34vw, 156px); aspect-ratio: 1; overflow: hidden; border: 5px solid rgba(255,253,248,.96); border-radius: 50%; background: #d6d8cf; box-shadow: 0 14px 34px rgba(62,51,39,.18), 0 0 0 1px rgba(92,76,58,.12); touch-action: none; cursor: grab; }
 .frame-photo-stage.dragging { cursor: grabbing; }
 .frame-photo-stage img { width: 100%; height: 100%; display: block; object-fit: cover; transform-origin: center; user-select: none; pointer-events: none; }
 .frame-photo-stage img[hidden],
 .frame-placeholder[hidden],
 .frame-edit-button[hidden],
 .frame-editor[hidden] { display: none !important; }
-.frame-placeholder { position: absolute; inset: 0; display: grid; place-content: center; gap: 8px; color: rgba(255,255,255,.88); text-align: center; background: radial-gradient(circle at 26% 22%, rgba(255,255,255,.18), transparent 35%), linear-gradient(145deg, #53675b, #a18e76); }
-.frame-placeholder span { font: 10px Georgia, serif; letter-spacing: .28em; }
-.frame-placeholder strong { font: 500 20px/1.4 Georgia, "Songti SC", serif; }
-.frame-caption { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 7px; color: #746650; font: italic 11px Georgia, serif; letter-spacing: .05em; }
-.frame-edit-button, .frame-done-button, .frame-upload-button { min-height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 11px; border: 0; border-radius: 999px; color: #fff; font: 700 10px/1 sans-serif; letter-spacing: 0; background: rgba(66,82,63,.84); cursor: pointer; }
-.frame-editor { display: grid; grid-template-columns: auto minmax(120px,1fr) auto; align-items: center; gap: 10px; margin: 0 -10px; padding: 12px; border-radius: 0 0 6px 6px; background: rgba(255,253,248,.94); }
+.frame-placeholder { position: absolute; inset: 0; display: grid; place-content: center; gap: 7px; padding: 14px; color: rgba(255,255,255,.92); text-align: center; background: radial-gradient(circle at 30% 24%, rgba(255,255,255,.22), transparent 36%), linear-gradient(145deg, #53675b, #8e826f); }
+.frame-placeholder span { font: 9px Georgia, serif; letter-spacing: .2em; }
+.frame-placeholder strong { font: 600 16px/1.35 Georgia, "Songti SC", serif; }
+.frame-edit-button, .frame-done-button, .frame-upload-button { min-height: 34px; display: inline-flex; align-items: center; justify-content: center; padding: 0 14px; border: 0; border-radius: 999px; color: #fff; font: 700 11px/1 sans-serif; letter-spacing: 0; background: rgba(66,82,63,.9); cursor: pointer; }
+.frame-edit-button { color: var(--sage-dark); background: rgba(232,237,227,.96); }
+.frame-editor { width: min(100%, 340px); display: grid; grid-template-columns: auto minmax(110px,1fr) auto; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,253,248,.96); box-shadow: 0 10px 28px rgba(62,51,39,.08); }
 .frame-editor p { grid-column: 1 / -1; margin: -2px 0 0; color: var(--muted); font-size: 10px; text-align: center; }
 .frame-zoom-control { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; gap: 8px; color: var(--muted); font-size: 10px; }
 .frame-zoom-control input { width: 100%; accent-color: var(--sage-dark); }
