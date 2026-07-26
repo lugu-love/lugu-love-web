@@ -32,7 +32,8 @@ img { display: block; max-width: 100%; }
 #notificationBadge:not(:empty) { margin-left: 2px; color: #a5584f; font-weight: 750; }
 .earth-link, .ghost-button, .primary-button, .text-button { min-height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; border: 0; cursor: pointer; }
 .earth-link, .ghost-button { padding: 0 16px; color: var(--sage-dark); background: rgba(255,255,255,.72); border: 1px solid var(--line); }
-.identity-card { position: relative; display: grid; justify-items: center; gap: 12px; padding: 24px 20px 22px; text-align: center; background: rgba(255,253,248,.92); border: 1px solid rgba(255,255,255,.8); border-radius: 30px; box-shadow: var(--shadow); }
+.home-identity { display: grid; justify-items: center; gap: 10px; }
+.identity-card { position: relative; width: 100%; display: grid; justify-items: center; margin-top: 4px; padding: 24px 20px 22px; text-align: center; background: rgba(255,253,248,.92); border: 1px solid rgba(255,255,255,.8); border-radius: 30px; box-shadow: var(--shadow); }
 .identity-avatar { display: grid; justify-items: center; gap: 9px; }
 .identity-avatar .avatar { width: clamp(158px, 44vw, 188px); height: clamp(158px, 44vw, 188px); border: 6px solid rgba(255,253,248,.92); font-size: 54px; box-shadow: 0 16px 38px rgba(62,51,39,.2), 0 0 0 1px rgba(92,76,58,.12); }
 .identity-avatar small { width: min(220px, 70vw); overflow: hidden; color: inherit; font-size: 13px; font-weight: 650; line-height: 1.3; text-align: center; text-overflow: ellipsis; white-space: nowrap; opacity: .88; }
@@ -43,9 +44,7 @@ img { display: block; max-width: 100%; }
 .identity-copy h1 { margin: 0 0 7px; font: 600 25px/1.25 Georgia, "Songti SC", serif; }
 .identity-copy p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
 .identity-card[data-ink] .identity-copy p { color: inherit; opacity: .82; }
-.edit-profile { min-height: 36px; padding: 0 15px; border: 1px solid rgba(93,111,82,.12); border-radius: 999px; color: var(--sage-dark); font-size: 12px; background: rgba(237,241,232,.82); cursor: pointer; }
-.identity-card[data-ink="light"] .edit-profile { border-color: rgba(255,255,255,.28); color: #fff; background: rgba(255,255,255,.16); }
-.identity-card[data-ink="dark"] .edit-profile { border-color: rgba(55,57,48,.14); color: #3f4c3c; background: rgba(255,255,255,.45); }
+.edit-profile { min-height: 36px; padding: 0 15px; border: 1px solid rgba(93,111,82,.12); border-radius: 999px; color: var(--sage-dark); font-size: 12px; background: rgba(232,237,227,.96); cursor: pointer; }
 .welcome { margin: 18px 0 28px; padding: 32px 22px; overflow: hidden; position: relative; min-height: 190px; display: flex; align-items: flex-end; border-radius: 28px; color: #fff; background: linear-gradient(135deg, rgba(84,104,76,.95), rgba(133,137,94,.88)); background-size: cover; background-position: center; box-shadow: var(--shadow); }
 .welcome::after { content: ""; position: absolute; width: 150px; height: 150px; right: -38px; top: -58px; border-radius: 50%; border: 28px solid rgba(255,255,255,.09); }
 .eyebrow { margin: 0 0 9px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; opacity: .78; }

@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f6efe3">
   <title>我的生命空间 V1</title>
   <link rel="icon" href="../assets/icons/lugu-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/main.css?v=20260727-2">
+  <link rel="stylesheet" href="css/main.css?v=20260727-3">
   <link rel="stylesheet" href="css/social.css?v=20260727-1">
 </head>
 <body>
@@ -18,17 +18,19 @@
         <button id="logoutButton" type="button">退出登录</button>
       </div>
     </nav>
-    <section class="identity-card" aria-labelledby="profileName">
+    <section class="home-identity" aria-labelledby="profileName">
       <div class="identity-avatar">
         <div class="avatar" id="profileAvatar" aria-label="当前头像"><span>生</span></div>
         <small id="profileNickname">我的生命空间</small>
       </div>
-      <div class="identity-copy">
-        <h1 id="profileName">今天，也值得被记住</h1>
-        <p id="profileBio">记录生活，也记录成为自己的过程。</p>
-        <p class="account-id" id="accountId"></p>
-      </div>
       <button class="edit-profile" id="editProfile" type="button">更换头像 · 编辑资料</button>
+      <div class="identity-card">
+        <div class="identity-copy">
+          <h1 id="profileName">今天，也值得被记住</h1>
+          <p id="profileBio">记录生活，也记录成为自己的过程。</p>
+          <p class="account-id" id="accountId"></p>
+        </div>
+      </div>
     </section>
 
     <section class="welcome" id="homeWelcome">
