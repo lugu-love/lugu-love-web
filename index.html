@@ -2469,7 +2469,7 @@ opacity: 1;
 <span class="guide-sub">Gently touch a “heart star”, meet a “world”.</span>
 </div>
 <div class="guide-final-heart" aria-hidden="true">♥</div>
-<button class="my-space-button" type="button" aria-label="我的空间 My Space" onclick="window.location.href='my.html'">
+<button class="my-space-button" type="button" aria-label="我的空间 My Space">
 <span class="my-space-button-icon" aria-hidden="true">🏠</span>
 <span class="my-space-button-label">我的空间</span>
 <span class="my-space-button-sub">MY SPACE</span>
@@ -3174,8 +3174,32 @@ setTimeout(() => overlay.remove(), 1200);
 }, 1900);
 }
 
+function getLifeSpaceV1TestEntry() {
+try {
+const session = JSON.parse(localStorage.getItem("life-space-v1.session") || "null");
+const users = JSON.parse(localStorage.getItem("life-space-v1.users") || "[]");
+const hasSignedInUser = Boolean(
+session
+&& session.userId
+&& Array.isArray(users)
+&& users.some((user) => user && user.id === session.userId)
+);
+return hasSignedInUser
+? "life-space-v1-test/index.html"
+: "life-space-v1-test/auth.html";
+} catch (error) {
+return "life-space-v1-test/auth.html";
+}
+}
+
 if (mySpaceGenerate) mySpaceGenerate.addEventListener("click", (event) => {
-enterSpaceWithMusic(event, "my.html", readMySpaceState(), true);
+event.preventDefault();
+window.location.href = getLifeSpaceV1TestEntry();
+});
+
+if (mySpaceButton) mySpaceButton.addEventListener("click", (event) => {
+event.preventDefault();
+window.location.href = getLifeSpaceV1TestEntry();
 });
 
 if (mySpaceStyle) mySpaceStyle.addEventListener("click", () => {
