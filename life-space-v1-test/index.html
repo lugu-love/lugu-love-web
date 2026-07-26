@@ -6,16 +6,18 @@
   <meta name="theme-color" content="#f6efe3">
   <title>我的生命空间 V1</title>
   <link rel="icon" href="../assets/icons/lugu-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/main.css?v=20260726-1">
-  <link rel="stylesheet" href="css/social.css?v=20260726-1">
+  <link rel="stylesheet" href="css/main.css?v=20260727-2">
+  <link rel="stylesheet" href="css/social.css?v=20260727-1">
 </head>
 <body>
   <main class="page-shell">
-    <div class="account-actions" id="accountActions">
-      <a href="notifications.html">通知 <span id="notificationBadge"></span></a>
-      <button id="logoutButton" type="button">退出登录</button>
-    </div>
-    <div class="top-actions"><a class="earth-link" href="../index.html">返回地球主页</a></div>
+    <nav class="home-toolbar" aria-label="空间快捷操作">
+      <a class="earth-link" href="../index.html"><span aria-hidden="true">←</span> 地球主页</a>
+      <div class="account-actions" id="accountActions">
+        <a class="notification-link" href="notifications.html">通知 <span id="notificationBadge"></span></a>
+        <button id="logoutButton" type="button">退出登录</button>
+      </div>
+    </nav>
     <section class="identity-card" aria-labelledby="profileName">
       <div class="identity-avatar">
         <div class="avatar" id="profileAvatar" aria-label="当前头像"><span>生</span></div>
@@ -26,7 +28,7 @@
         <p id="profileBio">记录生活，也记录成为自己的过程。</p>
         <p class="account-id" id="accountId"></p>
       </div>
-      <button class="edit-profile" id="editProfile" type="button">编辑资料</button>
+      <button class="edit-profile" id="editProfile" type="button">更换头像 · 编辑资料</button>
     </section>
 
     <section class="welcome" id="homeWelcome">

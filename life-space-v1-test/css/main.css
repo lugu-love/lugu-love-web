@@ -23,18 +23,27 @@ a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 .page-shell { width: min(100%, 760px); min-height: 100vh; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) 16px calc(34px + env(safe-area-inset-bottom)); }
 .top-actions { display: flex; justify-content: flex-end; margin-bottom: 16px; }
+.home-toolbar { min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
+.home-toolbar .earth-link { flex: 0 0 auto; gap: 6px; padding: 0 14px; font-weight: 650; }
+.home-toolbar .account-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 0; }
+.home-toolbar .account-actions a,
+.home-toolbar .account-actions button { min-height: 40px; padding: 0 13px; white-space: nowrap; }
+.home-toolbar .notification-link { position: relative; }
+#notificationBadge:not(:empty) { margin-left: 2px; color: #a5584f; font-weight: 750; }
 .earth-link, .ghost-button, .primary-button, .text-button { min-height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; border: 0; cursor: pointer; }
 .earth-link, .ghost-button { padding: 0 16px; color: var(--sage-dark); background: rgba(255,255,255,.72); border: 1px solid var(--line); }
-.identity-card { position: relative; display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 13px 14px; align-items: center; padding: 18px 20px; background: rgba(255,253,248,.92); border: 1px solid rgba(255,255,255,.8); border-radius: 28px; box-shadow: var(--shadow); }
-.identity-avatar { align-self: start; min-width: 68px; display: grid; justify-items: center; gap: 7px; }
-.identity-avatar small { width: 78px; overflow: hidden; color: inherit; font-size: 10px; line-height: 1.25; text-align: center; text-overflow: ellipsis; white-space: nowrap; opacity: .82; }
+.identity-card { position: relative; display: grid; justify-items: center; gap: 12px; padding: 24px 20px 22px; text-align: center; background: rgba(255,253,248,.92); border: 1px solid rgba(255,255,255,.8); border-radius: 30px; box-shadow: var(--shadow); }
+.identity-avatar { display: grid; justify-items: center; gap: 9px; }
+.identity-avatar .avatar { width: clamp(158px, 44vw, 188px); height: clamp(158px, 44vw, 188px); border: 6px solid rgba(255,253,248,.92); font-size: 54px; box-shadow: 0 16px 38px rgba(62,51,39,.2), 0 0 0 1px rgba(92,76,58,.12); }
+.identity-avatar small { width: min(220px, 70vw); overflow: hidden; color: inherit; font-size: 13px; font-weight: 650; line-height: 1.3; text-align: center; text-overflow: ellipsis; white-space: nowrap; opacity: .88; }
 .avatar { width: 68px; height: 68px; display: grid; place-items: center; border-radius: 50%; color: #fff; font-family: Georgia, serif; font-size: 28px; background: linear-gradient(145deg, #b8c4a9, #728268); box-shadow: inset 0 0 0 5px rgba(255,255,255,.32); }
 .avatar.has-image { overflow: hidden; background: #e8eadf; }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
-.identity-copy h1 { margin: 0 0 7px; font: 600 24px/1.2 Georgia, "Songti SC", serif; }
+.identity-copy { width: min(100%, 520px); }
+.identity-copy h1 { margin: 0 0 7px; font: 600 25px/1.25 Georgia, "Songti SC", serif; }
 .identity-copy p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
 .identity-card[data-ink] .identity-copy p { color: inherit; opacity: .82; }
-.edit-profile { grid-column: 2; justify-self: start; min-height: 32px; margin-top: -5px; padding: 0 12px; border: 1px solid rgba(93,111,82,.12); border-radius: 999px; color: var(--sage-dark); font-size: 12px; background: rgba(237,241,232,.72); cursor: pointer; }
+.edit-profile { min-height: 36px; padding: 0 15px; border: 1px solid rgba(93,111,82,.12); border-radius: 999px; color: var(--sage-dark); font-size: 12px; background: rgba(237,241,232,.82); cursor: pointer; }
 .identity-card[data-ink="light"] .edit-profile { border-color: rgba(255,255,255,.28); color: #fff; background: rgba(255,255,255,.16); }
 .identity-card[data-ink="dark"] .edit-profile { border-color: rgba(55,57,48,.14); color: #3f4c3c; background: rgba(255,255,255,.45); }
 .welcome { margin: 18px 0 28px; padding: 32px 22px; overflow: hidden; position: relative; min-height: 190px; display: flex; align-items: flex-end; border-radius: 28px; color: #fff; background: linear-gradient(135deg, rgba(84,104,76,.95), rgba(133,137,94,.88)); background-size: cover; background-position: center; box-shadow: var(--shadow); }
@@ -127,6 +136,11 @@ img { display: block; max-width: 100%; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 @media (max-width: 699px) {
+  .home-toolbar { align-items: stretch; gap: 7px; }
+  .home-toolbar .earth-link { padding: 0 10px; font-size: 11px; }
+  .home-toolbar .account-actions { gap: 5px; }
+  .home-toolbar .account-actions a,
+  .home-toolbar .account-actions button { padding: 0 10px; font-size: 11px; }
   #profileDialog.open {
     display: block;
     padding: 0;
