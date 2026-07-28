@@ -2469,7 +2469,7 @@ opacity: 1;
 <span class="guide-sub">Gently touch a “heart star”, meet a “world”.</span>
 </div>
 <div class="guide-final-heart" aria-hidden="true">♥</div>
-<button class="my-space-button" type="button" aria-label="我的空间 My Space">
+<button class="my-space-button" type="button" aria-label="选择我的空间 My Space">
 <span class="my-space-button-icon" aria-hidden="true">🏠</span>
 <span class="my-space-button-label">我的空间</span>
 <span class="my-space-button-sub">MY SPACE</span>
@@ -2478,10 +2478,11 @@ opacity: 1;
 <div class="my-space-bg" id="mySpaceBg"></div>
 <button class="my-space-close" id="mySpaceClose" type="button" aria-label="关闭我的空间">×</button>
 <div class="my-space-shell" id="mySpaceMenu">
-<p class="my-space-kicker">My Space · My World</p>
-<h2 class="my-space-title">我的空间 · 我的世界</h2>
-<button class="my-space-action my-space-primary" id="mySpaceGenerate" type="button">创建我的空间</button>
-<p class="my-space-kicker">从此拥有一个属于自己的世界。</p>
+<p class="my-space-kicker">My Space · Choose Your World</p>
+<h2 class="my-space-title">请选择进入哪个“我的空间”</h2>
+<button class="my-space-action my-space-primary" id="mySpaceGenerate" type="button">进入原来的“我的空间”</button>
+<button class="my-space-action my-space-third" id="mySpaceV13" type="button">进入 V1.3 装修空间</button>
+<p class="my-space-kicker">两个空间平行保存，互不覆盖。</p>
 </div>
 <div class="my-space-result" id="mySpaceResult" aria-live="polite">
 <div class="my-space-card" id="mySpaceCard">我的空间已生成</div>
@@ -2493,7 +2494,7 @@ opacity: 1;
 <p class="heart-star-card-no" id="heartStarCardNo">🌟 LX-2026-000001</p>
 <p class="heart-star-card-name" id="heartStarCardName">晨光星</p>
 <p class="heart-star-card-voice" id="heartStarCardVoice">“希望世界因为爱重新连接。”</p>
-<a class="heart-star-card-link" id="heartStarCardLink" href="my.html?view=public">进入TA的世界</a>
+<a class="heart-star-card-link" id="heartStarCardLink" href="life-space-v1/index.html?mode=visitor&amp;id=demo-lugu&amp;v=20260728-6">进入TA的世界</a>
 </div>
 <div class="footer-signature">心域·情感文明共创</div>
 <div id="audioControl">
@@ -2519,6 +2520,7 @@ const mySpaceResult = document.getElementById("mySpaceResult");
 const mySpaceCard = document.getElementById("mySpaceCard");
 const mySpaceClose = document.getElementById("mySpaceClose");
 const mySpaceGenerate = document.getElementById("mySpaceGenerate");
+const mySpaceV13 = document.getElementById("mySpaceV13");
 const mySpaceStyle = document.getElementById("mySpaceStyle");
 const mySpaceStylePanel = document.getElementById("mySpaceStylePanel");
 const mySpaceCustom = document.getElementById("mySpaceCustom");
@@ -2624,6 +2626,7 @@ let musicLoopTimer = 0;
 let musicSession = 0;
 let backgroundMusicPlayCount = 0;
 let openingAfterLaughScheduled = false;
+let musicForceAudible = false;
 let musicVolume = .6;
 window.earthMusicEnabled = true;
 try { window.earthMusicEnabled = localStorage.getItem("lugu_earth_music_enabled") !== "0"; } catch (error) {}
@@ -2777,10 +2780,71 @@ const musicButton = document.createElement("button");
 musicButton.type = "button";
 musicButton.textContent = "🔊";
 musicButton.setAttribute("aria-label", "空间音乐开关");
-musicButton.style.cssText = "position:absolute;right:14px;top:14px;z-index:3;width:46px;height:46px;padding:0;border:1px solid rgba(210,226,255,.38);border-radius:50%;background:rgba(12,18,42,.92);color:#fff;font-size:18px;box-shadow:0 10px 32px rgba(0,0,0,.4);cursor:pointer;pointer-events:auto";
+musicButton.title = "轻点开关音乐，按住可拖动";
+musicButton.style.cssText = "position:absolute;z-index:3;width:46px;height:46px;padding:0;border:1px solid rgba(210,226,255,.38);border-radius:50%;background:rgba(12,18,42,.92);color:#fff;font-size:18px;box-shadow:0 10px 32px rgba(0,0,0,.4);cursor:grab;pointer-events:auto;touch-action:none;user-select:none";
+const musicButtonPositionKey = "lugu_space_music_button_position";
+let savedMusicButtonPosition = null;
+try { savedMusicButtonPosition = JSON.parse(localStorage.getItem(musicButtonPositionKey) || "null"); } catch (error) {}
+const initialMusicLeft = savedMusicButtonPosition && Number.isFinite(savedMusicButtonPosition.x)
+? savedMusicButtonPosition.x * Math.max(0, window.innerWidth - 46)
+: Math.max(14, window.innerWidth - 60);
+const initialMusicTop = savedMusicButtonPosition && Number.isFinite(savedMusicButtonPosition.y)
+? savedMusicButtonPosition.y * Math.max(0, window.innerHeight - 46)
+: Math.max(70, window.innerHeight * .7);
+musicButton.style.left = `${Math.max(8, Math.min(window.innerWidth - 54, initialMusicLeft))}px`;
+musicButton.style.top = `${Math.max(68, Math.min(window.innerHeight - 62, initialMusicTop))}px`;
+let musicButtonDrag = null;
+let suppressMusicButtonClick = false;
+musicButton.addEventListener("pointerdown", (event) => {
+const rect = musicButton.getBoundingClientRect();
+musicButtonDrag = {
+pointerId: event.pointerId,
+startX: event.clientX,
+startY: event.clientY,
+left: rect.left,
+top: rect.top,
+moved: false
+};
+musicButton.setPointerCapture(event.pointerId);
+musicButton.style.cursor = "grabbing";
+});
+musicButton.addEventListener("pointermove", (event) => {
+if (!musicButtonDrag || musicButtonDrag.pointerId !== event.pointerId) return;
+const deltaX = event.clientX - musicButtonDrag.startX;
+const deltaY = event.clientY - musicButtonDrag.startY;
+if (Math.hypot(deltaX, deltaY) > 5) musicButtonDrag.moved = true;
+if (!musicButtonDrag.moved) return;
+event.preventDefault();
+const nextLeft = Math.max(8, Math.min(window.innerWidth - 54, musicButtonDrag.left + deltaX));
+const nextTop = Math.max(68, Math.min(window.innerHeight - 62, musicButtonDrag.top + deltaY));
+musicButton.style.left = `${nextLeft}px`;
+musicButton.style.top = `${nextTop}px`;
+});
+function finishMusicButtonDrag(event) {
+if (!musicButtonDrag || musicButtonDrag.pointerId !== event.pointerId) return;
+suppressMusicButtonClick = musicButtonDrag.moved;
+musicButton.style.cursor = "grab";
+if (musicButtonDrag.moved) {
+const left = parseFloat(musicButton.style.left) || 0;
+const top = parseFloat(musicButton.style.top) || 0;
+try {
+localStorage.setItem(musicButtonPositionKey, JSON.stringify({
+x: left / Math.max(1, window.innerWidth - 46),
+y: top / Math.max(1, window.innerHeight - 46)
+}));
+} catch (error) {}
+}
+musicButtonDrag = null;
+}
+musicButton.addEventListener("pointerup", finishMusicButtonDrag);
+musicButton.addEventListener("pointercancel", finishMusicButtonDrag);
 musicButton.addEventListener("click", (event) => {
 event.preventDefault();
 event.stopPropagation();
+if (suppressMusicButtonClick) {
+suppressMusicButtonClick = false;
+return;
+}
 const isPlaying = Boolean(embeddedSpaceAudio && !embeddedSpaceAudio.paused);
 if (isPlaying || embeddedSpaceStartTimer) {
 clearTimeout(embeddedSpaceStartTimer);
@@ -2974,7 +3038,9 @@ if (heartStarCardNo) heartStarCardNo.textContent = `🌟 ${data.id || "LX-2026-0
 if (heartStarCardName) heartStarCardName.textContent = starName;
 if (heartStarCardVoice) heartStarCardVoice.textContent = `“${voice}”`;
 if (heartStarCardLink) {
-heartStarCardLink.href = isMyStar ? "my.html" : `my.html?view=public&id=${encodeURIComponent(data.id || "")}`;
+heartStarCardLink.href = isMyStar
+? "life-space-v1/index.html?v=20260728-6"
+: "life-space-v1/index.html?mode=visitor&id=demo-lugu&v=20260728-6";
 heartStarCardLink.textContent = isMyStar ? "进入我的空间" : "进入TA的世界";
 heartStarCardLink.onclick = (event) => enterSpaceWithMusic(event, heartStarCardLink.href, data, isMyStar);
 }
@@ -3193,13 +3259,15 @@ return "life-space-v1-test/auth.html";
 }
 
 if (mySpaceGenerate) mySpaceGenerate.addEventListener("click", (event) => {
-event.preventDefault();
-window.location.href = getLifeSpaceV1TestEntry();
+enterSpaceWithMusic(event, "life-space-v1/index.html?v=20260728-6", null, true);
+});
+
+if (mySpaceV13) mySpaceV13.addEventListener("click", (event) => {
+enterSpaceWithMusic(event, "my-v13.html?v=20260723-4", null, true);
 });
 
 if (mySpaceButton) mySpaceButton.addEventListener("click", (event) => {
-event.preventDefault();
-window.location.href = getLifeSpaceV1TestEntry();
+enterSpaceWithMusic(event, "life-space-v1/index.html?v=20260728-6", null, true);
 });
 
 if (mySpaceStyle) mySpaceStyle.addEventListener("click", () => {
@@ -3406,7 +3474,7 @@ setTimeout(spawnVoiceStar, index * random(760, 1280));
 function scheduleOpeningBackgroundMusic(delay = 1000) {
 clearTimeout(backgroundMusicTimer);
 backgroundMusicTimer = setTimeout(() => {
-startMusic();
+startMusic({ forceAudible: true });
 }, delay);
 }
 
@@ -3429,7 +3497,7 @@ scheduleOpeningAfterLaugh(fallbackDelay);
 setTimeout(() => scheduleOpeningAfterLaugh(0), fallbackDelay);
 }
 
-function armBackgroundLoop(audio, session) {
+function armBackgroundLoop(audio, session, forceAudible = false) {
 function scheduleNext() {
 if (session !== musicSession || audio.dataset.nextLoopScheduled === "true") return;
 if (backgroundMusicPlayCount >= backgroundMusicMaxPlays) return;
@@ -3438,7 +3506,7 @@ if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
 audio.dataset.nextLoopScheduled = "true";
 const crossfadeSeconds = Math.min(musicLoopCrossfadeDuration / 1000, Math.max(audio.duration * .32, .35));
 const delay = Math.max((audio.duration - crossfadeSeconds) * 1000, 250);
-musicLoopTimer = setTimeout(() => crossfadeBackgroundLoop(audio, session), delay);
+musicLoopTimer = setTimeout(() => crossfadeBackgroundLoop(audio, session, forceAudible), delay);
 }
 
 if (Number.isFinite(audio.duration) && audio.duration > 0) {
@@ -3448,13 +3516,13 @@ audio.addEventListener("loadedmetadata", scheduleNext, { once: true });
 }
 }
 
-function playBackgroundTrack(session, fadeDuration = musicStartFadeDuration) {
+function playBackgroundTrack(session, fadeDuration = musicStartFadeDuration, forceAudible = musicForceAudible) {
 if (session !== musicSession) return;
 if (backgroundMusicPlayCount >= backgroundMusicMaxPlays) return;
 backgroundMusicPlayCount += 1;
 const audio = new Audio(backgroundMusicSrc);
 audio.loop = false;
-audio.muted = !window.earthMusicEnabled;
+audio.muted = !forceAudible && !window.earthMusicEnabled;
 audio.volume = 0;
 audio.preload = "auto";
 window.audio = audio;
@@ -3462,7 +3530,7 @@ activeMusicAudios.add(audio);
 
 audio.addEventListener("ended", () => {
 if (session === musicSession && window.audio === audio) {
-playBackgroundTrack(session, fadeDuration);
+playBackgroundTrack(session, fadeDuration, forceAudible);
 }
 if (window.audio === audio) window.audio = null;
 destroyAudioNow(audio);
@@ -3473,7 +3541,7 @@ if (window.syncAudioUI) window.syncAudioUI();
 audio.play().then(() => {
 syncMusicMotion();
 animateAudioVolume(audio, 0, musicVolume, fadeDuration);
-armBackgroundLoop(audio, session);
+armBackgroundLoop(audio, session, forceAudible);
 if (window.syncAudioUI) window.syncAudioUI();
 }).catch(() => {
 destroyAudioNow(audio);
@@ -3481,14 +3549,14 @@ syncMusicMotion();
 });
 }
 
-function crossfadeBackgroundLoop(currentAudio, session) {
+function crossfadeBackgroundLoop(currentAudio, session, forceAudible = musicForceAudible) {
 if (session !== musicSession || !activeMusicAudios.has(currentAudio)) return;
 if (backgroundMusicPlayCount >= backgroundMusicMaxPlays) return;
 backgroundMusicPlayCount += 1;
 
 const nextAudio = new Audio(backgroundMusicSrc);
 nextAudio.loop = false;
-nextAudio.muted = !window.earthMusicEnabled;
+nextAudio.muted = !forceAudible && !window.earthMusicEnabled;
 nextAudio.volume = 0;
 nextAudio.preload = "auto";
 window.audio = nextAudio;
@@ -3496,7 +3564,7 @@ activeMusicAudios.add(nextAudio);
 
 nextAudio.addEventListener("ended", () => {
 if (session === musicSession && window.audio === nextAudio) {
-playBackgroundTrack(session, musicLoopCrossfadeDuration);
+playBackgroundTrack(session, musicLoopCrossfadeDuration, forceAudible);
 }
 if (window.audio === nextAudio) window.audio = null;
 destroyAudioNow(nextAudio);
@@ -3511,7 +3579,7 @@ animateAudioVolume(currentAudio, currentAudio.volume, 0, musicLoopCrossfadeDurat
 destroyAudioNow(currentAudio);
 syncMusicMotion();
 });
-armBackgroundLoop(nextAudio, session);
+armBackgroundLoop(nextAudio, session, forceAudible);
 if (window.syncAudioUI) window.syncAudioUI();
 }).catch(() => {
 window.audio = currentAudio;
@@ -3519,8 +3587,9 @@ syncMusicMotion();
 });
 }
 
-function startMusic() {
-if (!window.earthMusicEnabled) return;
+function startMusic(options = {}) {
+const forceAudible = Boolean(options.forceAudible);
+if (!window.earthMusicEnabled && !forceAudible) return;
 stopVoiceMusic({ immediate: true });
 window.LuguMusic.claim("earth-music");
 clearTimeout(backgroundMusicTimer);
@@ -3530,14 +3599,16 @@ activeMusicAudios.clear();
 window.audio = null;
 window.fadingAudio = null;
 musicSession += 1;
+musicForceAudible = forceAudible;
 backgroundMusicPlayCount = 0;
-playBackgroundTrack(musicSession);
+playBackgroundTrack(musicSession, musicStartFadeDuration, forceAudible);
 }
 
 function stopMusic(options = {}) {
 clearTimeout(backgroundMusicTimer);
 cancelMusicAnimations();
 musicSession += 1;
+musicForceAudible = false;
 backgroundMusicPlayCount = 0;
 const audios = new Set(activeMusicAudios);
 if (window.audio && window.audio !== voiceAudio && window.audio !== fadingVoiceAudio) audios.add(window.audio);

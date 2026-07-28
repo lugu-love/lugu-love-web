@@ -48,6 +48,7 @@ if (!state) state = { contents: { home: [], voice: [], story: [], growth: [], co
 state.contents ||= {};
 state.contents[category] ||= [];
 state.worldMusic ||= {};
+state.customMusic ||= [];
 const $ = (id) => document.getElementById(id);
 document.querySelectorAll('a[href="index.html"]').forEach((link) => { link.target = "_top"; });
 $("title").textContent = labels[category][0];
@@ -106,6 +107,13 @@ Object.keys(musicTracks).forEach((name) => {
   option.textContent = name;
   $("worldMusic").appendChild(option);
 });
+state.customMusic.forEach((track) => {
+  if (!track || !track.id || !track.name) return;
+  const option = document.createElement("option");
+  option.value = `custom:${track.id}`;
+  option.textContent = `❤ ${track.name}`;
+  $("worldMusic").appendChild(option);
+});
 const volumeControl = document.createElement("label");
 volumeControl.className = "music-volume-control";
 volumeControl.innerHTML = `<span>音量</span><input id="musicVolume" type="range" min="0" max="100" step="1" value="${Math.round(musicVolume * 100)}"><output id="musicVolumeValue" for="musicVolume">${Math.round(musicVolume * 100)}%</output>`;
@@ -118,6 +126,22 @@ $("musicVolume").addEventListener("input", () => {
   if (musicAudio) musicAudio.volume = musicVolume;
   if (isEmbeddedView) window.parent.postMessage({ type: "lugu-set-space-music-volume", volume: musicVolume }, parentMessageOrigin);
 });
+const importMusicButton = document.createElement("button");
+importMusicButton.id = "musicImport";
+importMusicButton.type = "button";
+importMusicButton.textContent = "录入音乐";
+$("musicSave").insertAdjacentElement("beforebegin", importMusicButton);
+document.body.insertAdjacentHTML("beforeend", `
+  <div class="music-import-modal" id="musicImportModal" aria-hidden="true">
+    <section class="music-import-card" role="dialog" aria-modal="true" aria-labelledby="musicImportTitle">
+      <div class="music-import-head"><div><strong id="musicImportTitle">我的音乐库</strong><p>录入自己喜欢的音乐，保存后即可选择。</p></div><button id="musicImportClose" type="button" aria-label="关闭">×</button></div>
+      <label class="music-import-file"><span>选择音乐文件</span><input id="musicImportFile" type="file" accept="audio/*,.mp3,.m4a,.wav,.aac,.ogg,.flac"></label>
+      <label class="music-import-name"><span>音乐名称</span><input id="musicImportName" type="text" maxlength="40" placeholder="自动使用文件名，也可以修改"></label>
+      <button class="music-import-save" id="musicImportSave" type="button">保存到我的音乐库</button>
+      <p class="music-import-status" id="musicImportStatus">支持常见音频格式，单个文件不超过 30MB。</p>
+      <div class="personal-music-library" id="personalMusicLibrary"></div>
+    </section>
+  </div>`);
 const esc = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
 
 function mediaHtml(item) {
@@ -170,6 +194,19 @@ function openMediaDb() {
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
+}
+
+async function saveMusicFile(file) {
+  const key = `music-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const db = await openMediaDb();
+  await new Promise((resolve, reject) => {
+    const transaction = db.transaction("files", "readwrite");
+    transaction.objectStore("files").put(file, key);
+    transaction.oncomplete = resolve;
+    transaction.onerror = () => reject(transaction.error);
+  });
+  db.close();
+  return key;
 }
 
 async function saveMediaFile(dataUrl) {
@@ -423,6 +460,110 @@ if (state.worldMusic[category] !== savedMusic) {
 }
 $("worldMusic").value = savedMusic;
 $("musicState").textContent = `当前：${savedMusic}`;
+const customMusicUrls = new Map();
+
+async function getMusicSource(value) {
+  if (!String(value).startsWith("custom:")) return musicTracks[value] || "";
+  const id = String(value).slice(7);
+  if (customMusicUrls.has(id)) return customMusicUrls.get(id);
+  const track = state.customMusic.find((item) => item.id === id);
+  if (!track) return "";
+  const blob = await readMediaFile(track.mediaRef);
+  if (!blob) return "";
+  const url = URL.createObjectURL(blob);
+  customMusicUrls.set(id, url);
+  return url;
+}
+
+function musicDisplayName(value) {
+  if (!String(value).startsWith("custom:")) return value;
+  const track = state.customMusic.find((item) => item.id === String(value).slice(7));
+  return track ? track.name : "我的音乐";
+}
+
+function renderPersonalMusicLibrary() {
+  $("personalMusicLibrary").innerHTML = state.customMusic.length ? state.customMusic.map((track) => `
+    <div class="personal-music-item">
+      <button class="personal-music-pick" type="button" data-custom-music-pick="${esc(track.id)}"><span>♫</span><strong>${esc(track.name)}</strong></button>
+      <button class="personal-music-delete" type="button" data-custom-music-delete="${esc(track.id)}">删除</button>
+    </div>`).join("") : `<p class="personal-music-empty">你的音乐库还是空的，录入第一首喜欢的音乐吧。</p>`;
+}
+
+function closeMusicImport() {
+  $("musicImportModal").classList.remove("open");
+  $("musicImportModal").setAttribute("aria-hidden", "true");
+}
+
+$("musicImport").onclick = () => {
+  renderPersonalMusicLibrary();
+  $("musicImportModal").classList.add("open");
+  $("musicImportModal").setAttribute("aria-hidden", "false");
+};
+$("musicImportClose").onclick = closeMusicImport;
+$("musicImportModal").onclick = (event) => { if (event.target === $("musicImportModal")) closeMusicImport(); };
+$("musicImportFile").onchange = () => {
+  const file = $("musicImportFile").files[0];
+  if (!file) return;
+  $("musicImportName").value = file.name.replace(/\.[^.]+$/, "").slice(0, 40);
+  $("musicImportStatus").textContent = `已选择：${file.name}`;
+};
+$("musicImportSave").onclick = async () => {
+  const file = $("musicImportFile").files[0];
+  const name = $("musicImportName").value.trim();
+  if (!file) { $("musicImportStatus").textContent = "请先选择一个音乐文件。"; return; }
+  if (!file.type.startsWith("audio/") && !/\.(mp3|m4a|wav|aac|ogg|flac)$/i.test(file.name)) { $("musicImportStatus").textContent = "请选择正确的音乐文件。"; return; }
+  if (file.size > 30 * 1024 * 1024) { $("musicImportStatus").textContent = "音乐文件请控制在 30MB 以内。"; return; }
+  if (!name) { $("musicImportName").focus(); return; }
+  $("musicImportSave").disabled = true;
+  $("musicImportStatus").textContent = "正在保存到你的音乐库…";
+  let mediaRef = "";
+  let track = null;
+  try {
+    mediaRef = await saveMusicFile(file);
+    track = { id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`, name, mediaRef, size: file.size, time: Date.now() };
+    state.customMusic.push(track);
+    if (!persist()) throw new Error("metadata-save-failed");
+    const option = document.createElement("option");
+    option.value = `custom:${track.id}`;
+    option.textContent = `❤ ${track.name}`;
+    $("worldMusic").appendChild(option);
+    $("worldMusic").value = option.value;
+    $("musicImportFile").value = "";
+    $("musicImportName").value = "";
+    $("musicImportStatus").textContent = `已保存“${track.name}”，现在可以选择和试听。`;
+    renderPersonalMusicLibrary();
+  } catch (error) {
+    if (track) state.customMusic = state.customMusic.filter((item) => item.id !== track.id);
+    if (mediaRef) await deleteMediaFile(mediaRef).catch(() => {});
+    $("musicImportStatus").textContent = "保存失败，请检查浏览器存储空间后重试。";
+  } finally { $("musicImportSave").disabled = false; }
+};
+$("personalMusicLibrary").onclick = async (event) => {
+  const pick = event.target.closest("[data-custom-music-pick]");
+  const remove = event.target.closest("[data-custom-music-delete]");
+  if (pick) {
+    $("worldMusic").value = `custom:${pick.dataset.customMusicPick}`;
+    $("musicState").textContent = `已选择：${musicDisplayName($("worldMusic").value)}`;
+    closeMusicImport();
+    return;
+  }
+  if (!remove || !confirm("确定从我的音乐库删除这首音乐吗？")) return;
+  const index = state.customMusic.findIndex((item) => item.id === remove.dataset.customMusicDelete);
+  if (index < 0) return;
+  const [track] = state.customMusic.splice(index, 1);
+  const value = `custom:${track.id}`;
+  if (state.worldMusic[category] === value || $("worldMusic").value === value) stopWorldMusic();
+  Object.keys(state.worldMusic).forEach((key) => { if (state.worldMusic[key] === value) state.worldMusic[key] = "星河钢琴"; });
+  persist();
+  await deleteMediaFile(track.mediaRef).catch(() => {});
+  if (customMusicUrls.has(track.id)) { URL.revokeObjectURL(customMusicUrls.get(track.id)); customMusicUrls.delete(track.id); }
+  const option = Array.from($("worldMusic").options).find((item) => item.value === value);
+  if (option) option.remove();
+  if ($("worldMusic").value === "") $("worldMusic").value = "星河钢琴";
+  renderPersonalMusicLibrary();
+  $("musicImportStatus").textContent = `已删除“${track.name}”。`;
+};
+renderPersonalMusicLibrary();
 
 function updateMusicToggle() {
   const isPlaying = Boolean(worldMusicAudio && !worldMusicAudio.paused);
@@ -439,10 +580,11 @@ function stopWorldMusic() {
   updateMusicToggle();
 }
 
-function playWorldMusic(options = {}) {
+async function playWorldMusic(options = {}) {
   if (!worldMusicEnabled) return Promise.resolve(false);
   const name = state.worldMusic[category] || $("worldMusic").value || "星河钢琴";
-  const src = musicTracks[name];
+  const src = await getMusicSource(name);
+  const displayName = musicDisplayName(name);
   if (!src) return Promise.resolve(false);
   if (musicAudio) { musicAudio.pause(); musicAudio = null; $("musicPreview").textContent = "试听"; }
   window.LuguMusic.claim("content-world-music");
@@ -454,7 +596,7 @@ function playWorldMusic(options = {}) {
   worldMusicAudio.addEventListener("play", updateMusicToggle);
   worldMusicAudio.addEventListener("pause", updateMusicToggle);
   return worldMusicAudio.play().then(() => {
-    $("musicState").textContent = `正在播放：${name}`;
+    $("musicState").textContent = `正在播放：${displayName}`;
     updateMusicToggle();
     return true;
   }).catch(() => {
@@ -479,28 +621,31 @@ $("musicToggle").onclick = () => {
   playWorldMusic();
 };
 updateMusicToggle();
-$("musicPreview").onclick = () => {
+$("musicPreview").onclick = async () => {
   const name = $("worldMusic").value;
+  const src = await getMusicSource(name);
+  const displayName = musicDisplayName(name);
+  if (!src) { $("musicState").textContent = "音乐文件读取失败，请重新录入。"; return; }
   if (isEmbeddedView) {
     if (embeddedPreviewPlaying) {
       window.parent.postMessage({ type: "lugu-stop-preview-music" }, parentMessageOrigin);
       embeddedPreviewPlaying = false;
       $("musicPreview").textContent = "试听";
-      $("musicState").textContent = `已停止：${name}`;
+      $("musicState").textContent = `已停止：${displayName}`;
     } else {
-      window.parent.postMessage({ type: "lugu-preview-space-music", src: musicTracks[name], trackId: `content-${category}-${name}`, volume: musicVolume }, parentMessageOrigin);
+      window.parent.postMessage({ type: "lugu-preview-space-music", src, trackId: `content-${category}-${name}`, volume: musicVolume }, parentMessageOrigin);
       embeddedPreviewPlaying = true;
       $("musicPreview").textContent = "停止";
-      $("musicState").textContent = `正在试听：${name}`;
+      $("musicState").textContent = `正在试听：${displayName}`;
     }
     return;
   }
   if (musicAudio && !musicAudio.paused) { musicAudio.pause(); musicAudio = null; $("musicPreview").textContent = "试听"; $("musicState").textContent = `已停止：${name}`; return; }
   stopWorldMusic();
   window.LuguMusic.claim("content-preview");
-  musicAudio = new Audio(musicTracks[name]); musicAudio.volume = musicVolume;
-  musicAudio.onended = () => { musicAudio = null; $("musicPreview").textContent = "试听"; $("musicState").textContent = `试听结束：${name}`; if (worldMusicEnabled) playWorldMusic({ silent: true }); };
-  musicAudio.play().then(() => { $("musicPreview").textContent = "停止"; $("musicState").textContent = `正在试听：${name}`; }).catch(() => { $("musicState").textContent = "请再次点击试听。"; });
+  musicAudio = new Audio(src); musicAudio.volume = musicVolume;
+  musicAudio.onended = () => { musicAudio = null; $("musicPreview").textContent = "试听"; $("musicState").textContent = `试听结束：${displayName}`; if (worldMusicEnabled) playWorldMusic({ silent: true }); };
+  musicAudio.play().then(() => { $("musicPreview").textContent = "停止"; $("musicState").textContent = `正在试听：${displayName}`; }).catch(() => { $("musicState").textContent = "请再次点击试听。"; });
 };
 window.addEventListener("message", (event) => {
   if (!isEmbeddedView || event.source !== window.parent || !event.data) return;
